@@ -1,28 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
-<%@ include file="../common/head2.jsp" %>
 	 
 <!DOCTYPE html>
 <html lang="en" >
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- 제이쿼리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/resource/dist/style.css" />
 <link rel="stylesheet" href="/resource/cards/dist/style.css" />
 <link rel="stylesheet" href="/resource/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- 제이쿼리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <head>
   <meta charset="UTF-8">
   <title>dashboard</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 </head>
-<link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
-
 <body>
 <!-- partial:index.partial.html -->
+<link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 <div class="task-manager">
 	<div class="left-bar">
 	    <div class="upper-part">
@@ -33,10 +29,7 @@
 	    </div>
 	    <div class="left-content">
 	      <ul class="action-list">
-	       	<a href="../project/make">
-	        	<button class="btn btn-warning">새 프로젝트</button>
-	        </a>
-	        <li class="item mt-8">
+	        <li class="item">
 	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
 	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
 	            viewBox="0 0 24 24">
@@ -139,10 +132,10 @@
     			<div class="project-group">
     			<div class="mb-2.5">즐겨찾기</div>
     			<div class="cards">
-    				<a href="../project/detail?id=1">
+    				<a href="bg-yellow-50 w-full h-full">
 						<article class="information [ card ] bg-gray-50">
 							<div class="ml-4">
-								<div>테스트용</div>
+								<div>즐겨찾기아이콘</div>
 								<div class="pt-6 h-12">
 									<div>프로젝트이름</div>
 								</div>
@@ -150,18 +143,18 @@
 							</div>
 						</article>
 					</a>
-					<a href="../project/detail?id=1">
+					<a href="bg-yellow-50 w-full h-full">
 						<article class="information [ card ] bg-gray-50">
 							<div class="ml-4">
 								<div>즐겨찾기아이콘</div>
 								<div class="pt-6 h-12">
-									<div>테스트용</div>
+									<div>프로젝트이름</div>
 								</div>
 								<div class="pt-10">프로젝트참여수</div>
 							</div>
 						</article>
 					</a>
-					<a href="../project/detail?id=1">
+					<a href="bg-yellow-50 w-full h-full">
 						<article class="information [ card ] bg-gray-50">
 							<div class="ml-4">
 								<div>즐겨찾기아이콘</div>

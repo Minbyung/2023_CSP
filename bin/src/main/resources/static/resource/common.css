@@ -203,13 +203,3 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     transition: all .1s ease;
     margin: 0 auto;
 }
-
-.bookmark-button {
-    position: absolute;
-    top: 1px;
-    width: 22px;
-    height: 22px;
-    background-image: url("/flow-renewal/assets/images/icons/icon_star_on.png?v=a92226bd38ca294a4b524c3fe704fdbe310f2b8b");
-    background-size: 22px;
-    cursor: pointer;
-}
