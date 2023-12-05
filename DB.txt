@@ -54,6 +54,77 @@ CREATE TABLE reply(
     `body` TEXT NOT NULL
 );
 
+CREATE TABLE project(
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    project_name VARCHAR(100) NOT NULL,
+    project_description TEXT NOT NULL
+);
+
+
+CREATE TABLE projectMember (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+    projectId INT UNSIGNED NOT NULL, 
+    memberId INT UNSIGNED NOT NULL, 
+    `role` VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE favorite (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    projectId INT NOT NULL,    
+    memberId INT NOT NULL
+);
+
+
+DELETE FROM favorite
+WHERE memberId = 1
+AND projectId = 1
+
+
+SELECT * FROM project;
+SELECT * FROM projectMember;
+SELECT * FROM favorite;
+TRUNCATE TABLE project;
+TRUNCATE TABLE projectMember;
+TRUNCATE TABLE favorite;
+
+SELECT COUNT(*) 
+FROM favorite
+WHERE memberId = 2
+AND projectId = 1;
+				
+DELETE FROM favorite
+WHERE memberId = 2
+AND projectId = 1
+
+				
+SELECT * 
+FROM project AS P
+LEFT JOIN projectMember AS PM
+ON P.id = PM.projectId
+HAVING PM.memberId = 1;
+
+
+INSERT INTO projectMember
+SET projectId = 1,
+memberId = 1,
+`role` = '팀장';
+
+INSERT INTO projectMember
+SET projectId = 1,
+memberId = 2,
+`role` = '팀원';
+
+INSERT INTO projectMember
+SET projectId = 2,
+memberId = 3,
+`role` = '팀장';
+
+INSERT INTO project
+SET project_name = '테스트용'
+	, project_description = '1'
+
+
+
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -190,6 +261,7 @@ SELECT * FROM `member`;
 SELECT * FROM board;
 SELECT * FROM recommendPoint;
 SELECT * FROM reply;
+SELECT * FROM project;
 
 SELECT LAST_INSERT_ID();
 
