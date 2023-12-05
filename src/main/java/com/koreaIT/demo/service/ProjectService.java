@@ -23,4 +23,8 @@ public class ProjectService {
 		return projectDao.getProjectByProjectId(projectId);
 	}
 
+	public int getLastInsertId() {
+		return projectDao.getLastInsertId();
+	}
+
 }

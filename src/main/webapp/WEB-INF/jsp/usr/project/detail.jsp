@@ -10,7 +10,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <head>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/common.css" />
@@ -20,6 +19,46 @@
 <!-- partial:index.partial.html -->
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 <body>
+	<script>
+	$(document).ready(function() {		 
+	     var projectId = $('#favoriteIcon').data('project-id');
+	     $.ajax({
+	         url: '../favorite/getFavorite',
+	         method: 'GET',
+	         data: {
+	             "projectId": projectId
+	         },
+	         dataType: "json",
+	         success: function(data) {
+	        	 if (data) {
+	                 $('#favoriteIcon').addClass('fas');
+	             } 
+	        	 else {
+	                 $('#favoriteIcon').addClass('far');
+	             }
+	         }
+	     });
+	     
+
+	     $('#favoriteIcon').click(function() {
+	    	 var isFavorite = $(this).hasClass('fas'); 
+	        $.ajax({
+	            url: '../favorite/updateFavorite',
+	            method: 'POST',
+	            data: {
+	                "projectId": projectId, 
+	                "isFavorite": !isFavorite 
+	            },
+	            success: function(response) {
+	            	console.log(response);
+	            	 $('#favoriteIcon').toggleClass('far fas');
+	            }
+	        });
+	    });
+	});
+	</script>
+
+
 	<div class="task-manager">
 		<div class="left-bar">
 		    <div class="upper-part">
@@ -130,21 +169,37 @@
 		    </div>
 		  </div>
 		<div class="page-content bg-red-100 p-0">
-			<div class="h-20 bg-gray-100 px-8">
-				<div>
-					<i class="fa-thin fa-star fa-2xl"></i>
-				</div>
-			
-			
-			
-			
-			</div>
+  		  <div class="h-20 bg-gray-100 px-8">
+       	  	<div class="h-full flex justify-between items-center">
+          	<div class="flex items-center">
+                <i data-project-id="1" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
+                <div class="ml-4">
+                    <h1 class="text-xl font-bold">${project.project_name }</h1>
+                    <div class="mt-1">${project.project_description }</div>
+                </div>
+            </div>
+            <div>
+                <div>초대하기</div>
+            </div>
+      		  </div>
+    		</div>
+    		<div class="bg-gray-300">
+    			<nav>
+    				<ul>
+    					<li class="inline-block w-20"><a class="block p-3" href="">피드</a></li>
+    					<li class="inline-block w-20"><a class="block p-3" href="">업무</a></li>
+    					<li class="inline-block w-20"><a class="block p-3" href="">간트차트</a></li>
+    					<li class="inline-block w-20"><a class="block p-3" href="">캘린더</a></li>
+    					<li class="inline-block w-20"><a class="block p-3" href="">파일</a></li>
+    					<li class="inline-block w-20"><a class="block p-3" href="">알림</a></li>
+    				</ul>
+    			</nav>
+    		</div>
 		</div>
-	    	
-	    	
-	    	
-	<!-- partial -->
-	</div> 
+		
+		
+		
+	</div>	 
 </body>	
 </html>
 

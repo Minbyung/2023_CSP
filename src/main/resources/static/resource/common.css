@@ -213,3 +213,12 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     background-size: 22px;
     cursor: pointer;
 }
+
+#favoriteIcon {
+    cursor: pointer;
+}
+
+
+#favoriteIcon.fas { /* 즐겨찾기 된 상태 */
+    color: gold;
+}

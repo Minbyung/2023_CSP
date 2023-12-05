@@ -56,8 +56,9 @@ public class UsrProjectController {
 
 		projectService.makeProject(project_name, project_description);
 		
+		int id = projectService.getLastInsertId();
 		
-		return Util.jsReplace("프로젝트를 생성했습니다", "detail") ;
+		return Util.jsReplace("프로젝트를 생성했습니다", Util.f("detail?id=%d", id));
 	}
 	
 	@RequestMapping("/usr/project/detail")

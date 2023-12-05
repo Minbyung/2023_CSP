@@ -20,11 +20,6 @@ public interface ProjectDao {
 					, project_description = #{description}
 			""")
 	public void makeProject(String name, String description);
-
-	
-	
-	
-	
 	
 	@Select("""
 			SELECT *
@@ -33,4 +28,9 @@ public interface ProjectDao {
 			""")
 	public Project getProjectByProjectId(int projectId);
 	
+	
+	
+	
+	@Select("SELECT LAST_INSERT_ID()")
+	public int getLastInsertId();
 }
