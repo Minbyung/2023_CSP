@@ -18,11 +18,11 @@ public interface ArticleDao {
 				SET regDate = NOW()
 					, updateDate = NOW()
 					, memberId = #{memberId}
-					, boardId = #{boardId}
 					, title = #{title}
-					, `body` = #{body}
+					, content = #{content}
+					, `status` = #{status}
 			""")
-	public void writeArticle(int memberId, int boardId, String title, String body);
+	public void writeArticle(int memberId, String title, String content, String status);
 	
 	@Select("""
 			<script>

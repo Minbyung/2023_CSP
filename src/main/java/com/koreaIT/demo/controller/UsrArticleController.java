@@ -40,24 +40,19 @@ public class UsrArticleController {
 		this.rq = rq;
 	}
 	
-	@RequestMapping("/usr/article/write")
-	public String write() {
-		return "usr/article/write";
-	}
-	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String body, int boardId) {
+	public String doWrite(String title, String content, String status) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
 		}
 		
-		if (Util.empty(body)) {
+		if (Util.empty(content)) {
 			return Util.jsHistoryBack("내용을 입력해주세요");
 		}
 		
-		articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
+		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status);
 		
 		int id = articleService.getLastInsertId();
 		

@@ -1,0 +1,125 @@
+@charset "UTF-8";
+
+.detail-header {
+	padding: 0 30px;
+}
+
+.menu-box-1 {
+	background-color: gray;
+}
+
+.menu-box-1>ul {
+	display: flex;
+	padding: 0 30px;
+}
+
+.menu-box-1>ul>li>a {
+	padding: 20px;
+}
+
+.menu-box-1>ul>li:hover>a {
+	background-color: white;
+	color: black;
+}
+
+.project-detail-container {
+	padding: 0 30px;
+}
+
+.postTimeline {
+	min-width: 674px;
+	max-width: 674px;
+}
+
+.reportArea {
+	border: 1px solid gray;
+}
+
+.reportArea > h1 {
+	padding: 0 20px;
+	font-size: 20px;
+	font-weight: 100px;
+}
+
+.layer,.layer-bg {
+	display: none;
+}
+
+.layer-bg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, .5);
+}
+
+.layer {
+	background-color: #fefefe;
+	margin: 0 auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 50%;
+}
+
+.layer > .close-btn-x {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#content {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  color: black;
+  background-color: #f8f8f8;
+  resize: none;
+}
+
+#title {
+	width: 100%;
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	color: black;
+	background-color: #f8f8f8;
+	resize: none;
+}
+
+.status-btn {
+  background-color: #f8f8f8;
+  color: black;
+}
+
+.status-btn.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#submitBtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 33%;
+}
+
+#submitBtn:hover {
+  opacity: 0.8;
+}

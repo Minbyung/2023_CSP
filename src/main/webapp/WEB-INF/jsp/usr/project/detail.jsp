@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/common.css" />
+  <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <title>${project.project_name }</title>
 </head>
@@ -55,7 +56,57 @@
 	            }
 	        });
 	    });
+	     
+	     $(".status-btn").click(function(){
+	 	    // Remove 'active' class from all buttons
+	 	    $(".status-btn").removeClass("active");
+	 	    // Add 'active' class to the clicked button
+	 	    $(this).addClass("active");
+
+	 	    status = $(this).attr('data-status');
+	 	  });
+	     
+	     
+	     $('.modal-exam').click(function(){
+	    		$('.layer-bg').show();
+	    		$('.layer').show();
+	    	})
+
+	    	$('.close-btn').click(function(){
+	    		$('.layer-bg').hide();
+	    		$('.layer').hide();
+	    	})
+
+	    	$('.close-btn-x').click(function(){
+	    		$('.layer-bg').hide();
+	    		$('.layer').hide();
+	    	})
+
+	    	$('.layer-bg').click(function(){
+	    		$('.layer-bg').hide();
+	    		$('.layer').hide();
+	    	})
+	    	
+	    	$("#submitBtn").click(function(){
+		    var title = $("#title").val();
+		    var content = $("#content").val();
+	    	
+		    $.ajax({
+		        url: '../article/doWrite',
+		        type: 'POST',
+		        data: { title: title, content: content, status: status },
+		        success: function(data) {
+		          // 서버로부터 받은 데이터를 처리합니다.
+		          console.log(data);
+		          $("#postList").append("<tr><td>" + title + "</td><td>" + content + "</td><td>" + status + "</td></tr>");
+		          $("#myModal").hide();
+		        }
+		      });
+		    });
 	});
+	
+	
+	
 	</script>
 
 
@@ -169,7 +220,7 @@
 		    </div>
 		  </div>
 		<div class="page-content bg-red-100 p-0">
-  		  <div class="h-20 bg-gray-100 px-8">
+  		  <div class="h-20 bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
                 <i data-project-id="1" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
@@ -183,22 +234,55 @@
             </div>
       		  </div>
     		</div>
-    		<div class="bg-gray-300">
-    			<nav>
-    				<ul>
-    					<li class="inline-block w-20"><a class="block p-3" href="">피드</a></li>
-    					<li class="inline-block w-20"><a class="block p-3" href="">업무</a></li>
-    					<li class="inline-block w-20"><a class="block p-3" href="">간트차트</a></li>
-    					<li class="inline-block w-20"><a class="block p-3" href="">캘린더</a></li>
-    					<li class="inline-block w-20"><a class="block p-3" href="">파일</a></li>
-    					<li class="inline-block w-20"><a class="block p-3" href="">알림</a></li>
-    				</ul>
-    			</nav>
-    		</div>
+    		<nav class="menu-box-1">
+    			<ul>
+    				<li><a class="block" href="">피드</a></li>
+    				<li><a class="block" href="">업무</a></li>
+    				<li><a class="block" href="">간트차트</a></li>
+    				<li><a class="block" href="">캘린더</a></li>
+    				<li><a class="block" href="">파일</a></li>
+    				<li><a class="block" href="">알림</a></li>
+    			</ul>
+    		</nav>
+    		
+    		<section class="project-detail-container overflow-auto">
+				<div class="mt-5 detail-wrap mx-auto">
+    				<div class="postTimeline bg-yellow-100">
+    					<div class="reportArea">
+    					<h1>업무 리포트</h1>
+    					<div>차트 나오는곳</div>
+    					</div>
+						<div class="flex">
+							<div class="modal-exam"><span>글 작성</span></div>
+						</div>
+						<div class="layer-bg"></div>
+						<div class="layer">
+							<span id="close" class="close close-btn-x">&times;</span>
+							<div id="status">
+						      <button class="status-btn btn btn-active" data-status="요청">요청</button>
+						      <button class="status-btn btn btn-active" data-status="진행">진행</button>
+						      <button class="status-btn btn btn-active" data-status="피드백">피드백</button>
+						      <button class="status-btn btn btn-active" data-status="완료">완료</button>
+						      <button class="status-btn btn btn-active" data-status="보류">보류</button>
+						    </div>
+							<input type="text" id="title" placeholder="제목을 입력해주세요" required />
+						    <textarea id="content" placeholder="내용을 입력해주세요" required></textarea>
+						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
+						</div>
+						<div id="postList">
+						  <!-- 이곳에 게시글 목록이 들어갑니다. -->
+						</div>
+    				</div>
+				</div>
+    		</section>
+    		
+    		
+    		
+    		
+    		
+    		
+    		
 		</div>
-		
-		
-		
 	</div>	 
 </body>	
 </html>

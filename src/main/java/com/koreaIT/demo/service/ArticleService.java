@@ -16,8 +16,8 @@ public class ArticleService {
 		this.articleDao = articleDao;
 	}
 	
-	public void writeArticle(int memberId, int boardId, String title, String body) {
-		articleDao.writeArticle(memberId, boardId, title, body);
+	public void writeArticle(int memberId, String title, String content, String status) {
+		articleDao.writeArticle(memberId, title, content, status);
 	}
 	
 	public int getArticlesCnt(int boardId, String searchKeywordType, String searchKeyword) {
