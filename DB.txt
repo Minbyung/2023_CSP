@@ -7,12 +7,12 @@ CREATE TABLE article(
     regDate DATETIME NOT NULL,
     updateDate DATETIME NOT NULL,
     memberId INT UNSIGNED NOT NULL,
-    boardId INT UNSIGNED NOT NULL,
     title VARCHAR(100) NOT NULL,
-    `body` TEXT NOT NULL
+    content TEXT NOT NULL,
+    `status` VARCHAR(100) NOT NULL
 );
 
-ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
+-- ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
 
 CREATE TABLE `member`(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -83,6 +83,7 @@ AND projectId = 1
 SELECT * FROM project;
 SELECT * FROM projectMember;
 SELECT * FROM favorite;
+SELECT * FROM article;
 TRUNCATE TABLE project;
 TRUNCATE TABLE projectMember;
 TRUNCATE TABLE favorite;
@@ -123,31 +124,14 @@ INSERT INTO project
 SET project_name = '테스트용'
 	, project_description = '1'
 
-
-
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
-memberId = 1,
-boardId = 1,
+memberId = 2,
 title = '공지1',
-`body` = '공지내용1';
+content = '공지내용1',
+`status` = '요청';
 
-INSERT INTO article
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-boardId = 2,
-title = '제목2',
-`body` = '내용2';
-
-INSERT INTO article
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-boardId = 2,
-title = '제목3',
-`body` = '내용3';
 
 INSERT INTO `member`
 SET regDate = NOW(),
