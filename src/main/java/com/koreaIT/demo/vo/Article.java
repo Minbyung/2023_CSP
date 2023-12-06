@@ -13,9 +13,8 @@ public class Article {
 	private String updateDate;
 	private int memberId;
 	private String title;
-	private String body;
-	private int hitCount;
-	private int point;
+	private String content;
+	private String status;
 	
 	private String writerName;
 }

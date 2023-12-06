@@ -42,7 +42,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String content, String status) {
+	public String doWrite(String title, String content, String status, int projectId) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
@@ -52,47 +52,47 @@ public class UsrArticleController {
 			return Util.jsHistoryBack("내용을 입력해주세요");
 		}
 		
-		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status);
+		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId);
 		
 		int id = articleService.getLastInsertId();
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
-	@RequestMapping("/usr/article/list")
-	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "title") String searchKeywordType, @RequestParam(defaultValue = "") String searchKeyword) {
-		
-		if (page <= 0) {
-			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다");
-		}
-		
-		Board board = boardService.getBoardById(boardId);
-
-		if (board == null) {
-			return rq.jsReturnOnView("존재하지 않는 게시판입니다");
-		}
-		
-		int articlesCnt = articleService.getArticlesCnt(boardId, searchKeywordType, searchKeyword);
-		
-		int itemsInAPage = 10;
-		
-		int limitStart = (page - 1) * itemsInAPage;
-		
-		int pagesCnt = (int) Math.ceil((double) articlesCnt / itemsInAPage);
-		
-		List<Article> articles = articleService.getArticles(boardId, searchKeywordType, searchKeyword, limitStart, itemsInAPage);
-		
-		model.addAttribute("searchKeywordType", searchKeywordType);
-		model.addAttribute("searchKeyword", searchKeyword);
-		model.addAttribute("articles", articles);
-		model.addAttribute("articlesCnt", articlesCnt);
-		model.addAttribute("board", board);
-		model.addAttribute("pagesCnt", pagesCnt);
-		model.addAttribute("page", page);
-		
-		return "usr/article/list";
-	}
+//	@RequestMapping("/usr/article/list")
+//	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
+//			@RequestParam(defaultValue = "title") String searchKeywordType, @RequestParam(defaultValue = "") String searchKeyword) {
+//		
+//		if (page <= 0) {
+//			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다");
+//		}
+//		
+//		Board board = boardService.getBoardById(boardId);
+//
+//		if (board == null) {
+//			return rq.jsReturnOnView("존재하지 않는 게시판입니다");
+//		}
+//		
+//		int articlesCnt = articleService.getArticlesCnt(boardId, searchKeywordType, searchKeyword);
+//		
+//		int itemsInAPage = 10;
+//		
+//		int limitStart = (page - 1) * itemsInAPage;
+//		
+//		int pagesCnt = (int) Math.ceil((double) articlesCnt / itemsInAPage);
+//		
+//		List<Article> articles = articleService.getArticles(boardId, searchKeywordType, searchKeyword, limitStart, itemsInAPage);
+//		
+//		model.addAttribute("searchKeywordType", searchKeywordType);
+//		model.addAttribute("searchKeyword", searchKeyword);
+//		model.addAttribute("articles", articles);
+//		model.addAttribute("articlesCnt", articlesCnt);
+//		model.addAttribute("board", board);
+//		model.addAttribute("pagesCnt", pagesCnt);
+//		model.addAttribute("page", page);
+//		
+//		return "usr/article/list";
+//	}
 	
 	@RequestMapping("/usr/article/detail")
 	public String detail(HttpServletRequest req, HttpServletResponse resp, Model model, int id) {

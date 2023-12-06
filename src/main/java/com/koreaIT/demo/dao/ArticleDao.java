@@ -21,8 +21,9 @@ public interface ArticleDao {
 					, title = #{title}
 					, content = #{content}
 					, `status` = #{status}
+					, projectId = #{projectId}
 			""")
-	public void writeArticle(int memberId, String title, String content, String status);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId);
 	
 	@Select("""
 			<script>
@@ -50,39 +51,15 @@ public interface ArticleDao {
 	public int getArticlesCnt(int boardId, String searchKeywordType, String searchKeyword);
 	
 	@Select("""
-			<script>
-			SELECT A.*
-				   , M.name AS writerName
-				   , IFNULL(SUM(R.point), 0) AS `point`
+
+			SELECT A.* , M.name AS writerName
 				FROM article AS A
 				INNER JOIN `member` AS M
 				ON A.memberId = M.id
-				LEFT JOIN recommendPoint AS R
-				ON relTypeCode = 'article'
-				AND A.id = R.relId
-				WHERE A.boardId = #{boardId}
-				<if test="searchKeyword != ''">
-					<choose>
-						<when test="searchKeywordType == 'title'">
-							AND title LIKE CONCAT('%', #{searchKeyword}, '%')
-						</when>
-						<when test="searchKeywordType == 'body'">
-							AND `body` LIKE CONCAT('%', #{searchKeyword}, '%')
-						</when>
-						<otherwise>
-							AND (
-								title LIKE CONCAT('%', #{searchKeyword}, '%')
-								OR `body` LIKE CONCAT('%', #{searchKeyword}, '%')
-							)
-						</otherwise>
-					</choose>
-				</if>
-				GROUP BY A.id
-				ORDER BY A.id DESC
-				LIMIT #{limitStart}, #{itemsInAPage}
-			</script>
+				WHERE A.projectId = #{projectId}
+
 			""")
-	public List<Article> getArticles(int boardId, String searchKeywordType, String searchKeyword, int limitStart, int itemsInAPage);
+	public List<Article> getArticles(int projectId);
 	
 	@Update("""
 			UPDATE article

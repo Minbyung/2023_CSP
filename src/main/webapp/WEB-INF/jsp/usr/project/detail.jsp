@@ -22,7 +22,10 @@
 <body>
 	<script>
 	$(document).ready(function() {		 
-	     var projectId = $('#favoriteIcon').data('project-id');
+		var status = "요청"; // Default status 
+		$(".status-btn[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
+		
+		var projectId = $('#favoriteIcon').data('project-id');
 	     $.ajax({
 	         url: '../favorite/getFavorite',
 	         method: 'GET',
@@ -94,12 +97,15 @@
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status },
+		        data: { title: title, content: content, status: status, projectId: projectId },
 		        success: function(data) {
 		          // 서버로부터 받은 데이터를 처리합니다.
-		          console.log(data);
+		          console.log(data); 
 		          $("#postList").append("<tr><td>" + title + "</td><td>" + content + "</td><td>" + status + "</td></tr>");
-		          $("#myModal").hide();
+		          $("#title").val("");
+		          $("#content").val("");
+		          $('.layer-bg').hide();
+				  $('.layer').hide();
 		        }
 		      });
 		    });
@@ -252,9 +258,7 @@
     					<h1>업무 리포트</h1>
     					<div>차트 나오는곳</div>
     					</div>
-						<div class="flex">
 							<div class="modal-exam"><span>글 작성</span></div>
-						</div>
 						<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
@@ -270,7 +274,30 @@
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
 						</div>
 						<div id="postList">
-						  <!-- 이곳에 게시글 목록이 들어갑니다. -->
+						 
+				
+						<c:forEach var="article" items="${articles }">
+							<div class="card">
+							  <div class="card-body">
+							    <h5 class="card-title">제목: ${article.title }</h5>
+							    <h6 class="card-subtitle mb-2 text-muted">작성자: ${article.writerName }</h6>
+							    <p class="card-text">내용: ${article.content }</p>
+							    <a href="#" class="card-link">자세히 보기</a>
+							  </div>
+							</div>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+						 
+						</div>
+						  
+						  
+						  
+						  
+						  
+						  
+						  
 						</div>
     				</div>
 				</div>

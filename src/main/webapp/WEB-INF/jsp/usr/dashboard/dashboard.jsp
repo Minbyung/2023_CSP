@@ -139,7 +139,7 @@
     			<div class="project-group">
     			<div class="mb-2.5">즐겨찾기</div>
     			<div class="cards">
-    				<a href="../project/detail?id=1">
+    				<a href="../project/detail?projectId=1">
 						<article class="information [ card ] bg-gray-50">
 							<div class="ml-4">
 								<div>테스트용</div>
