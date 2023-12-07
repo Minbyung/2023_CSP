@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.koreaIT.demo.dao.ProjectDao;
-import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
 
 @Service
@@ -28,6 +28,11 @@ public class ProjectService {
 
 	public int getLastInsertId() {
 		return projectDao.getLastInsertId();
+	}
+
+	public List<String> getMembersByName(String name) {
+		
+		return projectDao.getMembersByName(name);
 	}
 
 }

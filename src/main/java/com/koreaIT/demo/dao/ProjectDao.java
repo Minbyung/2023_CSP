@@ -2,13 +2,12 @@ package com.koreaIT.demo.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
-import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
 
 @Mapper
@@ -27,9 +26,16 @@ public interface ProjectDao {
 				WHERE id = #{projectId}
 			""")
 	public Project getProjectByProjectId(int projectId);
+
 	
-	
-	
+	@Select("""
+			SELECT M.name 
+			FROM `member` AS M
+			INNER JOIN projectMember AS PM
+			ON PM.memberId = M.id
+			WHERE `name` LIKE CONCAT('%', #{name}, '%')
+			""")
+	public List<String> getMembersByName(@Param("name") String name);
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();

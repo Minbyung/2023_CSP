@@ -7,7 +7,7 @@
 <html lang="en" >
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- 제이쿼리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
 <head>
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
@@ -91,8 +91,8 @@
 	    	})
 	    	
 	    	$("#submitBtn").click(function(){
-		    var title = $("#title").val();
-		    var content = $("#content").val();
+		    var title = $("#exampleFormControlInput1").val();
+		    var content = $("#exampleFormControlTextarea1").val();
 	    	
 		    $.ajax({
 		        url: '../article/doWrite',
@@ -101,14 +101,44 @@
 		        success: function(data) {
 		          // 서버로부터 받은 데이터를 처리합니다.
 		          console.log(data); 
-		          $("#postList").append("<tr><td>" + title + "</td><td>" + content + "</td><td>" + status + "</td></tr>");
+// 		          $("#postList").append("<tr><td>" + title + "</td><td>" + content + "</td><td>" + status + "</td></tr>");
 		          $("#title").val("");
 		          $("#content").val("");
 		          $('.layer-bg').hide();
 				  $('.layer').hide();
+				  location.reload();
 		        }
 		      });
 		    });
+	     
+	     
+	     $('#search').on('keyup', function() {
+	         var search = $(this).val();
+	         $('#autocomplete-results').empty();
+
+	         if (search) {
+	             $.ajax({
+	                 url: '../project/getMembers', 
+	                 type: 'GET',
+	                 data: { "term": search },
+	                 success: function(data) {
+	                     $.each(data, function(i, result) {
+	                    	 var resultDiv = $('<div>' + result + '</div>');
+	                         
+	                         resultDiv.on('click', function() {
+	                        	 $('#search').val(result); // 클릭한 항목을 입력 필드에 채웁니다.
+	                        	 $('#autocomplete-results').empty(); // 결과 목록을 비웁니다.
+	                         });
+	                         $('#autocomplete-results').append(resultDiv);
+	                     });
+	                 },
+	                 error: function(err) {
+	                     // 에러 처리
+	                     console.error(err);
+	                 }
+	             });
+	         }
+	     });  
 	});
 	
 	
@@ -269,26 +299,39 @@
 						      <button class="status-btn btn btn-active" data-status="완료">완료</button>
 						      <button class="status-btn btn btn-active" data-status="보류">보류</button>
 						    </div>
-							<input type="text" id="title" placeholder="제목을 입력해주세요" required />
-						    <textarea id="content" placeholder="내용을 입력해주세요" required></textarea>
+<!-- 							<input type="text" id="title" placeholder="제목을 입력해주세요" required /> -->
+<!-- 						    <textarea id="content" placeholder="내용을 입력해주세요" required></textarea> -->
+	`							<input type="text" class="form-control" id="search">
+								<section id="autocomplete-results" style="position: absolute;"></section>
+								<div class="mb-3">
+								  <label for="exampleFormControlInput1" class="form-label">제목</label>
+								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+								</div>
+								<div class="mb-3">
+								  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+								  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+								</div>
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
 						</div>
 						<div id="postList">
 						 
 				
-						<c:forEach var="article" items="${articles }">
-							<div class="card">
-							  <div class="card-body">
-							    <h5 class="card-title">제목: ${article.title }</h5>
-							    <h6 class="card-subtitle mb-2 text-muted">작성자: ${article.writerName }</h6>
-							    <p class="card-text">내용: ${article.content }</p>
-							    <a href="#" class="card-link">자세히 보기</a>
-							  </div>
-							</div>
-						</c:forEach>
-					</tbody>
-				</table>
-			</div>
+							<c:forEach var="article" items="${articles }">
+								<div class="card">
+								  <div class="card-body">
+								  	<div class="flex">
+								  		<h6 class="card-subtitle mb-2 text-muted">${article.writerName }</h6>
+								  		<h6 class="card-subtitle mb-2 ml-4 text-muted">${article.regDate }</h6>
+								  	</div>
+								    <h5 class="card-title">${article.title }</h5>
+								    
+								    <p class="card-text">내용: ${article.content }</p>
+								    
+								    
+								  </div>
+								</div>
+							</c:forEach>
+						</div>
 						 
 						</div>
 						  

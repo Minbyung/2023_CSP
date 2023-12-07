@@ -15,6 +15,7 @@ import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.Rq;
 
@@ -70,7 +71,12 @@ public class UsrProjectController {
 		return "usr/project/detail";
 	}
 	
-	
+	@RequestMapping("/usr/project/getMembers")
+	@ResponseBody
+	public List<String> getMembersByName(@RequestParam String term) {
+		
+		return projectService.getMembersByName(term);
+	}
 	
 
 }

@@ -9,7 +9,8 @@ CREATE TABLE article(
     memberId INT UNSIGNED NOT NULL,
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
-    `status` VARCHAR(100) NOT NULL
+    `status` VARCHAR(100) NOT NULL,
+    projectId INT UNSIGNED NOT NULL
 );
 
 -- ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
@@ -79,9 +80,23 @@ DELETE FROM favorite
 WHERE memberId = 1
 AND projectId = 1
 
+SELECT A.* , M.name AS writerName
+FROM article AS A
+INNER JOIN `member` AS M
+ON A.memberId = M.id
+WHERE A.projectId = 1
+ORDER BY A.id DESC;
+
+SELECT M.name 
+FROM `member` AS M
+INNER JOIN projectMember AS PM
+ON PM.memberId = M.id
+WHERE `name` LIKE '%%'
+ 
 
 SELECT * FROM project;
 SELECT * FROM projectMember;
+SELECT * FROM `member`
 SELECT * FROM favorite;
 SELECT * FROM article;
 TRUNCATE TABLE project;
@@ -121,8 +136,8 @@ memberId = 3,
 `role` = '팀장';
 
 INSERT INTO project
-SET project_name = '테스트용'
-	, project_description = '1'
+SET project_name = '[IT/개발] 기능 개발 프로젝트'
+	, project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.'
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -130,7 +145,8 @@ updateDate = NOW(),
 memberId = 2,
 title = '공지1',
 content = '공지내용1',
-`status` = '요청';
+`status` = '요청',
+projectId = 1;
 
 
 INSERT INTO `member`
@@ -245,7 +261,7 @@ SELECT * FROM `member`;
 SELECT * FROM board;
 SELECT * FROM recommendPoint;
 SELECT * FROM reply;
-SELECT * FROM project;
+select * from project;
 
 SELECT LAST_INSERT_ID();
 

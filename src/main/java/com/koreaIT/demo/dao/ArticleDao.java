@@ -57,7 +57,7 @@ public interface ArticleDao {
 				INNER JOIN `member` AS M
 				ON A.memberId = M.id
 				WHERE A.projectId = #{projectId}
-
+				ORDER BY A.id DESC
 			""")
 	public List<Article> getArticles(int projectId);
 	
