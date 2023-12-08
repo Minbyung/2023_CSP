@@ -42,7 +42,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String content, String status, int projectId) {
+	public String doWrite(String title, String content, String status, int projectId, List<String> managers) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
@@ -52,9 +52,17 @@ public class UsrArticleController {
 			return Util.jsHistoryBack("내용을 입력해주세요");
 		}
 		
-		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId);
+		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, managers);
 		
 		int id = articleService.getLastInsertId();
+		
+		for (String manager : managers) {
+            Integer managerId = managerMapper.findIdByName(manager);
+            if (managerId != null) {
+                articleManagerMapper.insertArticleManager(articleId, managerId);
+            }
+        }
+    }
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}

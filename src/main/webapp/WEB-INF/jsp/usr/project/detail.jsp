@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
 <body>
 	<script>
-	$(document).ready(function() {		 
+	$(document).ready(function() {
 		var status = "요청"; // Default status 
 		$(".status-btn[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
@@ -61,9 +61,7 @@
 	    });
 	     
 	     $(".status-btn").click(function(){
-	 	    // Remove 'active' class from all buttons
 	 	    $(".status-btn").removeClass("active");
-	 	    // Add 'active' class to the clicked button
 	 	    $(this).addClass("active");
 
 	 	    status = $(this).attr('data-status');
@@ -83,27 +81,40 @@
 	    	$('.close-btn-x').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		// x버튼으로 끄면 안에 내용 빈칸으로 초기화
+	    		$('.tag').remove();
+	    		$('#exampleFormControlInput1').val('');
+	    		$('#exampleFormControlTextarea1').val('');
 	    	})
 
 	    	$('.layer-bg').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		// 회색바탕 눌러서 끄면 안에 내용 빈칸으로 초기화
+	    		$('.tag').remove();
+	    		$('#exampleFormControlInput1').val('');
+	    		$('#exampleFormControlTextarea1').val('');
 	    	})
 	    	
 	    	$("#submitBtn").click(function(){
 		    var title = $("#exampleFormControlInput1").val();
 		    var content = $("#exampleFormControlTextarea1").val();
 	    	
+		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
+		    var managers = $('.tag').map(function() {
+		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
+		        return $(this).clone().children().remove().end().text();
+		    }).get();
+		 
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status, projectId: projectId },
+		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers },
 		        success: function(data) {
 		          // 서버로부터 받은 데이터를 처리합니다.
-		          console.log(data); 
-// 		          $("#postList").append("<tr><td>" + title + "</td><td>" + content + "</td><td>" + status + "</td></tr>");
 		          $("#title").val("");
 		          $("#content").val("");
+		          $('.tag').remove();
 		          $('.layer-bg').hide();
 				  $('.layer').hide();
 				  location.reload();
@@ -111,34 +122,62 @@
 		      });
 		    });
 	     
-	     
+	     // 담당자 태그 및 자동 완성
 	     $('#search').on('keyup', function() {
-	         var search = $(this).val();
-	         $('#autocomplete-results').empty();
+	    	    var search = $(this).val();
+	    	    $('#autocomplete-results').empty();
 
-	         if (search) {
-	             $.ajax({
-	                 url: '../project/getMembers', 
-	                 type: 'GET',
-	                 data: { "term": search },
-	                 success: function(data) {
-	                     $.each(data, function(i, result) {
-	                    	 var resultDiv = $('<div>' + result + '</div>');
-	                         
-	                         resultDiv.on('click', function() {
-	                        	 $('#search').val(result); // 클릭한 항목을 입력 필드에 채웁니다.
-	                        	 $('#autocomplete-results').empty(); // 결과 목록을 비웁니다.
-	                         });
-	                         $('#autocomplete-results').append(resultDiv);
-	                     });
-	                 },
-	                 error: function(err) {
-	                     // 에러 처리
-	                     console.error(err);
-	                 }
-	             });
-	         }
-	     });  
+	    	    if (search) {
+	    	        $.ajax({
+	    	            url: '../project/getMembers', 
+	    	            type: 'GET',
+	    	            data: { "term": search },
+	    	            success: function(data) {
+	    	                $.each(data, function(i, result) {
+	    	                    // 태그에 있는 담당자를 확인합니다.
+	    	                    var taggedMembers = $('.tag').map(function() {
+	    	                        // 'x' 버튼을 제외한 텍스트만 반환합니다.
+	    	                        return $(this).clone().children().remove().end().text();
+	    	                    }).get();
+
+	    	                    // 태그에 없는 담당자만 목록을 생성합니다.
+	    	                    if(taggedMembers.indexOf(result) === -1) {
+	    	                        var resultDiv = $('<div>' + result + '</div>');
+	    	                        
+	    	                        resultDiv.on('click', function() {
+	    	                            var newValue = result;
+	    	                            $('#search').val('');
+	    	                            $('#autocomplete-results').empty();
+
+	    	                            // 선택한 담당자를 태그로 표시합니다. 'x' 버튼을 추가합니다.
+	    	                            var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+	    	                            $('#inputArea').prepend(tag);
+										
+	    	                            
+	    	                        	// 입력 필드를 autocomplete-container의 맨 앞으로 이동합니다.
+	    	                            $('#search').prependTo('.autocomplete-container');
+	    	                        	
+// 	    	                            // 입력 필드를 오른쪽으로 이동합니다.
+// 	    	                            $('#search').appendTo('#inputArea');
+
+	    	                            // 'x' 버튼에 클릭 이벤트 핸들러를 설정합니다.
+	    	                            tag.find('.tag-remove').on('click', function() {
+	    	                                tag.remove(); // 태그를 삭제합니다.
+	    	                            });
+	    	                        });
+	    	                        
+	    	                        $('#autocomplete-results').append(resultDiv);
+	    	                    }
+	    	                });
+	    	            },
+	    	            error: function(err) {
+	    	                console.error(err);
+	    	            }
+	    	        });
+	    	    }
+	    	});
+	     
+
 	});
 	
 	
@@ -299,17 +338,21 @@
 						      <button class="status-btn btn btn-active" data-status="완료">완료</button>
 						      <button class="status-btn btn btn-active" data-status="보류">보류</button>
 						    </div>
-<!-- 							<input type="text" id="title" placeholder="제목을 입력해주세요" required /> -->
-<!-- 						    <textarea id="content" placeholder="내용을 입력해주세요" required></textarea> -->
-	`							<input type="text" class="form-control" id="search">
-								<section id="autocomplete-results" style="position: absolute;"></section>
+								<div id="inputArea">
+								  <div class="autocomplete-container flex flex-col">
+									  <!-- 기존의 입력 필드 -->
+									  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+									  <!-- 자동완성 목록 -->
+									  <section id="autocomplete-results" style="width:20%;"></section>
+								  </div>
+								</div>
 								<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">제목</label>
 								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
 								</div>
 								<div class="mb-3">
 								  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
-								  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+								  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 								</div>
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
 						</div>
@@ -317,9 +360,9 @@
 						 
 				
 							<c:forEach var="article" items="${articles }">
-								<div class="card">
-								  <div class="card-body">
-								  	<div class="flex">
+								<div class="card z-0">
+								  <div class="card-body z-0">
+								  	<div class="flex z-0">
 								  		<h6 class="card-subtitle mb-2 text-muted">${article.writerName }</h6>
 								  		<h6 class="card-subtitle mb-2 ml-4 text-muted">${article.regDate }</h6>
 								  	</div>

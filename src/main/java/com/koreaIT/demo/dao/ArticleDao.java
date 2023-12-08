@@ -23,7 +23,7 @@ public interface ArticleDao {
 					, `status` = #{status}
 					, projectId = #{projectId}
 			""")
-	public void writeArticle(int memberId, String title, String content, String status, int projectId);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId, List<String> managers);
 	
 	@Select("""
 			<script>

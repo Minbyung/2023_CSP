@@ -51,6 +51,8 @@
 	right: 0;
 	bottom: 0;
 	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 9998;
+
 }
 
 .layer {
@@ -61,6 +63,11 @@
 	width: 50%;
 	z-index: 9999;
 	color: black;
+	border-radius: 10px;
+	max-width: 1000px;
+    max-height: 100%;
+    height: 830px;
+/*    overflow-y: auto;*/
 }
 
 .layer > .close-btn-x {
@@ -70,6 +77,12 @@
 	font-weight: bold;
 }
 
+#close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
 
 .close:hover,
 .close:focus {
@@ -78,32 +91,10 @@
   cursor: pointer;
 }
 
-/*#content {*/
-/*  width: 100%;*/
-/*  height: 150px;*/
-/*  padding: 12px 20px;*/
-/*  box-sizing: border-box;*/
-/*  border: 2px solid #ccc;*/
-/*  border-radius: 4px;*/
-/*  color: black;*/
-/*  background-color: #f8f8f8;*/
-/*  resize: none;*/
-/*}*/
-
-/*#title {*/
-/*	width: 100%;*/
-/*	padding: 12px 20px;*/
-/*	box-sizing: border-box;*/
-/*	border: 2px solid #ccc;*/
-/*	border-radius: 4px;*/
-/*	color: black;*/
-/*	background-color: #f8f8f8;*/
-/*	resize: none;*/
-/*}*/
-
 .status-btn {
   background-color: #f8f8f8;
   color: black;
+  margin-right: 10px;
 }
 
 .status-btn.active {
@@ -119,31 +110,20 @@
   border: none;
   cursor: pointer;
   width: 33%;
+  display: block;
+  margin-top: 20px;
 }
 
 #submitBtn:hover {
   opacity: 0.8;
 }
 
-/*#autocomplete-results {*/
-/*	position: relative;*/
-/*}*/
-
-/*#autocomplete-results div {*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 200px;*/
-/*    padding: 10px;*/
-/*    background-color: #f8f9fa;*/
-/*    border: 1px solid #ced4da;*/
-/*    color: #212529;*/
-/*    cursor: pointer;*/
-/*}*/
-
 #autocomplete-results div {
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 12px;
+	padding-right: 12px;
+	font-size: 1.1rem;
     background-color: #f8f9fa;
     border: 1px solid #ced4da;
     color: #212529;
@@ -151,11 +131,37 @@
 }
 
 #autocomplete-results div:hover {
-    background-color: #e9ecef;
+    background-color: #ced4da;
 }
 
+#inputArea {
+  margin-top: 20px;
+}
 
+.autocomplete-container {
+  position: relative;
+}
 
-#autocomplete-results div:hover {
-    background-color: #e9ecef;
+#autocomplete-results {
+  position: absolute;
+  top: 100%;	
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.tag {
+	font-size: 1.1rem;
+}
+
+.tag-remove {
+  /* 기존 스타일... */
+  padding: 2px;  /* 내부 여백을 원하는 크기로 조정 */
+}
+
+.tag-remove svg {
+  width: 20px;   /* SVG 이미지의 너비를 조정 */
+  height: 20px;  /* SVG 이미지의 높이를 조정 */
+  padding: 0;
+  margin: 0;
 }
