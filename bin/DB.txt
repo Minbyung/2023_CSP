@@ -10,7 +10,8 @@ CREATE TABLE article(
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
     `status` VARCHAR(100) NOT NULL,
-    projectId INT UNSIGNED NOT NULL
+    projectId INT UNSIGNED NOT NULL,
+    groupId INT UNSIGNED NOT NULL
 );
 
 -- ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
@@ -75,35 +76,48 @@ CREATE TABLE favorite (
     memberId INT NOT NULL
 );
 
-create table tag (
+CREATE TABLE tag (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     projectId INT NOT NULL,
     articleId INT NOT NULL,
     memberId INT NOT NULL
 );
-insert into tag
-set projectId = 1,
+
+CREATE TABLE `group` (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    projectId INT NOT NULL,
+    group_name VARCHAR(50) NOT NULL
+);
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹 미지정';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹1';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹2';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹3';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹4';
+
+INSERT INTO tag
+SET projectId = 1,
 articleId = 1,
 memberId = 2;
 
 
-SELECT p.*, a.name AS author_name, t.name AS tagged_member_name
-FROM post p 
-JOIN member a ON p.author_id = a.id  -- 'a'는 작성자를 위한 별칭입니다.
-JOIN tag tg ON p.id = tg.post_id 
-JOIN member t ON tg.member_id = t.id  -- 't'는 태그된 회원을 위한 별칭입니다.
-WHERE p.id = #{postId}
-
-
-SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames
-FROM article AS A
-INNER JOIN `member` AS M ON A.memberId = M.id
-LEFT JOIN tag AS T ON A.id = T.articleId
-LEFT JOIN `member` AS TA ON T.memberId = TA.id
-WHERE A.projectId = 1
-GROUP BY A.id
-ORDER BY A.id DESC
-
+					
+TRUNCATE TABLE `group`;			
+					
 -- DELETE FROM favorite
 -- WHERE memberId = 1
 -- AND projectId = 1
@@ -122,15 +136,19 @@ ORDER BY A.id DESC
 -- WHERE `name` LIKE '%%'
 --  
 
-select * from tag;
+SELECT * FROM tag;
 SELECT * FROM project;
 SELECT * FROM projectMember;
 SELECT * FROM `member`;
 SELECT * FROM favorite;
 SELECT * FROM article;
+SELECT * FROM `group`;
 -- TRUNCATE TABLE project;
 -- TRUNCATE TABLE projectMember;
 -- TRUNCATE TABLE favorite;
+
+SELECT * FROM `group`
+WHERE projectId = 1;
 
 
 INSERT INTO projectMember
@@ -159,8 +177,18 @@ memberId = 2,
 title = '공지1',
 content = '공지내용1',
 `status` = '요청',
-projectId = 1;
+projectId = 1,
+groupId = 1;
 
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+title = 'test1',
+content = 'test2',
+`status` = '요청',
+projectId = 1,
+groupId = 2;
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -205,6 +233,16 @@ updateDate = NOW(),
 `code` = 'free',
 `name` = '자유';
 
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+FROM article AS A
+INNER JOIN `member` AS M ON A.memberId = M.id
+LEFT JOIN tag AS T ON A.id = T.articleId
+LEFT JOIN `member` AS TA ON T.memberId = TA.id
+LEFT JOIN `group` AS G ON A.groupId = G.id
+WHERE A.projectId = 1
+GROUP BY A.id
+ORDER BY A.id DESC;
+
 
 SELECT * 
 FROM project AS P
@@ -217,7 +255,7 @@ SELECT * FROM `member`;
 SELECT * FROM board;
 SELECT * FROM recommendPoint;
 SELECT * FROM reply;
-select * from project;
+SELECT * FROM project;
 
 SELECT LAST_INSERT_ID();
 

@@ -1,6 +1,7 @@
 package com.koreaIT.demo.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -136,4 +137,14 @@ public interface ArticleDao {
 				WHERE id = #{articleId};
 			""")
 	public void updateStatus(int articleId, String newStatus);
+
+	
+	
+	@Select("""
+			SELECT `status`, COUNT(*) AS `count`
+			FROM article
+			WHERE projectId = #{projectId}
+			GROUP BY `status`
+			""")
+	public List<Map<String, Object>> getArticleCountsByStatus(int projectId);
 }

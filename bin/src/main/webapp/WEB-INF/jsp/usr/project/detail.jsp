@@ -6,18 +6,15 @@
 
 <!DOCTYPE html>
 <html lang="en" >
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- 제이쿼리 -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
   <link rel="stylesheet" href="/resource/dist/style.css" />
-  <link rel="stylesheet" href="/resource/common.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-  
   <title>${project.project_name }</title>
+<!--chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
 </head>
 <!-- partial:index.partial.html -->
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
@@ -25,7 +22,7 @@
 	<script>
 	$(document).ready(function() {
 		var status = "요청"; // Default status 
-		$(".status-btn[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
+		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
 		var projectId = $('#favoriteIcon').data('project-id');
 	     $.ajax({
@@ -62,8 +59,9 @@
 	        });
 	    });
 	     
-	     $(".status-btn").click(function(){
-	 	    $(".status-btn").removeClass("active");
+
+	     $(".status-btn-write").click(function(){
+	 	    $(".status-btn-write").removeClass("active");
 	 	    $(this).addClass("active");
 
 	 	    status = $(this).attr('data-status');
@@ -98,10 +96,15 @@
 	    		$('#exampleFormControlTextarea1').val('');
 	    	})
 	    	
+//           글쓰기	     	    	
 	    	$("#submitBtn").click(function(){
+	    	var selectedGroupId = parseInt($('#groupSelect').val());
+	    	if (!selectedGroupId) {
+	            // 아무 것도 선택되지 않았다면 '그룹 미지정' 그룹의 ID 설정
+	            $('#groupSelect').val('그룹 미지정');
+	        }
 		    var title = $("#exampleFormControlInput1").val();
 		    var content = $("#exampleFormControlTextarea1").val();
-	    	
 		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 		    var managers = $('.tag').map(function() {
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
@@ -111,10 +114,9 @@
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers },
+		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId },
 		        success: function(data) {
-		          // 서버로부터 받은 데이터를 처리합니다.
-		          console.log(data);
+		          console.log(selectedGroupId);
 		          $("#title").val("");
 		          $("#content").val("");
 		          $('.tag').remove();
@@ -180,12 +182,80 @@
 	    	    }
 	    	});
 	     
+// 	     상태버튼 현재 상태 활성화 표시
+
+	     $('.status-btns-update').each(function() {
+	         var currentStatus = $(this).data('current-status');
+	         $(this).find('.status-btn-update').each(function() {
+	             if ($(this).data('status') === currentStatus) {
+	                 $(this).addClass("active");
+	             }
+	         });
+	     });
+// 	     상태버튼 업데이트	     
+	     $('.status-btn-update').click(function() {
+	    	    var newStatus = $(this).data('status');
+	    	    var articleId = $(this).data('article-id');
+	    	    $.ajax({
+	    	        url: '../article/doUpdateStatus', 
+	    	        type: 'POST',
+	    	        data: {
+	    	            'articleId': articleId,
+	    	            'newStatus': newStatus
+	    	        },
+	    	        success: function(response) {
+	    	        	console.log(response);
+	    	            $('.status-btn-update').removeClass('active');
+	    	            $(this).addClass('active');
+	    	            location.reload();
+	    	        }
+	    	    });
+	    	});
+	     
+	     var ctx = document.getElementById('donutChart').getContext('2d');
+	     var data = {
+	         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+	         datasets: [{
+	             label: '# of Votes',
+	             data: [12, 19, 3, 5, 2, 3],
+	             backgroundColor: [
+	                 'rgba(255, 99, 132, 0.2)',
+	                 'rgba(54, 162, 235, 0.2)',
+	                 'rgba(255, 206, 86, 0.2)',
+	                 'rgba(75, 192, 192, 0.2)',
+	                 'rgba(153, 102, 255, 0.2)',
+	                 'rgba(255, 159, 64, 0.2)'
+	             ],
+	             borderColor: [
+	                 'rgba(255, 99, 132, 1)',
+	                 'rgba(54, 162, 235, 1)',
+	                 'rgba(255, 206, 86, 1)',
+	                 'rgba(75, 192, 192, 1)',
+	                 'rgba(153, 102, 255, 1)',
+	                 'rgba(255, 159, 64, 1)'
+	             ],
+	             borderWidth: 1
+	         }]
+	     };
+
+	     var options = {
+	         responsive: true,
+	         cutout: '80%'
+	     };
+
+	     var myChart = new Chart(ctx, {
+	         type: 'doughnut',
+	         data: data,
+	         options: options
+	     });
+	     
 
 	});
 	
 	
 	
 	</script>
+
 
 
 	<div class="task-manager">
@@ -314,8 +384,8 @@
     		</div>
     		<nav class="menu-box-1">
     			<ul>
-    				<li><a class="block" href="">피드</a></li>
-    				<li><a class="block" href="">업무</a></li>
+    				<li><a class="block" href="../project/detail?projectId=1">피드</a></li>
+    				<li><a class="block" href="../project/task?projectId=1">업무</a></li>
     				<li><a class="block" href="">간트차트</a></li>
     				<li><a class="block" href="">캘린더</a></li>
     				<li><a class="block" href="">파일</a></li>
@@ -328,18 +398,23 @@
     				<div class="postTimeline bg-yellow-100">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
-    					<div>차트 나오는곳</div>
+    					<div style="width: 300px;">
+							<!--차트가 그려질 부분-->
+							<canvas id="donutChart"></canvas>
+							
+							
+						</div>
     					</div>
 							<div class="modal-exam"><span>글 작성</span></div>
 						<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
 							<div id="status">
-						      <button class="status-btn btn btn-active" data-status="요청">요청</button>
-						      <button class="status-btn btn btn-active" data-status="진행">진행</button>
-						      <button class="status-btn btn btn-active" data-status="피드백">피드백</button>
-						      <button class="status-btn btn btn-active" data-status="완료">완료</button>
-						      <button class="status-btn btn btn-active" data-status="보류">보류</button>
+						      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+						      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+						      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+						      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+						      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 						    </div>
 								<div id="inputArea">
 								  <div class="autocomplete-container flex flex-col">
@@ -348,13 +423,24 @@
 									  <!-- 자동완성 목록 -->
 									  <section id="autocomplete-results" style="width:20%;"></section>
 								  </div>
+								  
+								  						  
+								<select id="groupSelect" class="select w-full max-w-xs">
+									
+									<c:forEach var="group" items="${groups }">
+								  <option value="${group.id }">${group.group_name }</option>
+								 	</c:forEach>
+								</select>  
+								  
+								  
+								  
 								</div>
 								<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">제목</label>
 								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
 								</div>
 								<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+								  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
 								  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 								</div>
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
@@ -370,12 +456,22 @@
 								  		<h6 class="card-subtitle mb-2 ml-4 text-muted">${article.regDate }</h6>
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
+								    <p>그룹: ${article.groupName }</p> 
+								    <div class="status-btns-update" data-current-status="${article.status }" >
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
+								    </div>
+								    
+								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+									    ${name}
+									</c:forEach>
 								    
 								    <p class="card-text">내용: ${article.content }</p>
 								    
-								    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-									    ${name}<br>
-									</c:forEach>
+								    
 								  </div>
 								</div>
 							</c:forEach>

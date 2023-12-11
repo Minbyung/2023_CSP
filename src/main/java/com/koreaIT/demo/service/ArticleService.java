@@ -1,6 +1,7 @@
 package com.koreaIT.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -75,5 +76,10 @@ public class ArticleService {
 	public void updateStatus(int articleId, String newStatus) {
 		articleDao.updateStatus(articleId, newStatus);
 		
+	}
+
+	public List<Map<String, Object>> getArticleCountsByStatus(int projectId) {
+		
+		return articleDao.getArticleCountsByStatus(projectId);
 	}
 }

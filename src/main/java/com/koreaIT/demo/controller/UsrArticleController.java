@@ -1,6 +1,7 @@
 package com.koreaIT.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +66,11 @@ public class UsrArticleController {
 		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
+	@RequestMapping("/usr/article/getArticleCountsByStatus")
+	@ResponseBody
+	public List<Map<String, Object>> getArticleCountsByStatus(int projectId) {
+		return articleService.getArticleCountsByStatus(projectId);
+	}	
 	
 //	@RequestMapping("/usr/article/list")
 //	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,

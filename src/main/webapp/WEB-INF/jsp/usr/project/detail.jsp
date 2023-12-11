@@ -211,48 +211,79 @@
 	    	        }
 	    	    });
 	    	});
-	     
-	     var ctx = document.getElementById('donutChart').getContext('2d');
-	     var data = {
-	         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
-	         datasets: [{
-	             label: '# of Votes',
-	             data: [12, 19, 3, 5, 2, 3],
-	             backgroundColor: [
-	                 'rgba(255, 99, 132, 0.2)',
-	                 'rgba(54, 162, 235, 0.2)',
-	                 'rgba(255, 206, 86, 0.2)',
-	                 'rgba(75, 192, 192, 0.2)',
-	                 'rgba(153, 102, 255, 0.2)',
-	                 'rgba(255, 159, 64, 0.2)'
-	             ],
-	             borderColor: [
-	                 'rgba(255, 99, 132, 1)',
-	                 'rgba(54, 162, 235, 1)',
-	                 'rgba(255, 206, 86, 1)',
-	                 'rgba(75, 192, 192, 1)',
-	                 'rgba(153, 102, 255, 1)',
-	                 'rgba(255, 159, 64, 1)'
-	             ],
-	             borderWidth: 1
-	         }]
-	     };
 
-	     var options = {
-	         responsive: true,
-	         cutout: '80%'
-	     };
 
-	     var myChart = new Chart(ctx, {
-	         type: 'doughnut',
-	         data: data,
-	         options: options
-	     });
-	     
+
+
+			$.ajax({
+    url: '../article/getArticleCountsByStatus',
+    type: 'GET',
+    data: { 'projectId': projectId },
+    success: function(data) {
+        var labels = data.map(function(item) {
+            return item.status;
+        });
+        var counts = data.map(function(item) {
+            return item.count;
+        });
+		console.log(counts);
+        var ctx = document.getElementById('donutChart').getContext('2d');
+        var chartData = {
+            labels: labels,
+            datasets: [{
+                data: counts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var options = {
+            responsive: true,
+            cutout: '80%'
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: chartData,
+            options: options
+        });
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.log(textStatus, errorThrown);
+    }
+});
+							
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	});
-	
-	
+
 	
 	</script>
 
@@ -487,19 +518,7 @@
 						  
 						</div>
     				</div>
-				</div>
-    		</section>
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-		</div>
+
 	</div>	 
 </body>	
 </html>
-
-
-
