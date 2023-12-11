@@ -5,20 +5,23 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.koreaIT.demo.dao.ArticleDao;
+import com.koreaIT.demo.dao.MemberDao;
 import com.koreaIT.demo.vo.Article;
 
 @Service
 public class ArticleService {
 	
 	private ArticleDao articleDao;
+	private MemberDao memberDao;
 	
-	public ArticleService(ArticleDao articleDao) {
+	public ArticleService(ArticleDao articleDao, MemberDao memberDao) {
 		this.articleDao = articleDao;
+		this.memberDao = memberDao;		
 	}
 	
-	public void writeArticle(int memberId, String title, String content, String status, int projectId, List<String> managers) {
-		articleDao.writeArticle(memberId, title, content, status, projectId, managers);
-	}
+//	public void writeArticle(int memberId, String title, String content, String status, int projectId, List<String> managers) {
+//		articleDao.writeArticle(memberId, title, content, status, projectId, managers);
+//	}
 	
 	public int getArticlesCnt(int boardId, String searchKeywordType, String searchKeyword) {
 		return articleDao.getArticlesCnt(boardId, searchKeywordType, searchKeyword);
@@ -54,5 +57,18 @@ public class ArticleService {
 
 	public void increaseHitCount(int id) {
 		articleDao.increaseHitCount(id);
+	}
+
+	public void writeArticle(int memberId, String title, String content, String status, int projectId, List<String> managers) {
+		articleDao.writeArticle(memberId, title, content, status, projectId);
+		
+		int articleId = getLastInsertId();
+		
+		for (String managerName : managers) {
+            Integer managerId = memberDao.findIdByName(managerName);
+            if (managerId != null) {
+                articleDao.insertTag(articleId, managerId, projectId);
+            }
+        }
 	}
 }

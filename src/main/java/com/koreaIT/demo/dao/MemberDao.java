@@ -57,4 +57,11 @@ public interface MemberDao {
 				WHERE id = #{id}
 			""")
 	public void doPasswordModify(int id, String loginPw);
+	
+	
+	
+	@Select("""
+			SELECT id FROM `member` WHERE `name` = #{managerName}
+			""")
+	public Integer findIdByName(String managerName);
 }

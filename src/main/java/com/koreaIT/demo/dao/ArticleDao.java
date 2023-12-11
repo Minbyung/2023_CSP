@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.ArticleAndTagInfo;
 
 @Mapper
 public interface ArticleDao {
@@ -23,7 +24,7 @@ public interface ArticleDao {
 					, `status` = #{status}
 					, projectId = #{projectId}
 			""")
-	public void writeArticle(int memberId, String title, String content, String status, int projectId, List<String> managers);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId);
 	
 	@Select("""
 			<script>
@@ -52,11 +53,13 @@ public interface ArticleDao {
 	
 	@Select("""
 
-			SELECT A.* , M.name AS writerName
+			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames
 				FROM article AS A
-				INNER JOIN `member` AS M
-				ON A.memberId = M.id
+				INNER JOIN `member` AS M ON A.memberId = M.id
+				LEFT JOIN tag AS T ON A.id = T.articleId
+				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				WHERE A.projectId = #{projectId}
+				GROUP BY A.id
 				ORDER BY A.id DESC
 			""")
 	public List<Article> getArticles(int projectId);
@@ -113,4 +116,13 @@ public interface ArticleDao {
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+
+	
+	@Insert("""
+			INSERT INTO tag
+				SET projectId = #{projectId},
+				articleId = #{articleId},
+				memberId = #{managerId}
+			""")
+	public void insertTag(int articleId, Integer managerId, int projectId);
 }
