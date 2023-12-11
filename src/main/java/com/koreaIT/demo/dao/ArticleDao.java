@@ -23,8 +23,9 @@ public interface ArticleDao {
 					, content = #{content}
 					, `status` = #{status}
 					, projectId = #{projectId}
+					, groupId = #{selectedGroupId}
 			""")
-	public void writeArticle(int memberId, String title, String content, String status, int projectId);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId);
 	
 	@Select("""
 			<script>
@@ -53,11 +54,12 @@ public interface ArticleDao {
 	
 	@Select("""
 
-			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames
+			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
 				LEFT JOIN tag AS T ON A.id = T.articleId
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
+				LEFT JOIN `group` AS G ON A.groupId = G.id
 				WHERE A.projectId = #{projectId}
 				GROUP BY A.id
 				ORDER BY A.id DESC

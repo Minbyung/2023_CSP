@@ -62,6 +62,7 @@
 	        });
 	    });
 	     
+
 	     $(".status-btn-write").click(function(){
 	 	    $(".status-btn-write").removeClass("active");
 	 	    $(this).addClass("active");
@@ -98,10 +99,11 @@
 	    		$('#exampleFormControlTextarea1').val('');
 	    	})
 	    	
+//           글쓰기	     	    	
 	    	$("#submitBtn").click(function(){
+	    	var selectedGroupId = parseInt($('#groupSelect').val());
 		    var title = $("#exampleFormControlInput1").val();
 		    var content = $("#exampleFormControlTextarea1").val();
-	    	
 		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 		    var managers = $('.tag').map(function() {
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
@@ -111,10 +113,9 @@
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers },
+		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId },
 		        success: function(data) {
-		          // 서버로부터 받은 데이터를 처리합니다.
-		          console.log(data);
+		          console.log(selectedGroupId);
 		          $("#title").val("");
 		          $("#content").val("");
 		          $('.tag').remove();
@@ -380,13 +381,24 @@
 									  <!-- 자동완성 목록 -->
 									  <section id="autocomplete-results" style="width:20%;"></section>
 								  </div>
+								  
+								  						  
+								<select id="groupSelect" class="select w-full max-w-xs">
+									<option disabled selected>그룹 설정</option>
+									<c:forEach var="group" items="${groups }">
+								  <option value="${group.id }">${group.group_name }</option>
+								 	</c:forEach>
+								</select>  
+								  
+								  
+								  
 								</div>
 								<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">제목</label>
 								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
 								</div>
 								<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+								  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
 								  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 								</div>
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
@@ -402,10 +414,7 @@
 								  		<h6 class="card-subtitle mb-2 ml-4 text-muted">${article.regDate }</h6>
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
-								    
-								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-									    ${name}
-									</c:forEach>
+								    <p>그룹: ${article.groupName }</p> 
 								    <div class="status-btns-update" data-current-status="${article.status }" >
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
@@ -413,6 +422,10 @@
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
 								    </div>
+								    
+								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+									    ${name}
+									</c:forEach>
 								    
 								    <p class="card-text">내용: ${article.content }</p>
 								    

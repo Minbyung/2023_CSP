@@ -18,4 +18,5 @@ public class Article {
 	
 	private String writerName;
 	private String taggedNames;
+	private String groupName;
 }

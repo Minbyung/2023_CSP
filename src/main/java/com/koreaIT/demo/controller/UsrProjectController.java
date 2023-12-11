@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
+import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.Rq;
@@ -24,14 +26,16 @@ public class UsrProjectController {
 	
 	private ProjectService projectService;
 	private ArticleService articleService;
+	private GroupService groupService;
 	private BoardService boardService;
 	private ReplyService replyService;
 	private MemberService memberService;
 	private Rq rq;
 	
-	UsrProjectController(ProjectService projectService, BoardService boardService, ReplyService replyService, MemberService memberService, ArticleService articleService, Rq rq) {
+	UsrProjectController(ProjectService projectService, BoardService boardService, ReplyService replyService, MemberService memberService, ArticleService articleService, GroupService groupService, Rq rq) {
 		this.projectService = projectService;
-		this.articleService = articleService;		
+		this.articleService = articleService;
+		this.groupService = groupService;
 		this.boardService = boardService;
 		this.replyService = replyService;
 		this.memberService = memberService;
@@ -63,10 +67,11 @@ public class UsrProjectController {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId);
-		
+		List<Group> groups = groupService.getGroups(projectId);
 		
 		model.addAttribute("project", project);
 		model.addAttribute("articles", articles);
+		model.addAttribute("groups", groups);
 		
 		return "usr/project/detail";
 	}
