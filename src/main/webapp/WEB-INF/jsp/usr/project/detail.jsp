@@ -266,10 +266,15 @@
         });
 
 
+		var totalCount = counts.reduce(function(acc, val) {
+			return acc + val;
+		}, 0);
+		
 		var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너를 가져옵니다.
 		$.each(data, function(i, item) {
+			var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
 			var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성합니다.
-			$infoElement.text(item.status + ': ' + item.count); // 요소의 내용을 설정합니다.
+			$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정합니다.
 			$infoContainer.append($infoElement); // 요소를 컨테이너에 추가합니다.
 		});
 
@@ -444,12 +449,15 @@
     				<div class="postTimeline bg-yellow-100">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
-    					<div style="width: 300px;">
-							<!--차트가 그려질 부분-->
-							<canvas id="donutChart"></canvas>
+    					<div class="flex">
+							<div style="width: 250px;">
+								<!--차트가 그려질 부분-->
+								<canvas id="donutChart"></canvas>
+							</div>
+							<div id="infoContainer"></div>
 						</div>
-						<div id="infoContainer">
-						</div>
+
+
     					</div>
 							<div class="modal-exam"><span>글 작성</span></div>
 						<div class="layer-bg"></div>
