@@ -226,7 +226,11 @@
         var counts = data.map(function(item) {
             return item.count;
         });
-		console.log(counts);
+		
+
+
+
+
         var ctx = document.getElementById('donutChart').getContext('2d');
         var chartData = {
             labels: labels,
@@ -260,6 +264,17 @@
             data: chartData,
             options: options
         });
+
+
+		var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너를 가져옵니다.
+		$.each(data, function(i, item) {
+			var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성합니다.
+			$infoElement.text(item.status + ': ' + item.count); // 요소의 내용을 설정합니다.
+			$infoContainer.append($infoElement); // 요소를 컨테이너에 추가합니다.
+		});
+
+
+
     },
     error: function(jqXHR, textStatus, errorThrown) {
         console.log(textStatus, errorThrown);
@@ -432,8 +447,8 @@
     					<div style="width: 300px;">
 							<!--차트가 그려질 부분-->
 							<canvas id="donutChart"></canvas>
-							
-							
+						</div>
+						<div id="infoContainer">
 						</div>
     					</div>
 							<div class="modal-exam"><span>글 작성</span></div>
