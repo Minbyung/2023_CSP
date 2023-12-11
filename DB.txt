@@ -91,6 +91,10 @@ CREATE TABLE `group` (
 
 INSERT INTO `group`
 SET projectId = 1,
+group_name = '그룹 미지정';
+
+INSERT INTO `group`
+SET projectId = 1,
 group_name = '그룹1';
 
 INSERT INTO `group`
@@ -110,17 +114,9 @@ SET projectId = 1,
 articleId = 1,
 memberId = 2;
 
-INSERT INTO article
-				SET regDate = NOW()
-					, updateDate = NOW()
-					, memberId = 2
-					, title = '345345'
-					, content = '3454353'
-					, `status` = '요청'
-					, projectId = 1
-					, groupId = 3
+
 					
-					
+TRUNCATE TABLE `group`;			
 					
 -- DELETE FROM favorite
 -- WHERE memberId = 1

@@ -76,6 +76,21 @@ public class UsrProjectController {
 		return "usr/project/detail";
 	}
 	
+	@RequestMapping("/usr/project/task")
+	public String task(Model model, int projectId) {
+		
+		Project project = projectService.getProjectByProjectId(projectId);
+		List<Article> articles = articleService.getArticles(projectId);
+		List<Group> groups = groupService.getGroups(projectId);
+		
+		model.addAttribute("project", project);
+		model.addAttribute("articles", articles);
+		model.addAttribute("groups", groups);
+		
+		return "usr/project/task";
+	}
+//	../project/task?projectId=1"
+	
 	@RequestMapping("/usr/project/getMembers")
 	@ResponseBody
 	public List<String> getMembersByName(@RequestParam String term) {
