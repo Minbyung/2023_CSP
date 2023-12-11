@@ -75,49 +75,62 @@ CREATE TABLE favorite (
     memberId INT NOT NULL
 );
 
+create table tag (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    projectId INT NOT NULL,
+    articleId INT NOT NULL,
+    memberId INT NOT NULL
+);
+insert into tag
+set projectId = 1,
+articleId = 1,
+memberId = 2;
 
-DELETE FROM favorite
-WHERE memberId = 1
-AND projectId = 1
 
-SELECT A.* , M.name AS writerName
+SELECT p.*, a.name AS author_name, t.name AS tagged_member_name
+FROM post p 
+JOIN member a ON p.author_id = a.id  -- 'a'는 작성자를 위한 별칭입니다.
+JOIN tag tg ON p.id = tg.post_id 
+JOIN member t ON tg.member_id = t.id  -- 't'는 태그된 회원을 위한 별칭입니다.
+WHERE p.id = #{postId}
+
+
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames
 FROM article AS A
-INNER JOIN `member` AS M
-ON A.memberId = M.id
+INNER JOIN `member` AS M ON A.memberId = M.id
+LEFT JOIN tag AS T ON A.id = T.articleId
+LEFT JOIN `member` AS TA ON T.memberId = TA.id
 WHERE A.projectId = 1
-ORDER BY A.id DESC;
+GROUP BY A.id
+ORDER BY A.id DESC
 
-SELECT M.name 
-FROM `member` AS M
-INNER JOIN projectMember AS PM
-ON PM.memberId = M.id
-WHERE `name` LIKE '%%'
- 
+-- DELETE FROM favorite
+-- WHERE memberId = 1
+-- AND projectId = 1
+-- 
+-- SELECT A.* , M.name AS writerName
+-- FROM article AS A
+-- INNER JOIN `member` AS M
+-- ON A.memberId = M.id
+-- WHERE A.projectId = 1
+-- ORDER BY A.id DESC;
+-- 
+-- SELECT M.name 
+-- FROM `member` AS M
+-- INNER JOIN projectMember AS PM
+-- ON PM.memberId = M.id
+-- WHERE `name` LIKE '%%'
+--  
 
+select * from tag;
 SELECT * FROM project;
 SELECT * FROM projectMember;
-SELECT * FROM `member`
+SELECT * FROM `member`;
 SELECT * FROM favorite;
 SELECT * FROM article;
-TRUNCATE TABLE project;
-TRUNCATE TABLE projectMember;
-TRUNCATE TABLE favorite;
-
-SELECT COUNT(*) 
-FROM favorite
-WHERE memberId = 2
-AND projectId = 1;
-				
-DELETE FROM favorite
-WHERE memberId = 2
-AND projectId = 1
-
-				
-SELECT * 
-FROM project AS P
-LEFT JOIN projectMember AS PM
-ON P.id = PM.projectId
-HAVING PM.memberId = 1;
+-- TRUNCATE TABLE project;
+-- TRUNCATE TABLE projectMember;
+-- TRUNCATE TABLE favorite;
 
 
 INSERT INTO projectMember
@@ -136,8 +149,8 @@ memberId = 3,
 `role` = '팀장';
 
 INSERT INTO project
-SET project_name = '[IT/개발] 기능 개발 프로젝트'
-	, project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.'
+SET project_name = '[IT/개발] 기능 개발 프로젝트',
+project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.';
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -192,69 +205,12 @@ updateDate = NOW(),
 `code` = 'free',
 `name` = '자유';
 
-# 2번 회원이 1번 글에 좋아요
-INSERT INTO recommendPoint
-SET memberId = 2,
-relTypeCode = 'article',
-relId = 1,
-`point` = 1;
 
-# 2번 회원이 3번 글에 좋아요
-INSERT INTO recommendPoint
-SET memberId = 2,
-relTypeCode = 'article',
-relId = 3,
-`point` = 1;
-
-# 3번 회원이 2번 글에 좋아요
-INSERT INTO recommendPoint
-SET memberId = 3,
-relTypeCode = 'article',
-relId = 2,
-`point` = 1;
-
-# 3번 회원이 1번 글에 좋아요
-INSERT INTO recommendPoint
-SET memberId = 3,
-relTypeCode = 'article',
-relId = 1,
-`point` = 1;
-
-# 2번 회원이 1번 글에 댓글
-INSERT INTO reply
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-relTypeCode = 'article',
-relId = 1,
-`body` = '댓글1';
-
-# 3번 회원이 1번 글에 댓글
-INSERT INTO reply
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 3,
-relTypeCode = 'article',
-relId = 1,
-`body` = '댓글2';
-
-# 2번 회원이 3번 글에 댓글
-INSERT INTO reply
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 2,
-relTypeCode = 'article',
-relId = 3,
-`body` = '댓글3';
-
-# 3번 회원이 2번 글에 댓글
-INSERT INTO reply
-SET regDate = NOW(),
-updateDate = NOW(),
-memberId = 3,
-relTypeCode = 'article',
-relId = 2,
-`body` = '댓글4';
+SELECT * 
+FROM project AS P
+LEFT JOIN projectMember AS PM
+ON P.id = PM.projectId
+HAVING PM.memberId = 1;
 
 SELECT * FROM article;
 SELECT * FROM `member`;

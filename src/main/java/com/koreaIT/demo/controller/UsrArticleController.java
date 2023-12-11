@@ -53,6 +53,19 @@ public class UsrArticleController {
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
+	
+	
+	@RequestMapping("/usr/article/doUpdateStatus")
+	@ResponseBody
+	public String doUpdateStatus(int articleId, String newStatus) {
+		
+		articleService.updateStatus(articleId, newStatus);
+		
+		int id = articleId;
+		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
+	}
+	
+	
 //	@RequestMapping("/usr/article/list")
 //	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
 //			@RequestParam(defaultValue = "title") String searchKeywordType, @RequestParam(defaultValue = "") String searchKeyword) {

@@ -25,7 +25,7 @@
 	<script>
 	$(document).ready(function() {
 		var status = "요청"; // Default status 
-		$(".status-btn[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
+		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
 		var projectId = $('#favoriteIcon').data('project-id');
 	     $.ajax({
@@ -62,8 +62,8 @@
 	        });
 	    });
 	     
-	     $(".status-btn").click(function(){
-	 	    $(".status-btn").removeClass("active");
+	     $(".status-btn-write").click(function(){
+	 	    $(".status-btn-write").removeClass("active");
 	 	    $(this).addClass("active");
 
 	 	    status = $(this).attr('data-status');
@@ -179,6 +179,38 @@
 	    	        });
 	    	    }
 	    	});
+	     
+// 	     상태버튼 현재 상태 활성화 표시
+
+	     $('.status-btns-update').each(function() {
+	         var currentStatus = $(this).data('current-status');
+	         $(this).find('.status-btn-update').each(function() {
+	             if ($(this).data('status') === currentStatus) {
+	                 $(this).addClass("active");
+	             }
+	         });
+	     });
+// 	     상태버튼 업데이트	     
+	     $('.status-btn-update').click(function() {
+	    	    var newStatus = $(this).data('status');
+	    	    var articleId = $(this).data('article-id');
+	    	    $.ajax({
+	    	        url: '../article/doUpdateStatus', 
+	    	        type: 'POST',
+	    	        data: {
+	    	            'articleId': articleId,
+	    	            'newStatus': newStatus
+	    	        },
+	    	        success: function(response) {
+	    	        	console.log(response);
+	    	            $('.status-btn-update').removeClass('active');
+	    	            $(this).addClass('active');
+	    	            location.reload();
+	    	        }
+	    	    });
+	    	});
+	     
+	     
 	     
 
 	});
@@ -335,11 +367,11 @@
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
 							<div id="status">
-						      <button class="status-btn btn btn-active" data-status="요청">요청</button>
-						      <button class="status-btn btn btn-active" data-status="진행">진행</button>
-						      <button class="status-btn btn btn-active" data-status="피드백">피드백</button>
-						      <button class="status-btn btn btn-active" data-status="완료">완료</button>
-						      <button class="status-btn btn btn-active" data-status="보류">보류</button>
+						      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+						      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+						      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+						      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+						      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 						    </div>
 								<div id="inputArea">
 								  <div class="autocomplete-container flex flex-col">
@@ -371,11 +403,20 @@
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
 								    
+								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+									    ${name}
+									</c:forEach>
+								    <div class="status-btns-update" data-current-status="${article.status }" >
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
+								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
+								    </div>
+								    
 								    <p class="card-text">내용: ${article.content }</p>
 								    
-								    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-									    ${name}<br>
-									</c:forEach>
+								    
 								  </div>
 								</div>
 							</c:forEach>

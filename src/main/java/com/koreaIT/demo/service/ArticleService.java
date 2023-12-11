@@ -71,4 +71,9 @@ public class ArticleService {
             }
         }
 	}
+
+	public void updateStatus(int articleId, String newStatus) {
+		articleDao.updateStatus(articleId, newStatus);
+		
+	}
 }

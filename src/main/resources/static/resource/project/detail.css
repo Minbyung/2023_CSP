@@ -91,13 +91,13 @@
   cursor: pointer;
 }
 
-.status-btn {
+.status-btn-write, .status-btn-update {
   background-color: #f8f8f8;
   color: black;
   margin-right: 10px;
 }
 
-.status-btn.active {
+.status-btn-write.active, .status-btn-update.active {
   background-color: #4CAF50;
   color: white;
 }

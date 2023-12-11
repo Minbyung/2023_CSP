@@ -125,4 +125,13 @@ public interface ArticleDao {
 				memberId = #{managerId}
 			""")
 	public void insertTag(int articleId, Integer managerId, int projectId);
+
+	
+	
+	@Update("""
+			UPDATE article
+				SET `status` = #{newStatus}
+				WHERE id = #{articleId};
+			""")
+	public void updateStatus(int articleId, String newStatus);
 }

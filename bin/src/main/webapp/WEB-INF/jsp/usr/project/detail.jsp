@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../common/head2.jsp" %>
 
 <!DOCTYPE html>
@@ -15,6 +16,7 @@
   <link rel="stylesheet" href="/resource/common.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  
   <title>${project.project_name }</title>
 </head>
 <!-- partial:index.partial.html -->
@@ -105,13 +107,14 @@
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
 		        return $(this).clone().children().remove().end().text();
 		    }).get();
-		 
+		 	
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
 		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers },
 		        success: function(data) {
 		          // 서버로부터 받은 데이터를 처리합니다.
+		          console.log(data);
 		          $("#title").val("");
 		          $("#content").val("");
 		          $('.tag').remove();
@@ -370,7 +373,9 @@
 								    
 								    <p class="card-text">내용: ${article.content }</p>
 								    
-								    
+								    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+									    ${name}<br>
+									</c:forEach>
 								  </div>
 								</div>
 							</c:forEach>
