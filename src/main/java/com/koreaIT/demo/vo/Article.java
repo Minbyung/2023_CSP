@@ -15,8 +15,14 @@ public class Article {
 	private String title;
 	private String content;
 	private String status;
+	private String startDate;
+	private String endDate;
+	
+	
 	
 	private String writerName;
 	private String taggedNames;
 	private String groupName;
+	private int groupId;
+	
 }

@@ -60,8 +60,8 @@ public class ArticleService {
 		articleDao.increaseHitCount(id);
 	}
 
-	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, List<String> managers) {
-		articleDao.writeArticle(memberId, title, content, status, projectId, selectedGroupId);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, List<String> managers, String startDate, String endDate) {
+		articleDao.writeArticle(memberId, title, content, status, projectId, selectedGroupId, startDate, endDate);
 		
 		int articleId = getLastInsertId();
 		

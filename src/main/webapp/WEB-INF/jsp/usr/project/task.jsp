@@ -54,9 +54,11 @@
 		       }
 		   });
 		});
+	
+		
 	});	
 	
-	
+
 	</script>
 
 
@@ -195,8 +197,57 @@
                     <li><a class="block" href="">파일</a></li>
                     <li><a class="block" href="">알림</a></li>
                 </ul>
-            </nav>
-                   
+            </nav>        
+            
+            <div class="overflow-x-auto">
+			    <c:forEach var="group" items="${groupedArticles}">
+			        <h2><c:out value="${group.key}"></c:out></h2>
+			        <table class="table">
+			        	<colgroup>
+			                <col style="width: 20%;">
+			                <col style="width: 10%;">
+			                <col style="width: 14%;">
+			                <col style="width: 14%;">
+			                <col style="width: 14%;">
+			                <col style="width: 14%;">
+			                <col style="width: 14%;">
+			            </colgroup>
+			            <thead>
+			                <tr>
+			                    <th>업무명</th>
+			                    <th>상태</th>
+			                    <th>담당자</th>
+			                    <th>시작일</th>
+			                    <th>마감일</th>
+			                    <th>등록일</th>
+			                    <th>업무번호</th>
+			                </tr>
+			            </thead>
+			            <tbody>
+			                <c:forEach var="article" items="${group.value}">
+			                    <tr>
+			                        <td><c:out value="${article.title}"></c:out></td>
+			                        <td class="status" data-id="${article.id}">
+									    <c:out value="${article.status}"></c:out>
+									</td>
+			                        <td>
+			                            <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+			                                	<c:out value="${name}"></c:out>
+			                            </c:forEach>
+			                        </td>
+			                        <td><c:out value="${article.startDate.substring(2, 10)}"></c:out></td>
+			                        <td><c:out value="${article.endDate.substring(2, 10)}"></c:out></td>
+			                        <td><c:out value="${article.regDate.substring(2, 10)}"></c:out></td>
+			                        <td><c:out value="${article.id}"></c:out></td>
+			                    </tr>
+			                </c:forEach>
+			            </tbody>
+			        </table>
+			    </c:forEach>
+			</div>
+			
+			
+			
         </div>      
     </div>              
 </body>

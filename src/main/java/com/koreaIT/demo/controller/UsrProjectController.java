@@ -1,6 +1,9 @@
 package com.koreaIT.demo.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +20,6 @@ import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.Group;
-import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.Rq;
 
@@ -83,9 +85,25 @@ public class UsrProjectController {
 		List<Article> articles = articleService.getArticles(projectId);
 		List<Group> groups = groupService.getGroups(projectId);
 		
+		
+		// groupId 별로 article을 그룹화
+		Map<String, List<Article>> groupedArticles = new HashMap<>();
+        for (Article article : articles) {
+            String groupName = article.getGroupName();
+            if (!groupedArticles.containsKey(groupName)) {
+                groupedArticles.put(groupName, new ArrayList<>());
+            }
+            groupedArticles.get(groupName).add(article);
+        }
+		
+		
+		
+		
 		model.addAttribute("project", project);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
+		model.addAttribute("groupedArticles", groupedArticles);
+		
 		
 		return "usr/project/task";
 	}
@@ -94,6 +112,10 @@ public class UsrProjectController {
 	@RequestMapping("/usr/project/getMembers")
 	@ResponseBody
 	public List<String> getMembersByName(@RequestParam String term) {
+		
+		if (term.equals(" ")) {
+	        return memberService.getMembers();
+	    }
 		
 		return projectService.getMembersByName(term);
 	}

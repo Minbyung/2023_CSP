@@ -1,5 +1,7 @@
 package com.koreaIT.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.koreaIT.demo.dao.MemberDao;
@@ -36,5 +38,10 @@ public class MemberService {
 
 	public void doPasswordModify(int id, String loginPw) {
 		memberDao.doPasswordModify(id, loginPw);
+	}
+
+	public List<String> getMembers() {
+		
+		return memberDao.getMembers();
 	}
 }

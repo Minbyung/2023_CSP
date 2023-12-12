@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
   <title>${project.project_name }</title>
 <!--chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
@@ -105,6 +106,12 @@
 	        }
 		    var title = $("#exampleFormControlInput1").val();
 		    var content = $("#exampleFormControlTextarea1").val();
+		    
+		 // 시작일과 마감일을 가져옵니다.
+		    var startDate = $("#start-date").val();
+		    var endDate = $("#end-date").val();
+		    
+		    
 		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 		    var managers = $('.tag').map(function() {
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
@@ -114,7 +121,7 @@
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId },
+		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId, startDate: startDate, endDate: endDate },
 		        success: function(data) {
 		          console.log(selectedGroupId);
 		          $("#title").val("");
@@ -126,64 +133,54 @@
 		        }
 		      });
 		    });
+	      
 	     
-	     // 담당자 태그 및 자동 완성
-	     $('#search').on('keyup', function() {
-	    	    var search = $(this).val();
-	    	    $('#autocomplete-results').empty();
+			 $("#search").autocomplete({
+			    source: function(request, response) {
+			        $.ajax({
+			            url: "../project/getMembers",
+			            type: "GET",
+			            data: { term: request.term },
+			            success: function(data) {
+			            	console.log("클릭1");
+			                var taggedMembers = $('.tag').map(function() {
+			                    return $(this).clone().children().remove().end().text().trim();
+			                }).get();
+			
+			                var results = $.grep(data, function(result){
+			                    return $.inArray(result.trim(), taggedMembers) === -1;
+			                });
+			
+			                response(results);
+			            },
+			            error: function(err) {
+			                console.error(err);
+			            }
+			        });
+			    },
+			    select: function(event, ui) {
+			        var newValue = ui.item.value;
+			        $('#search').val('');
+			
+			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+			        $('#inputArea').prepend(tag);
+			
+			        $('#search').prependTo('.autocomplete-container');
+			
+			        tag.find('.tag-remove').on('click', function() {
+			            tag.remove();
+			        });
+			
+			        return false;
+			    }
+			}).on("focus", function() {
+				// $(this).autocomplete("search", ""); 원래 이렇게 하려했는데 서버에서 처리를 못하고있음
+				// request.term은 빈 문자열("")이 되는데, 서버에서 이를 처리하지 못하는 경우 
+				// 클라이언트 측에서 빈 문자열 대신 기본 검색어(" ")를 제공 모든 가능한 검색 결과를 반환하는 기본 검색어를 사용
+			    $(this).autocomplete("search", " "); 
+			});
 
-	    	    if (search) {
-	    	        $.ajax({
-	    	            url: '../project/getMembers', 
-	    	            type: 'GET',
-	    	            data: { "term": search },
-	    	            success: function(data) {
-	    	                $.each(data, function(i, result) {
-	    	                    // 태그에 있는 담당자를 확인합니다.
-	    	                    var taggedMembers = $('.tag').map(function() {
-	    	                        // 'x' 버튼을 제외한 텍스트만 반환합니다.
-	    	                        return $(this).clone().children().remove().end().text();
-	    	                    }).get();
-
-	    	                    // 태그에 없는 담당자만 목록을 생성합니다.
-	    	                    if(taggedMembers.indexOf(result) === -1) {
-	    	                        var resultDiv = $('<div>' + result + '</div>');
-	    	                        
-	    	                        resultDiv.on('click', function() {
-	    	                            var newValue = result;
-	    	                            $('#search').val('');
-	    	                            $('#autocomplete-results').empty();
-
-	    	                            // 선택한 담당자를 태그로 표시합니다. 'x' 버튼을 추가합니다.
-	    	                            var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-	    	                            $('#inputArea').prepend(tag);
-										
-	    	                            
-	    	                        	// 입력 필드를 autocomplete-container의 맨 앞으로 이동합니다.
-	    	                            $('#search').prependTo('.autocomplete-container');
-	    	                        	
-// 	    	                            // 입력 필드를 오른쪽으로 이동합니다.
-// 	    	                            $('#search').appendTo('#inputArea');
-
-	    	                            // 'x' 버튼에 클릭 이벤트 핸들러를 설정합니다.
-	    	                            tag.find('.tag-remove').on('click', function() {
-	    	                                tag.remove(); // 태그를 삭제합니다.
-	    	                            });
-	    	                        });
-	    	                        
-	    	                        $('#autocomplete-results').append(resultDiv);
-	    	                    }
-	    	                });
-	    	            },
-	    	            error: function(err) {
-	    	                console.error(err);
-	    	            }
-	    	        });
-	    	    }
-	    	});
-	     
 // 	     상태버튼 현재 상태 활성화 표시
-
 	     $('.status-btns-update').each(function() {
 	         var currentStatus = $(this).data('current-status');
 	         $(this).find('.status-btn-update').each(function() {
@@ -216,90 +213,76 @@
 
 
 			$.ajax({
-    url: '../article/getArticleCountsByStatus',
-    type: 'GET',
-    data: { 'projectId': projectId },
-    success: function(data) {
-        var labels = data.map(function(item) {
-            return item.status;
-        });
-        var counts = data.map(function(item) {
-            return item.count;
-        });
+		    url: '../article/getArticleCountsByStatus',
+		    type: 'GET',
+		    data: { 'projectId': projectId },
+		    success: function(data) {
+		        var labels = data.map(function(item) {
+		            return item.status;
+		        });
+		        var counts = data.map(function(item) {
+		            return item.count;
+		        });
+				
 		
-
-
-
-
-        var ctx = document.getElementById('donutChart').getContext('2d');
-        var chartData = {
-            labels: labels,
-            datasets: [{
-                data: counts,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        };
-
-        var options = {
-            responsive: true,
-            cutout: '80%'
-        };
-
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: chartData,
-            options: options
-        });
-
-
-		var totalCount = counts.reduce(function(acc, val) {
-			return acc + val;
-		}, 0);
 		
-		var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너를 가져옵니다.
-		$.each(data, function(i, item) {
-			var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
-			var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성합니다.
-			$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정합니다.
-			$infoContainer.append($infoElement); // 요소를 컨테이너에 추가합니다.
+		
+		
+		        var ctx = document.getElementById('donutChart').getContext('2d');
+		        var chartData = {
+		            labels: labels,
+		            datasets: [{
+		                data: counts,
+		                backgroundColor: [
+		                    'rgba(255, 99, 132, 0.2)',
+		                    'rgba(54, 162, 235, 0.2)',
+		                    'rgba(255, 206, 86, 0.2)',
+		                    'rgba(75, 192, 192, 0.2)',
+		                    'rgba(153, 102, 255, 0.2)'
+		                ],
+		                borderColor: [
+		                    'rgba(255, 99, 132, 1)',
+		                    'rgba(54, 162, 235, 1)',
+		                    'rgba(255, 206, 86, 1)',
+		                    'rgba(75, 192, 192, 1)',
+		                    'rgba(153, 102, 255, 1)'
+		                ],
+		                borderWidth: 1
+		            }]
+		        };
+		
+		        var options = {
+		            responsive: true,
+		            cutout: '80%'
+		        };
+		
+		        var myChart = new Chart(ctx, {
+		            type: 'doughnut',
+		            data: chartData,
+		            options: options
+		        });
+		
+		
+				var totalCount = counts.reduce(function(acc, val) {
+					return acc + val;
+				}, 0);
+				
+				var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너를 가져옵니다.
+				$.each(data, function(i, item) {
+					var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
+					var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성합니다.
+					$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정합니다.
+					$infoContainer.append($infoElement); // 요소를 컨테이너에 추가합니다.
+				});
+		
+		
+		
+		    },
+		    error: function(jqXHR, textStatus, errorThrown) {
+		        console.log(textStatus, errorThrown);
+		    }
 		});
-
-
-
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-        console.log(textStatus, errorThrown);
-    }
-});
 							
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	});
@@ -446,7 +429,7 @@
     		
     		<section class="project-detail-container overflow-auto">
 				<div class="mt-5 detail-wrap mx-auto">
-    				<div class="postTimeline bg-yellow-100">
+    				<div class="postTimeline">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
     					<div class="flex">
@@ -477,7 +460,13 @@
 									  <!-- 자동완성 목록 -->
 									  <section id="autocomplete-results" style="width:20%;"></section>
 								  </div>
-								  
+
+								<label for="start-date">시작일:</label>
+								<input type="date" id="start-date" name="start-date">
+
+							    <label class ="bg-red-100" for="end-date">마감일:</label>
+							    <input type="date" id="end-date" name="end-date">		
+								  		
 								  						  
 								<select id="groupSelect" class="select w-full max-w-xs">
 									
@@ -522,7 +511,10 @@
 								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
 									    ${name}
 									</c:forEach>
-								    
+								    <div class="flex">
+									    <div>시작일: ${article.startDate.substring(2, 10)}</div>
+									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
+								    </div>
 								    <p class="card-text">내용: ${article.content }</p>
 								    
 								    
@@ -540,8 +532,20 @@
 						  
 						  
 						</div>
+						
+						
     				</div>
+	</div>
+    		</section>
 
-	</div>	 
+
+
+
+
+
+
+		
+
 </body>	
+
 </html>

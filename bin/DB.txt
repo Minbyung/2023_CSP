@@ -116,7 +116,7 @@ memberId = 2;
 
 
 					
-TRUNCATE TABLE `group`;			
+		
 					
 -- DELETE FROM favorite
 -- WHERE memberId = 1
@@ -242,6 +242,11 @@ LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
 ORDER BY A.id DESC;
+
+SELECT `status`, COUNT(*) AS `count`
+FROM article
+WHERE projectId = 1
+GROUP BY `status`;
 
 
 SELECT * 

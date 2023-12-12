@@ -11,7 +11,9 @@ CREATE TABLE article(
     content TEXT NOT NULL,
     `status` VARCHAR(100) NOT NULL,
     projectId INT UNSIGNED NOT NULL,
-    groupId INT UNSIGNED NOT NULL
+    groupId INT UNSIGNED NOT NULL,
+    startDate DATETIME NOT NULL,
+    endDate DATETIME NOT NULL
 );
 
 -- ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
@@ -114,7 +116,10 @@ SET projectId = 1,
 articleId = 1,
 memberId = 2;
 
-
+INSERT INTO tag
+SET projectId = 1,
+articleId = 2,
+memberId = 1;
 					
 		
 					
@@ -178,7 +183,9 @@ title = '공지1',
 content = '공지내용1',
 `status` = '요청',
 projectId = 1,
-groupId = 1;
+groupId = 1,
+startDate = NOW(),
+endDate = NOW();
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -188,7 +195,9 @@ title = 'test1',
 content = 'test2',
 `status` = '요청',
 projectId = 1,
-groupId = 2;
+groupId = 2,
+startDate = NOW(),
+endDate = NOW();
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -261,8 +270,27 @@ SELECT * FROM board;
 SELECT * FROM recommendPoint;
 SELECT * FROM reply;
 SELECT * FROM project;
+SELECT * FROM `group`;
+
+
+SELECT A.*, G.group_name AS group_name FROM article AS A 
+JOIN `group` AS G ON A.groupId = G.id 
+ORDER BY G.group_name;
+
 
 SELECT LAST_INSERT_ID();
+
+
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+FROM article AS A
+INNER JOIN `member` AS M ON A.memberId = M.id
+LEFT JOIN tag AS T ON A.id = T.articleId
+LEFT JOIN `member` AS TA ON T.memberId = TA.id
+LEFT JOIN `group` AS G ON A.groupId = G.id
+WHERE A.projectId = 1
+GROUP BY A.id
+ORDER BY A.id DESC;
+
 
 /*
 insert into article

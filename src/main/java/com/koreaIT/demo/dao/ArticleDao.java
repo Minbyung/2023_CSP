@@ -25,8 +25,10 @@ public interface ArticleDao {
 					, `status` = #{status}
 					, projectId = #{projectId}
 					, groupId = #{selectedGroupId}
+					, startDate = #{startDate}
+					, endDate = #{endDate}
 			""")
-	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId);
+	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, String startDate, String endDate);
 	
 	@Select("""
 			<script>

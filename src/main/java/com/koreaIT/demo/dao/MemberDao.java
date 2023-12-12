@@ -1,5 +1,7 @@
 package com.koreaIT.demo.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -64,4 +66,12 @@ public interface MemberDao {
 			SELECT id FROM `member` WHERE `name` = #{managerName}
 			""")
 	public Integer findIdByName(String managerName);
+
+	@Select("""
+			SELECT M.name 
+			FROM `member` AS M
+			INNER JOIN projectMember AS PM
+			ON PM.memberId = M.id
+			""")
+	public List<String> getMembers();
 }

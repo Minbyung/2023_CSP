@@ -34,7 +34,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers) {
+	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
@@ -44,7 +44,7 @@ public class UsrArticleController {
 			return Util.jsHistoryBack("내용을 입력해주세요");
 		}
 		
-		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers);
+		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers, startDate, endDate);
 		
 		int id = articleService.getLastInsertId();
 		
