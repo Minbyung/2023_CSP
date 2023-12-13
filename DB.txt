@@ -231,7 +231,7 @@ LEFT JOIN `member` AS TA ON T.memberId = TA.id
 LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
-ORDER BY A.id DESC;
+ORDER BY title asc;
 
 SELECT `status`, COUNT(*) AS `count`
 FROM article
