@@ -2,6 +2,7 @@ package com.koreaIT.demo.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,24 +88,24 @@ public class UsrProjectController {
 		
 		
 		// groupId 별로 article을 그룹화
-		Map<String, List<Article>> groupedArticles = new HashMap<>();
-        for (Article article : articles) {
-            String groupName = article.getGroupName();
-            if (!groupedArticles.containsKey(groupName)) {
-                groupedArticles.put(groupName, new ArrayList<>());
-            }
-            groupedArticles.get(groupName).add(article);
-        }
-		
-		
-		
-		
+		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
+		// 먼저 모든 그룹을 맵에 추가합니다.
+		for (Group group : groups) {
+		    groupedArticles.put(group.getGroup_name(), new ArrayList<>());
+		}
+		// 그런 다음 각 게시글을 해당 그룹에 추가합니다.
+		for (Article article : articles) {
+		    String groupName = article.getGroupName();
+		    if (groupedArticles.containsKey(groupName)) { // 이 검사는 생략해도 됩니다.
+		        groupedArticles.get(groupName).add(article);
+		    }
+		}
+
 		model.addAttribute("project", project);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
 		model.addAttribute("groupedArticles", groupedArticles);
-		
-		
+
 		return "usr/project/task";
 	}
 //	../project/task?projectId=1"

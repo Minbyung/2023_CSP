@@ -20,5 +20,10 @@ public class GroupService {
 		
 		return groupDao.getGroups(projectId);
 	}
+
+	public void doMakeGroup(int projectId, String group_name) {
+		groupDao.doMakeGroup(projectId, group_name);
+		
+	}
 	
 }

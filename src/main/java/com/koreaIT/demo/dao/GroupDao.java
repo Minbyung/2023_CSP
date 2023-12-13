@@ -16,8 +16,18 @@ import com.koreaIT.demo.vo.Group;
 public interface GroupDao {
 	@Select("""
 			SELECT * FROM `group`
-				WHERE projectId = #{projectId};
+				WHERE projectId = #{projectId}
+				ORDER BY id DESC
 			""")
 	public List<Group> getGroups(int projectId);
+
+	
+	
+	@Insert("""
+			INSERT INTO `group`
+				SET projectId = #{projectId},
+				group_name = #{group_name}
+			""")
+	public void doMakeGroup(int projectId, String group_name);
 	
 }

@@ -211,7 +211,7 @@
 
 
 
-
+//			상태 chart.js
 			$.ajax({
 		    url: '../article/getArticleCountsByStatus',
 		    type: 'GET',
@@ -223,11 +223,7 @@
 		        var counts = data.map(function(item) {
 		            return item.count;
 		        });
-				
-		
-		
-		
-		
+
 		        var ctx = document.getElementById('donutChart').getContext('2d');
 		        var chartData = {
 		            labels: labels,

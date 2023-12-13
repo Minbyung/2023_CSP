@@ -91,6 +91,8 @@ CREATE TABLE `group` (
     group_name VARCHAR(50) NOT NULL
 );
 
+TRUNCATE TABLE `group`;
+
 INSERT INTO `group`
 SET projectId = 1,
 group_name = '그룹 미지정';
@@ -110,6 +112,21 @@ group_name = '그룹3';
 INSERT INTO `group`
 SET projectId = 1,
 group_name = '그룹4';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹5';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹6';
+
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹7';
+
+
+
 
 INSERT INTO tag
 SET projectId = 1,
@@ -153,8 +170,8 @@ SELECT * FROM `group`;
 -- TRUNCATE TABLE favorite;
 
 SELECT * FROM `group`
-WHERE projectId = 1;
-
+WHERE projectId = 1
+ORDER BY id DESC;
 
 INSERT INTO projectMember
 SET projectId = 1,

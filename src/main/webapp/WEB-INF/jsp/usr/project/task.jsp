@@ -21,6 +21,7 @@
 	<script>
 	$(document).ready(function() {
 		var projectId = $('#favoriteIcon').data('project-id');
+		
 		$.ajax({
 		    url: '../favorite/getFavorite',
 		    method: 'GET',
@@ -55,8 +56,94 @@
 		   });
 		});
 	
+		$(".status-btn-write").click(function(event) {
+	        event.stopPropagation();
+	        $(this).siblings(".status-menu").toggle();
+	    });
+
+	    $(document).click(function() {
+	        $(".status-menu").hide();
+	    });
+
+	    $(".status-menu button").click(function() {
+	        var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져옵니다.
+	        var articleId = $(this).data('article-id');
+	        $.ajax({
+	            url: '../article/doUpdateStatus',
+	            method: 'POST',
+	            data: {
+	            	'articleId': articleId,
+	                'newStatus': newStatus
+	            },
+	            success: function() {
+	                // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨깁니다.
+	                $(".status[data-article-id=" + articleId + "] .status-btn-write").text(status);
+	                $(".status-menu").hide();
+	                location.reload();
+	            },
+	            error: function() {
+	                alert('상태 업데이트에 실패했습니다.');
+	            }
+	        });
+	    });
 		
+		 // 그룹 추가 버튼을 눌렀을 때
+	    $(".addGroupButton").click(function(){
+	      // 그룹명 입력 창을 생성
+	      var $inputRow = $('<tr><th colspan="7"><input placeholder="추가할 그룹명을 입력해 주세요." type="text" id="groupNameInput"></th></tr>');
+	      $(".task-table").prepend($inputRow);
+	      $("#groupNameInput").focus();
+	    });	
+		
+		 
+		 // 그룹명 입력 창에 엔터를 눌렀을 때
+	    $(document).on('keypress', '#groupNameInput', function(event) {
+	        if(event.keyCode == 13) {
+	            saveGroup();
+	        }
+	    });
+
+	   /*  // 그룹명 입력 창 외의 영역을 클릭했을 때
+	    $(document).click(function(event){
+		  if($('#groupNameInput').is(":visible") && !$(event.target).closest('#groupNameInput').length){
+		    saveGroup();
+		  }
+		}); */
+	    
+		 // 그룹 저장 함수
+	    function saveGroup() {
+        
+	      var group_name = $("#groupNameInput").val().trim();
+	      var projectId = $('#favoriteIcon').data('project-id');
+	      
+	      if (group_name.length === 0) {
+	            alert('그룹 이름을 입력해주세요.');
+	            return;
+	        }
+	       $.ajax({
+	            url: '../group/doMake',
+	            method: 'POST',
+	            data: {
+	            	'projectId': projectId,
+	                'group_name': group_name
+	            },
+	            success: function() {
+	            	console.log(projectId);
+	            	//그룹명 입력 창을 제거
+// 	            	$("#groupNameInput").parent().parent().remove();
+	            	location.reload();
+	            },
+	            error: function() {
+	                alert('그룹 저장에 실패했습니다.');
+	            }
+	        });
+		
+	    } 
+		 
 	});	
+			
+	
+	
 	
 
 	</script>
@@ -199,53 +286,76 @@
                 </ul>
             </nav>        
             
-            <div class="overflow-x-auto">
-			    <c:forEach var="group" items="${groupedArticles}">
-			        <h2><c:out value="${group.key}"></c:out></h2>
-			        <table class="table">
-			        	<colgroup>
-			                <col style="width: 20%;">
-			                <col style="width: 10%;">
-			                <col style="width: 14%;">
-			                <col style="width: 14%;">
-			                <col style="width: 14%;">
-			                <col style="width: 14%;">
-			                <col style="width: 14%;">
-			            </colgroup>
-			            <thead>
-			                <tr>
-			                    <th>업무명</th>
-			                    <th>상태</th>
-			                    <th>담당자</th>
-			                    <th>시작일</th>
-			                    <th>마감일</th>
-			                    <th>등록일</th>
-			                    <th>업무번호</th>
-			                </tr>
-			            </thead>
+            
+            <div><button class="btn btn-active btn-sm addGroupButton">그룹 추가</button></div>
+            
+			<div class="overflow-x-auto">
+			    <table class="table task-table">
+			    	
+			        <colgroup>
+			            <col style="width: 20%;">
+			            <col style="width: 10%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			        </colgroup>
+			        <thead>
+			            <tr>
+			                <th>업무명</th>
+			                <th style="text-align: center;">상태</th>
+			                <th style="text-align: center;">담당자</th>
+			                <th style="text-align: center;">시작일</th>
+			                <th style="text-align: center;">마감일</th>
+			                <th style="text-align: center;">등록일</th>
+			                <th style="text-align: center;">업무번호</th>
+			            </tr>
+			        </thead>
+			        <c:forEach var="group" items="${groupedArticles}">
 			            <tbody>
+			                <tr><th class="font-bold" colspan="7"><c:out value="${group.key}"/></th></tr>
+			                <c:choose>
+                    			<c:when test="${not empty group.value}">
 			                <c:forEach var="article" items="${group.value}">
 			                    <tr>
-			                        <td><c:out value="${article.title}"></c:out></td>
-			                        <td class="status" data-id="${article.id}">
-									    <c:out value="${article.status}"></c:out>
-									</td>
-			                        <td>
-			                            <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-			                                	<c:out value="${name}"></c:out>
-			                            </c:forEach>
-			                        </td>
-			                        <td><c:out value="${article.startDate.substring(2, 10)}"></c:out></td>
-			                        <td><c:out value="${article.endDate.substring(2, 10)}"></c:out></td>
-			                        <td><c:out value="${article.regDate.substring(2, 10)}"></c:out></td>
-			                        <td><c:out value="${article.id}"></c:out></td>
+			                        <td><c:out value="${article.title}"></c:out></td>						
+	                                <td class="status relative" data-id="${article.id}">
+	                                    <button class="status-btn-write btn btn-active btn-xs btn-block" data-status="${article.status}">
+	                                        <c:out value="${article.status}"></c:out>
+	                                    </button>
+	                                    <div class="status-menu" style="display: none; position: absolute; z-index: 1000;">
+	                                        <div class="bg-white border border-black border-solid p-3 rounded">
+	                                            <button class="status-btn-write btn btn-active btn-xs btn-block my-1" data-status="요청" data-article-id="${article.id}">요청</button>
+	                                            <button class="status-btn-write btn btn-active btn-xs btn-block my-1" data-status="진행" data-article-id="${article.id}">진행</button>
+	                                            <button class="status-btn-write btn btn-active btn-xs btn-block my-1" data-status="피드백" data-article-id="${article.id}">피드백</button>
+	                                            <button class="status-btn-write btn btn-active btn-xs btn-block my-1" data-status="완료" data-article-id="${article.id}">완료</button>
+	                                            <button class="status-btn-write btn btn-active btn-xs btn-block my-1" data-status="보류" data-article-id="${article.id}">보류</button>
+	                                        </div>
+	                                    </div>
+	                                </td>						
+	                                <td style="text-align: center;">
+	                                    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+	                                        <c:out value="${name}"></c:out>
+	                                    </c:forEach>
+	                                </td>
+	                                <td style="text-align: center;"><c:out value="${article.startDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.endDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.regDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.id}"></c:out></td>
 			                    </tr>
 			                </c:forEach>
+				                </c:when>
+		                  		<c:otherwise>
+		                  		<tr>
+		                            <td colspan="7" style="text-align: center;">작업 내용이 없습니다.</td>
+		                        </tr>
+		                  	  </c:otherwise>
+		               		 </c:choose>
 			            </tbody>
-			        </table>
-			    </c:forEach>
+			        </c:forEach>
+			    </table>
 			</div>
-			
 			
 			
         </div>      
