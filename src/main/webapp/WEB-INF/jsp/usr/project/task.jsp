@@ -142,7 +142,7 @@
 		
 		
 		
-//		업무 추가		
+//		업무 추가 버튼을 누르면		
 	    $('.modal-exam').click(function(){
     		$('.layer-bg').show();
     		$('.layer').show();
@@ -160,6 +160,8 @@
     		$('.tag').remove();
     		$('#exampleFormControlInput1').val('');
     		$('#exampleFormControlTextarea1').val('');
+    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
+    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
     	})
 
     	$('.layer-bg').click(function(){
@@ -169,6 +171,8 @@
     		$('.tag').remove();
     		$('#exampleFormControlInput1').val('');
     		$('#exampleFormControlTextarea1').val('');
+    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
+    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
     	})
     	
 //       글쓰기
@@ -226,7 +230,6 @@
 		            type: "GET",
 		            data: { term: request.term },
 		            success: function(data) {
-		            	console.log("클릭1");
 		                var taggedMembers = $('.tag').map(function() {
 		                    return $(this).clone().children().remove().end().text().trim();
 		                }).get();
@@ -450,11 +453,20 @@
 						  		
 						  						  
 						<select id="groupSelect" class="select w-full max-w-xs">
-							
-							<c:forEach var="group" items="${groups }">
-						  <option value="${group.id }">${group.group_name }</option>
-						 	</c:forEach>
-						</select>  
+						    <c:forEach var="group" items="${groups}">
+						        <c:choose>
+						            <c:when test="${group.group_name eq '그룹 미지정'}">
+						                <option value="${group.id}" selected>${group.group_name}</option>
+						            </c:when>
+						            <c:otherwise>
+						                <option value="${group.id}">${group.group_name}</option>
+						            </c:otherwise>
+						        </c:choose>
+						    </c:forEach>
+						</select>
+
+
+
 	
 						</div>
 						<div class="mb-3">

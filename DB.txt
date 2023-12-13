@@ -91,42 +91,6 @@ CREATE TABLE `group` (
     group_name VARCHAR(50) NOT NULL
 );
 
-TRUNCATE TABLE `group`;
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹 미지정';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹1';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹2';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹3';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹4';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹5';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹6';
-
-INSERT INTO `group`
-SET projectId = 1,
-group_name = '그룹7';
-
-
-
 
 INSERT INTO tag
 SET projectId = 1,
@@ -212,7 +176,7 @@ title = 'test1',
 content = 'test2',
 `status` = '요청',
 projectId = 1,
-groupId = 2,
+groupId = 1,
 startDate = NOW(),
 endDate = NOW();
 
