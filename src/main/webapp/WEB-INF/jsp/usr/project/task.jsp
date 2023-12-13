@@ -266,7 +266,10 @@
 		
 		
 		
-		
+		$(".toggleTasks").click(function() {
+			$(this).parent().parent().parent().nextUntil('tbody').toggle();
+			console.log("asdasd");
+		});
 		
 		
 		
@@ -416,61 +419,58 @@
                     <li><a class="block" href="">알림</a></li>
                 </ul>
             </nav>        
-            
-            
-            <div>
-            	<button class="btn btn-active btn-sm addGroupButton">그룹 추가</button>
-            	<button class="btn btn-active btn-sm modal-exam">업무 추가</button>
+
+            <div class="flex justify-end p-2">
+            	<button class="btn btn-active btn-sm addGroupButton mx-2">그룹 추가</button>
+            	<button class="btn btn-active btn-sm modal-exam mx-2">업무 추가</button>
+            </div>	
             	<div class="layer-bg"></div>
-						<div class="layer">
-							<span id="close" class="close close-btn-x">&times;</span>
-							<div id="status">
-						      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-						      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-						      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-						      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-						      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
-						    </div>
-								<div id="inputArea">
-								  <div class="autocomplete-container flex flex-col">
-									  <!-- 기존의 입력 필드 -->
-									  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-									  <!-- 자동완성 목록 -->
-									  <section id="autocomplete-results" style="width:20%;"></section>
-								  </div>
-
-								<label for="start-date">시작일:</label>
-								<input type="date" id="start-date" name="start-date">
-
-							    <label class ="bg-red-100" for="end-date">마감일:</label>
-							    <input type="date" id="end-date" name="end-date">		
-								  		
-								  						  
-								<select id="groupSelect" class="select w-full max-w-xs">
-									
-									<c:forEach var="group" items="${groups }">
-								  <option value="${group.id }">${group.group_name }</option>
-								 	</c:forEach>
-								</select>  
-								  
-								  
-								  
-								</div>
-								<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">제목</label>
-								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
-								</div>
-								<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-								  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-								</div>
-						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
+				<div class="layer">
+					<span id="close" class="close close-btn-x">&times;</span>
+					<div id="status">
+				      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+				      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+				      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+				      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+				    </div>
+						<div id="inputArea">
+						  <div class="autocomplete-container flex flex-col">
+							  <!-- 기존의 입력 필드 -->
+							  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+							  <!-- 자동완성 목록 -->
+							  <section id="autocomplete-results" style="width:20%;"></section>
+						  </div>
+	
+						<label for="start-date">시작일:</label>
+						<input type="date" id="start-date" name="start-date">
+	
+					    <label class ="bg-red-100" for="end-date">마감일:</label>
+					    <input type="date" id="end-date" name="end-date">		
+						  		
+						  						  
+						<select id="groupSelect" class="select w-full max-w-xs">
+							
+							<c:forEach var="group" items="${groups }">
+						  <option value="${group.id }">${group.group_name }</option>
+						 	</c:forEach>
+						</select>  
+	
 						</div>
-            </div>
+						<div class="mb-3">
+						  <label for="exampleFormControlInput1" class="form-label">제목</label>
+						  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+						</div>
+				    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
+				</div>
+            
             
 			<div class="overflow-x-auto">
 			    <table class="table task-table">
-			    	
 			        <colgroup>
 			            <col style="width: 20%;">
 			            <col style="width: 10%;">
@@ -493,7 +493,7 @@
 			        </thead>
 			        <c:forEach var="group" items="${groupedArticles}">
 			            <tbody>
-			                <tr><th class="font-bold" colspan="7"><c:out value="${group.key}"/></th></tr>
+			                <tr><th class="font-bold" colspan="7"><c:out value="${group.key}"/> <button class="toggleTasks">업무 숨기기/보이기</button></th></tr>
 			                <c:choose>
                     			<c:when test="${not empty group.value}">
 			                <c:forEach var="article" items="${group.value}">
