@@ -268,11 +268,10 @@
 		});
 		
 		
-		
-		$(".toggleTasks").click(function() {
-			$(this).parent().parent().parent().nextUntil('tbody').toggle();
-			console.log("asdasd");
-		});
+		// 그룹 내의 업무를 보이기/숨기기하는 기능
+		 $('.toggleTasks').click(function() {
+			    $(this).closest('tr').nextAll().toggle();
+			});
 		
 		
 		
@@ -290,7 +289,7 @@
 
 
 <body>
-	<div class="task-manager">
+	<div class="task-manager overflow-y-auto">
 		<div class="left-bar">
 				    <div class="upper-part">
 				      <div class="actions">
@@ -505,7 +504,7 @@
 			        </thead>
 			        <c:forEach var="group" items="${groupedArticles}">
 			            <tbody>
-			                <tr><th class="font-bold" colspan="7"><c:out value="${group.key}"/> <button class="toggleTasks">업무 숨기기/보이기</button></th></tr>
+			                <tr><th class="font-bold" colspan="7"> <button class="toggleTasks">▶</button> <c:out value="${group.key}"/></th></tr>
 			                <c:choose>
                     			<c:when test="${not empty group.value}">
 			                <c:forEach var="article" items="${group.value}">
