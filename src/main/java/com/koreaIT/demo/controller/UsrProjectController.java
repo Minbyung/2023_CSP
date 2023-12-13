@@ -66,10 +66,10 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/detail")
-	public String detail(Model model, int projectId) {
+	public String detail(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
-		List<Article> articles = articleService.getArticles(projectId);
+		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
 		
 		model.addAttribute("project", project);
@@ -80,10 +80,10 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/task")
-	public String task(Model model, int projectId) {
+	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
-		List<Article> articles = articleService.getArticles(projectId);
+		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
 		
 		

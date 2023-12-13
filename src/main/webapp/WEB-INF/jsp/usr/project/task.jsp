@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+  
   <title>${project.project_name }</title>
 </head>
 <!-- partial:index.partial.html -->
@@ -50,7 +53,6 @@
 		           "isFavorite": !isFavorite 
 		       },
 		       success: function(response) {
-		       	console.log(response);
 		       	 $('#favoriteIcon').toggleClass('far fas');
 		       }
 		   });
@@ -128,7 +130,6 @@
 	                'group_name': group_name
 	            },
 	            success: function() {
-	            	console.log(projectId);
 	            	//그룹명 입력 창을 제거
 // 	            	$("#groupNameInput").parent().parent().remove();
 	            	location.reload();
@@ -211,7 +212,7 @@
 	        type: 'POST',
 	        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId, startDate: startDate, endDate: endDate },
 	        success: function(data) {
-	          console.log(selectedGroupId);
+
 	          $("#title").val("");
 	          $("#content").val("");
 	          $('.tag').remove();
@@ -274,6 +275,29 @@
 			});
 		
 		
+		
+		 $('.sort-btn').click(function() {
+			    var column = $(this).data('column');
+			    var order = $(this).data('order');
+
+			    $.ajax({
+			        url: '/usr/project/task',
+			        type: 'GET',
+			        data: {
+			            projectId: projectId,
+			            column: column,
+			            order: order
+			        },
+			        success: function(data) {
+			            console.log(data);
+			            location.reload();
+			        }
+			    });
+			 });
+		 
+		 
+		 
+		 
 		
 		
 	});	
@@ -463,10 +487,6 @@
 						        </c:choose>
 						    </c:forEach>
 						</select>
-
-
-
-	
 						</div>
 						<div class="mb-3">
 						  <label for="exampleFormControlInput1" class="form-label">제목</label>
@@ -493,7 +513,10 @@
 			        </colgroup>
 			        <thead>
 			            <tr>
-			                <th>업무명</th>
+			                <th>업무명
+				                <button class="sort-btn" data-column="title" data-order="ASC">▲</button>
+	   							<button class="sort-btn" data-column="title" data-order="DESC">▼</button>
+   							</th>
 			                <th style="text-align: center;">상태</th>
 			                <th style="text-align: center;">담당자</th>
 			                <th style="text-align: center;">시작일</th>

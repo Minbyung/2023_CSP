@@ -32,8 +32,8 @@ public class ArticleService {
 //		return articleDao.getArticles(boardId, searchKeywordType, searchKeyword, limitStart, itemsInAPage);
 //	}
 	
-	public List<Article> getArticles(int projectId) {
-		return articleDao.getArticles(projectId);
+	public List<Article> getArticles(int projectId, String column, String order) {
+		return articleDao.getArticles(projectId, column, order);
 	}
 	
 	public Article forPrintArticle(int id) {
