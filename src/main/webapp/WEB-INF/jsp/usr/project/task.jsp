@@ -295,72 +295,73 @@
 			    window.location.href = '/usr/project/task?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
 
 			    $.ajax({
-			        url: "../project/getGroupedArticles",
+			        url: "../project/task",
 			        type: 'GET',
 			        data: {
 			            projectId: projectId,
 			            column: column,
 			            order: order
 			        },
-			        success: function(data) {	        	
-			        	// 테이블 생성
-			            var table = $('#task-table-1');
+			        success: function(data) {
+// 			        	location.reload();
+// 			        	// 테이블 생성
+// 			            var table = $('#task-table-1');
 
-			            // 기존 tbody 삭제
-			            table.find('tbody').remove();
+// 			            // 기존 tbody 삭제
+// 			            table.find('tbody').remove();
 						       
-			            $.each(data, function(group, articles) {
-			                var tbody = $('<tbody></tbody>');
+// 			            $.each(data, function(group, articles) {
+// 			                var tbody = $('<tbody></tbody>');
 
-			                // 그룹 이름을 표시하는 행 생성
-			                var groupRow = $('<tr></tr>');
-			                groupRow.append('<th class="font-bold" colspan="7">' +
-			                                '<button class="toggleTasks">▶</button>' + group +
-			                                '</th>');
-			                tbody.append(groupRow);
+// 			                // 그룹 이름을 표시하는 행 생성
+// 			                var groupRow = $('<tr></tr>');
+// 			                groupRow.append('<th class="font-bold" colspan="7">' +
+// 			                                '<button class="toggleTasks">▶</button>' + group +
+// 			                                '</th>');
+// 			                tbody.append(groupRow);
 			            
-			                // 각 아티클을 표시하는 행 생성
-			                if (articles.length > 0) {
-			                    $.each(articles, function(index, article) {
-			                    	console.log(article.id);
-			                        var row = $('<tr></tr>');
-			                        row.append('<td>' + article.title + '</td>');
+// 			                // 각 아티클을 표시하는 행 생성
+// 			                if (articles.length > 0) {
+// 			                    $.each(articles, function(index, article) {
+// 			                    	console.log(article.id);
+// 			                        var row = $('<tr></tr>');
+// 			                        row.append('<td>' + article.title + '</td>');
 			                        
-			                     // 상태를 표시하는 부분
-			                        row.append(`
-			                            <td class="status relative" data-id="\${article.id}">
-			                                <button class="status-btn-taskupdate btn btn-active btn-xs btn-block" data-status="\${article.status}">
-			                                    \${article.status}
-			                                </button>
-			                                <div class="status-menu" style="display: none; position: absolute; z-index: 1000;">
-			                                    <div class="bg-white border border-black border-solid p-3 rounded">
-			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="요청" data-article-id="\${article.id}">요청</button>
-			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="진행" data-article-id="\${article.id}">진행</button>
-			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="피드백" data-article-id="\${article.id}">피드백</button>
-			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="완료" data-article-id="\${article.id}">완료</button>
-			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="보류" data-article-id="\${article.id}">보류</button>
-			                                    </div>
-			                                </div>
-			                            </td>
-			                        `);
+// 			                     // 상태를 표시하는 부분
+// 			                        row.append(`
+// 			                            <td class="status relative" data-id="\${article.id}">
+// 			                                <button class="status-btn-taskupdate btn btn-active btn-xs btn-block" data-status="\${article.status}">
+// 			                                    \${article.status}
+// 			                                </button>
+// 			                                <div class="status-menu" style="display: none; position: absolute; z-index: 1000;">
+// 			                                    <div class="bg-white border border-black border-solid p-3 rounded">
+// 			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="요청" data-article-id="\${article.id}">요청</button>
+// 			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="진행" data-article-id="\${article.id}">진행</button>
+// 			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="피드백" data-article-id="\${article.id}">피드백</button>
+// 			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="완료" data-article-id="\${article.id}">완료</button>
+// 			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="보류" data-article-id="\${article.id}">보류</button>
+// 			                                    </div>
+// 			                                </div>
+// 			                            </td>
+// 			                        `);
 			                     
-			                        row.append('<td style="text-align: center;">' + article.taggedNames + '</td>');
-			                        row.append('<td style="text-align: center;">' + article.startDate.substring(2, 10) + '</td>');
-			                        row.append('<td style="text-align: center;">' + article.endDate.substring(2, 10) + '</td>');
-			                        row.append('<td style="text-align: center;">' + article.regDate.substring(2, 10) + '</td>');
-			                        row.append('<td style="text-align: center;">' + article.id + '</td>');
-			                        tbody.append(row);
-			                    });
-			                } else {
-			                    // 아티클이 없는 경우
-			                    var emptyRow = $('<tr></tr>');
-			                    emptyRow.append('<td colspan="7" style="text-align: center;">작업 내용이 없습니다.</td>');
-			                    tbody.append(emptyRow);
-			                }
+// 			                        row.append('<td style="text-align: center;">' + article.taggedNames + '</td>');
+// 			                        row.append('<td style="text-align: center;">' + article.startDate.substring(2, 10) + '</td>');
+// 			                        row.append('<td style="text-align: center;">' + article.endDate.substring(2, 10) + '</td>');
+// 			                        row.append('<td style="text-align: center;">' + article.regDate.substring(2, 10) + '</td>');
+// 			                        row.append('<td style="text-align: center;">' + article.id + '</td>');
+// 			                        tbody.append(row);
+// 			                    });
+// 			                } else {
+// 			                    // 아티클이 없는 경우
+// 			                    var emptyRow = $('<tr></tr>');
+// 			                    emptyRow.append('<td colspan="7" style="text-align: center;">작업 내용이 없습니다.</td>');
+// 			                    tbody.append(emptyRow);
+// 			                }
 
-			                // 생성된 tbody를 테이블에 추가
-			                table.append(tbody);
-			            });
+// 			                // 생성된 tbody를 테이블에 추가
+// 			                table.append(tbody);
+// 			            });
 			         } 
 			    });
 			 });
