@@ -13,6 +13,9 @@
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.widgets.min.js"></script>
+  	
   
   <title>${project.project_name }</title>
 </head>
@@ -68,7 +71,7 @@
 	    });
 	    
 	    $(".status-menu button").click(function() {
-	        var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져옵니다.
+	        var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져오기
 	        var articleId = $(this).data('article-id');
 	        $.ajax({
 	            url: '../article/doUpdateStatus',
@@ -78,7 +81,7 @@
 	                'newStatus': newStatus
 	            },
 	            success: function() {
-	                // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨깁니다.
+	                // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨김
 	                $(".status[data-article-id=" + articleId + "] .status-btn-taskupdate").text(status);
 	                $(".status-menu").hide();
 	                location.reload();
@@ -196,14 +199,14 @@
 	    var title = $("#exampleFormControlInput1").val();
 	    var content = $("#exampleFormControlTextarea1").val();
 	    
-	 // 시작일과 마감일을 가져옵니다.
+	 // 시작일과 마감일을 가져오기
 	    var startDate = $("#start-date").val();
 	    var endDate = $("#end-date").val();
 	    
 	    
-	 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
+	 // 태그에 있는 모든 담당자를 배열로 가져오기
 	    var managers = $('.tag').map(function() {
-	  // 'x' 버튼을 제외한 텍스트만 반환합니다.
+	  // 'x' 버튼을 제외한 텍스트만 반환
 	        return $(this).clone().children().remove().end().text();
 	    }).get();
 	 	
@@ -275,13 +278,18 @@
 			});
 		
 		
+
+
+
 		
+		
+		//정렬 기능
 		 $('.sort-btn').click(function() {
 			    var column = $(this).data('column');
 			    var order = $(this).data('order');
 
 			    $.ajax({
-			        url: '/usr/project/task',
+			        url: "../project/getGroupedArticles",
 			        type: 'GET',
 			        data: {
 			            projectId: projectId,
@@ -289,13 +297,52 @@
 			            order: order
 			        },
 			        success: function(data) {
-			            console.log(data);
-			            location.reload();
-			        }
+			        	console.log(order);
+			        	console.log(column);
+			        	console.log(data);
+			        	// 테이블 생성
+			            var table = $('#task-table-1');
+
+			            // 기존 tbody 삭제
+			            table.find('tbody').remove();
+						       
+			            $.each(data, function(group, articles) {
+			                var tbody = $('<tbody></tbody>');
+
+			                // 그룹 이름을 표시하는 행 생성
+			                var groupRow = $('<tr></tr>');
+			                groupRow.append('<th class="font-bold" colspan="7">' +
+			                                '<button class="toggleTasks">▶</button>' + group +
+			                                '</th>');
+			                tbody.append(groupRow);
+			            
+			                // 각 아티클을 표시하는 행 생성
+			                if (articles.length > 0) {
+			                    $.each(articles, function(index, article) {
+			                        var row = $('<tr></tr>');
+			                        row.append('<td>' + article.title + '</td>');
+			                        
+			                        row.append('<td style="text-align: center;">' + article.status + '</td>');
+			                        row.append('<td style="text-align: center;">' + article.taggedNames + '</td>');
+			                        row.append('<td style="text-align: center;">' + article.startDate.substring(2, 10) + '</td>');
+			                        row.append('<td style="text-align: center;">' + article.endDate.substring(2, 10) + '</td>');
+			                        row.append('<td style="text-align: center;">' + article.regDate.substring(2, 10) + '</td>');
+			                        row.append('<td style="text-align: center;">' + article.id + '</td>');
+			                        tbody.append(row);
+			                    });
+			                } else {
+			                    // 아티클이 없는 경우
+			                    var emptyRow = $('<tr></tr>');
+			                    emptyRow.append('<td colspan="7" style="text-align: center;">작업 내용이 없습니다.</td>');
+			                    tbody.append(emptyRow);
+			                }
+
+			                // 생성된 tbody를 테이블에 추가
+			                table.append(tbody);
+			            });
+			         } 
 			    });
 			 });
-		 
-		 
 		 
 		 
 		
@@ -499,9 +546,8 @@
 				    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
 				</div>
             
-            
 			<div class="overflow-x-auto">
-			    <table class="table task-table">
+			    <table id="task-table-1" class="table task-table tablesorter">
 			        <colgroup>
 			            <col style="width: 20%;">
 			            <col style="width: 10%;">

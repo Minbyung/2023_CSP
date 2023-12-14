@@ -89,14 +89,14 @@ public class UsrProjectController {
 		
 		// groupId 별로 article을 그룹화
 		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
-		// 먼저 모든 그룹을 맵에 추가합니다.
+		// 먼저 모든 그룹을 맵에 추가
 		for (Group group : groups) {
 		    groupedArticles.put(group.getGroup_name(), new ArrayList<>());
 		}
-		// 그런 다음 각 게시글을 해당 그룹에 추가합니다.
+		// 그런 다음 각 게시글을 해당 그룹에 추가
 		for (Article article : articles) {
 		    String groupName = article.getGroupName();
-		    if (groupedArticles.containsKey(groupName)) { // 이 검사는 생략해도 됩니다.
+		    if (groupedArticles.containsKey(groupName)) { 
 		        groupedArticles.get(groupName).add(article);
 		    }
 		}
@@ -109,6 +109,42 @@ public class UsrProjectController {
 		return "usr/project/task";
 	}
 //	../project/task?projectId=1"
+	
+	
+	
+	@RequestMapping("/usr/project/getGroupedArticles")
+	@ResponseBody
+	public Map<String, List<Article>> getGroupedArticles(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+		
+		List<Article> articles = articleService.getArticles(projectId, column, order);
+		List<Group> groups = groupService.getGroups(projectId);
+		
+		for (Article article : articles) {
+			System.out.println(article.getId());
+		}
+		
+		
+		// groupId 별로 article을 그룹화
+		
+		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
+		// 먼저 모든 그룹을 맵에 추가
+		for (Group group : groups) {
+		    groupedArticles.put(group.getGroup_name(), new ArrayList<>());
+		}
+		
+		// 그런 다음 각 게시글을 해당 그룹에 추가
+		for (Article article : articles) {
+		    String groupName = article.getGroupName();
+		    if (groupedArticles.containsKey(groupName)) { 
+		        groupedArticles.get(groupName).add(article);
+		    }
+		}
+		
+		return groupedArticles;
+	}
+	
+	
+	
 	
 	@RequestMapping("/usr/project/getMembers")
 	@ResponseBody

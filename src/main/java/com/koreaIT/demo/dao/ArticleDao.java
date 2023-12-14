@@ -56,7 +56,6 @@ public interface ArticleDao {
 	public int getArticlesCnt(int boardId, String searchKeywordType, String searchKeyword);
 	
 	@Select("""
-
 			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
@@ -65,7 +64,7 @@ public interface ArticleDao {
 				LEFT JOIN `group` AS G ON A.groupId = G.id
 				WHERE A.projectId = #{projectId}
 				GROUP BY A.id
-				ORDER BY #{column} #{order}
+				ORDER BY title DESC
 			""")
 	public List<Article> getArticles(int projectId, String column, String order);
 	

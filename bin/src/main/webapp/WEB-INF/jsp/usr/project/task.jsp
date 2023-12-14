@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+  
   <title>${project.project_name }</title>
 </head>
 <!-- partial:index.partial.html -->
@@ -21,6 +24,7 @@
 	<script>
 	$(document).ready(function() {
 		var projectId = $('#favoriteIcon').data('project-id');
+		
 		$.ajax({
 		    url: '../favorite/getFavorite',
 		    method: 'GET',
@@ -49,14 +53,259 @@
 		           "isFavorite": !isFavorite 
 		       },
 		       success: function(response) {
-		       	console.log(response);
 		       	 $('#favoriteIcon').toggleClass('far fas');
 		       }
 		   });
 		});
+	
+		$(".status-btn-taskupdate").click(function(event) {
+	        event.stopPropagation();
+	        $(this).siblings(".status-menu").toggle();
+	    });
+
+	    $(document).click(function() {
+	        $(".status-menu").hide();
+	    });
+	    
+	    $(".status-menu button").click(function() {
+	        var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져옵니다.
+	        var articleId = $(this).data('article-id');
+	        $.ajax({
+	            url: '../article/doUpdateStatus',
+	            method: 'POST',
+	            data: {
+	            	'articleId': articleId,
+	                'newStatus': newStatus
+	            },
+	            success: function() {
+	                // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨깁니다.
+	                $(".status[data-article-id=" + articleId + "] .status-btn-taskupdate").text(status);
+	                $(".status-menu").hide();
+	                location.reload();
+	            },
+	            error: function() {
+	                alert('상태 업데이트에 실패했습니다.');
+	            }
+	        });
+	    });
+		
+		 // 그룹 추가 버튼을 눌렀을 때
+	    $(".addGroupButton").click(function(){
+	      // 그룹명 입력 창을 생성
+	      var $inputRow = $('<tr class="inputRow"><th colspan="7"><input placeholder="추가할 그룹명을 입력해 주세요." type="text" id="groupNameInput"></th></tr>');
+	      $(".task-table").prepend($inputRow);
+	      $("#groupNameInput").focus();
+	    });	
+		
+		 
+		 // 그룹명 입력 창에 엔터를 눌렀을 때
+	    $(document).on('keypress', '#groupNameInput', function(event) {
+	        if(event.keyCode == 13) {
+	            saveGroup();
+	        }
+	    });
+
+	   /*  // 그룹명 입력 창 외의 영역을 클릭했을 때
+	    $(document).click(function(event){
+		  if($('#groupNameInput').is(":visible") && !$(event.target).closest('#groupNameInput').length){
+		    saveGroup();
+		  }
+		}); */
+	    
+		 // 그룹 저장 함수
+	    function saveGroup() {
+        
+	      var group_name = $("#groupNameInput").val().trim();
+	      var projectId = $('#favoriteIcon').data('project-id');
+	      
+	      if (group_name.length === 0) {
+	            alert('그룹 이름을 입력해주세요.');
+	            return;
+	        }
+	       $.ajax({
+	            url: '../group/doMake',
+	            method: 'POST',
+	            data: {
+	            	'projectId': projectId,
+	                'group_name': group_name
+	            },
+	            success: function() {
+	            	//그룹명 입력 창을 제거
+// 	            	$("#groupNameInput").parent().parent().remove();
+	            	location.reload();
+	            },
+	            error: function() {
+	                alert('그룹 저장에 실패했습니다.');
+	            }
+	        });
+		
+	    } 
+		
+		
+		
+//		업무 추가 버튼을 누르면		
+	    $('.modal-exam').click(function(){
+    		$('.layer-bg').show();
+    		$('.layer').show();
+    	})
+
+    	$('.close-btn').click(function(){
+    		$('.layer-bg').hide();
+    		$('.layer').hide();
+    	})
+
+    	$('.close-btn-x').click(function(){
+    		$('.layer-bg').hide();
+    		$('.layer').hide();
+    		// x버튼으로 끄면 안에 내용 빈칸으로 초기화
+    		$('.tag').remove();
+    		$('#exampleFormControlInput1').val('');
+    		$('#exampleFormControlTextarea1').val('');
+    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
+    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
+    	})
+
+    	$('.layer-bg').click(function(){
+    		$('.layer-bg').hide();
+    		$('.layer').hide();
+    		// 회색바탕 눌러서 끄면 안에 내용 빈칸으로 초기화
+    		$('.tag').remove();
+    		$('#exampleFormControlInput1').val('');
+    		$('#exampleFormControlTextarea1').val('');
+    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
+    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
+    	})
+    	
+//       글쓰기
+		var status = "요청"; // Default status 
+		$(".status-btn-write[data-status='요청']").addClass("active");
+		
+		$(".status-btn-write").click(function(){
+	 	    $(".status-btn-write").removeClass("active");
+	 	    $(this).addClass("active");
+
+	 	    status = $(this).attr('data-status');
+	 	  });
+
+    	$("#submitBtn").click(function(){
+    	var selectedGroupId = parseInt($('#groupSelect').val());
+    	if (!selectedGroupId) {
+            // 아무 것도 선택되지 않았다면 '그룹 미지정' 그룹의 ID 설정
+            $('#groupSelect').val('그룹 미지정');
+        }
+	    var title = $("#exampleFormControlInput1").val();
+	    var content = $("#exampleFormControlTextarea1").val();
+	    
+	 // 시작일과 마감일을 가져옵니다.
+	    var startDate = $("#start-date").val();
+	    var endDate = $("#end-date").val();
+	    
+	    
+	 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
+	    var managers = $('.tag').map(function() {
+	  // 'x' 버튼을 제외한 텍스트만 반환합니다.
+	        return $(this).clone().children().remove().end().text();
+	    }).get();
+	 	
+	    $.ajax({
+	        url: '../article/doWrite',
+	        type: 'POST',
+	        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId, startDate: startDate, endDate: endDate },
+	        success: function(data) {
+
+	          $("#title").val("");
+	          $("#content").val("");
+	          $('.tag').remove();
+	          $('.layer-bg').hide();
+			  $('.layer').hide();
+			  location.reload();
+	        }
+	      });
+	    });
+      
+     
+		 $("#search").autocomplete({
+		    source: function(request, response) {
+		        $.ajax({
+		            url: "../project/getMembers",
+		            type: "GET",
+		            data: { term: request.term },
+		            success: function(data) {
+		                var taggedMembers = $('.tag').map(function() {
+		                    return $(this).clone().children().remove().end().text().trim();
+		                }).get();
+		
+		                var results = $.grep(data, function(result){
+		                    return $.inArray(result.trim(), taggedMembers) === -1;
+		                });
+		
+		                response(results);
+		            },
+		            error: function(err) {
+		                console.error(err);
+		            }
+		        });
+		    },
+		    select: function(event, ui) {
+		        var newValue = ui.item.value;
+		        $('#search').val('');
+		
+		        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+		        $('#inputArea').prepend(tag);
+		
+		        $('#search').prependTo('.autocomplete-container');
+		
+		        tag.find('.tag-remove').on('click', function() {
+		            tag.remove();
+		        });
+		
+		        return false;
+		    }
+		}).on("focus", function() {
+			// $(this).autocomplete("search", ""); 원래 이렇게 하려했는데 서버에서 처리를 못하고있음
+			// request.term은 빈 문자열("")이 되는데, 서버에서 이를 처리하지 못하는 경우 
+			// 클라이언트 측에서 빈 문자열 대신 기본 검색어(" ")를 제공 모든 가능한 검색 결과를 반환하는 기본 검색어를 사용
+		    $(this).autocomplete("search", " "); 
+		});
+		
+		
+		// 그룹 내의 업무를 보이기/숨기기하는 기능
+		 $('.toggleTasks').click(function() {
+			    $(this).closest('tr').nextAll().toggle();
+			});
+		
+		
+		
+		 $('.sort-btn').click(function() {
+			    var column = $(this).data('column');
+			    var order = $(this).data('order');
+
+			    $.ajax({
+			        url: '/usr/project/task',
+			        type: 'GET',
+			        data: {
+			            projectId: projectId,
+			            column: column,
+			            order: order
+			        },
+			        success: function(data) {
+			            console.log(data);
+			            location.reload();
+			        }
+			    });
+			 });
+		 
+		 
+		 
+		 
+		
+		
 	});	
+			
 	
 	
+	
+
 	</script>
 
 
@@ -64,7 +313,7 @@
 
 
 <body>
-	<div class="task-manager">
+	<div class="task-manager overflow-y-auto">
 		<div class="left-bar">
 				    <div class="upper-part">
 				      <div class="actions">
@@ -195,8 +444,133 @@
                     <li><a class="block" href="">파일</a></li>
                     <li><a class="block" href="">알림</a></li>
                 </ul>
-            </nav>
-                   
+            </nav>        
+
+            <div class="flex justify-end p-2">
+            	<button class="btn btn-active btn-sm addGroupButton mx-2">그룹 추가</button>
+            	<button class="btn btn-active btn-sm modal-exam mx-2">업무 추가</button>
+            </div>	
+            	<div class="layer-bg"></div>
+				<div class="layer">
+					<span id="close" class="close close-btn-x">&times;</span>
+					<div id="status">
+				      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+				      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+				      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+				      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+				    </div>
+						<div id="inputArea">
+						  <div class="autocomplete-container flex flex-col">
+							  <!-- 기존의 입력 필드 -->
+							  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+							  <!-- 자동완성 목록 -->
+							  <section id="autocomplete-results" style="width:20%;"></section>
+						  </div>
+	
+						<label for="start-date">시작일:</label>
+						<input type="date" id="start-date" name="start-date">
+	
+					    <label class ="bg-red-100" for="end-date">마감일:</label>
+					    <input type="date" id="end-date" name="end-date">		
+						  		
+						  						  
+						<select id="groupSelect" class="select w-full max-w-xs">
+						    <c:forEach var="group" items="${groups}">
+						        <c:choose>
+						            <c:when test="${group.group_name eq '그룹 미지정'}">
+						                <option value="${group.id}" selected>${group.group_name}</option>
+						            </c:when>
+						            <c:otherwise>
+						                <option value="${group.id}">${group.group_name}</option>
+						            </c:otherwise>
+						        </c:choose>
+						    </c:forEach>
+						</select>
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlInput1" class="form-label">제목</label>
+						  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+						</div>
+				    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
+				</div>
+            
+            
+			<div class="overflow-x-auto">
+			    <table class="table task-table">
+			        <colgroup>
+			            <col style="width: 20%;">
+			            <col style="width: 10%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			            <col style="width: 14%;">
+			        </colgroup>
+			        <thead>
+			            <tr>
+			                <th>업무명
+				                <button class="sort-btn" data-column="title" data-order="ASC">▲</button>
+	   							<button class="sort-btn" data-column="title" data-order="DESC">▼</button>
+   							</th>
+			                <th style="text-align: center;">상태</th>
+			                <th style="text-align: center;">담당자</th>
+			                <th style="text-align: center;">시작일</th>
+			                <th style="text-align: center;">마감일</th>
+			                <th style="text-align: center;">등록일</th>
+			                <th style="text-align: center;">업무번호</th>
+			            </tr>
+			        </thead>
+			        <c:forEach var="group" items="${groupedArticles}">
+			            <tbody>
+			                <tr><th class="font-bold" colspan="7"> <button class="toggleTasks">▶</button> <c:out value="${group.key}"/></th></tr>
+			                <c:choose>
+                    			<c:when test="${not empty group.value}">
+			                <c:forEach var="article" items="${group.value}">
+			                    <tr>
+			                        <td><c:out value="${article.title}"></c:out></td>						
+	                                <td class="status relative" data-id="${article.id}">
+	                                    <button class="status-btn-taskupdate btn btn-active btn-xs btn-block" data-status="${article.status}">
+	                                        <c:out value="${article.status}"></c:out>
+	                                    </button>
+	                                    <div class="status-menu" style="display: none; position: absolute; z-index: 1000;">
+	                                        <div class="bg-white border border-black border-solid p-3 rounded">
+	                                            <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="요청" data-article-id="${article.id}">요청</button>
+	                                            <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="진행" data-article-id="${article.id}">진행</button>
+	                                            <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="피드백" data-article-id="${article.id}">피드백</button>
+	                                            <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="완료" data-article-id="${article.id}">완료</button>
+	                                            <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="보류" data-article-id="${article.id}">보류</button>
+	                                        </div>
+	                                    </div>
+	                                </td>						
+	                                <td style="text-align: center;">
+	                                    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
+	                                        <c:out value="${name}"></c:out>
+	                                    </c:forEach>
+	                                </td>
+	                                <td style="text-align: center;"><c:out value="${article.startDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.endDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.regDate.substring(2, 10)}"></c:out></td>
+	                                <td style="text-align: center;"><c:out value="${article.id}"></c:out></td>
+			                    </tr>
+			                </c:forEach>
+				                </c:when>
+		                  		<c:otherwise>
+		                  		<tr>
+		                            <td colspan="7" style="text-align: center;">작업 내용이 없습니다.</td>
+		                        </tr>
+		                  	  </c:otherwise>
+		               		 </c:choose>
+			            </tbody>
+			        </c:forEach>
+			    </table>
+			</div>
+			
+			
         </div>      
     </div>              
 </body>
