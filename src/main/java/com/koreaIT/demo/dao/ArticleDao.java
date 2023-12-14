@@ -64,7 +64,7 @@ public interface ArticleDao {
 				LEFT JOIN `group` AS G ON A.groupId = G.id
 				WHERE A.projectId = #{projectId}
 				GROUP BY A.id
-				ORDER BY title DESC
+				ORDER BY ${column} ${order}
 			""")
 	public List<Article> getArticles(int projectId, String column, String order);
 	

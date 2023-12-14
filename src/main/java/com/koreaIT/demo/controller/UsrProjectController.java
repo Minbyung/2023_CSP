@@ -80,7 +80,7 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/task")
-	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+	public String task(Model model, @RequestParam(defaultValue = "1") int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
@@ -118,11 +118,6 @@ public class UsrProjectController {
 		
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
-		
-		for (Article article : articles) {
-			System.out.println(article.getId());
-		}
-		
 		
 		// groupId 별로 article을 그룹화
 		

@@ -27,7 +27,11 @@
 	<script>
 	$(document).ready(function() {
 		var projectId = $('#favoriteIcon').data('project-id');
-		
+		var defaultColumn = 'id';
+		var defaultOrder = 'DESC';
+		var column = localStorage.getItem('column') || defaultColumn;
+		var order = localStorage.getItem('order') || defaultOrder;
+			
 		$.ajax({
 		    url: '../favorite/getFavorite',
 		    method: 'GET',
@@ -61,37 +65,37 @@
 		   });
 		});
 	
-		$(".status-btn-taskupdate").click(function(event) {
-	        event.stopPropagation();
-	        $(this).siblings(".status-menu").toggle();
-	    });
+		$(document).on('click', '.status-btn-taskupdate', function(event) {
+		    event.stopPropagation();
+		    $(this).siblings(".status-menu").toggle();
+		});
 
 	    $(document).click(function() {
 	        $(".status-menu").hide();
 	    });
 	    
-	    $(".status-menu button").click(function() {
-	        var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져오기
-	        var articleId = $(this).data('article-id');
-	        $.ajax({
-	            url: '../article/doUpdateStatus',
-	            method: 'POST',
-	            data: {
-	            	'articleId': articleId,
-	                'newStatus': newStatus
-	            },
-	            success: function() {
-	                // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨김
-	                $(".status[data-article-id=" + articleId + "] .status-btn-taskupdate").text(status);
-	                $(".status-menu").hide();
-	                location.reload();
-	            },
-	            error: function() {
-	                alert('상태 업데이트에 실패했습니다.');
-	            }
-	        });
-	    });
-		
+		$(document).on('click', '.status-menu button', function() { //동적으로 생성된 요소에 이벤트 핸들러를 적용하려면, $(document).on(event, selector, function) 형태를 사용
+		    var newStatus = $(this).data('status'); // 클릭한 버튼의 상태를 가져오기
+		    var articleId = $(this).data('article-id');
+		    $.ajax({
+		        url: '../article/doUpdateStatus',
+		        method: 'POST',
+		        data: {
+		            'articleId': articleId,
+		            'newStatus': newStatus
+		        },
+		        success: function() {
+		            // 요청이 성공하면 상태 버튼의 텍스트를 업데이트하고 상태 리스트를 숨김
+		            $(".status[data-article-id=" + articleId + "] .status-btn-taskupdate").text(status);
+		            $(".status-menu").hide();
+		            location.reload();
+		        },
+		        error: function() {
+		            alert('상태 업데이트에 실패했습니다.');
+		        }
+		    });
+		});
+
 		 // 그룹 추가 버튼을 눌렀을 때
 	    $(".addGroupButton").click(function(){
 	      // 그룹명 입력 창을 생성
@@ -273,20 +277,22 @@
 		
 		
 		// 그룹 내의 업무를 보이기/숨기기하는 기능
-		 $('.toggleTasks').click(function() {
-			    $(this).closest('tr').nextAll().toggle();
-			});
-		
-		
+// 		 $('.toggleTasks').click(function() {
+// 			    $(this).closest('tr').nextAll().toggle();
+// 			});		
+		$(document).on('click', '.toggleTasks', function() { // 동적으로 생성된 요소에 이벤트 핸들러를 적용하려면, $(document).on(event, selector, function) 형태를 사용
+		    $(this).closest('tr').nextAll().toggle();
+		});		
 
-
-
-		
-		
 		//정렬 기능
 		 $('.sort-btn').click(function() {
 			    var column = $(this).data('column');
 			    var order = $(this).data('order');
+			    
+				// 새로고침해도 정렬값이 유지
+			    localStorage.setItem('column', column);
+			    localStorage.setItem('order', order);
+			    window.location.href = '/usr/project/task?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
 
 			    $.ajax({
 			        url: "../project/getGroupedArticles",
@@ -296,10 +302,7 @@
 			            column: column,
 			            order: order
 			        },
-			        success: function(data) {
-			        	console.log(order);
-			        	console.log(column);
-			        	console.log(data);
+			        success: function(data) {	        	
 			        	// 테이블 생성
 			            var table = $('#task-table-1');
 
@@ -319,10 +322,28 @@
 			                // 각 아티클을 표시하는 행 생성
 			                if (articles.length > 0) {
 			                    $.each(articles, function(index, article) {
+			                    	console.log(article.id);
 			                        var row = $('<tr></tr>');
 			                        row.append('<td>' + article.title + '</td>');
 			                        
-			                        row.append('<td style="text-align: center;">' + article.status + '</td>');
+			                     // 상태를 표시하는 부분
+			                        row.append(`
+			                            <td class="status relative" data-id="\${article.id}">
+			                                <button class="status-btn-taskupdate btn btn-active btn-xs btn-block" data-status="\${article.status}">
+			                                    \${article.status}
+			                                </button>
+			                                <div class="status-menu" style="display: none; position: absolute; z-index: 1000;">
+			                                    <div class="bg-white border border-black border-solid p-3 rounded">
+			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="요청" data-article-id="\${article.id}">요청</button>
+			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="진행" data-article-id="\${article.id}">진행</button>
+			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="피드백" data-article-id="\${article.id}">피드백</button>
+			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="완료" data-article-id="\${article.id}">완료</button>
+			                                        <button class="status-btn-taskupdate btn btn-active btn-xs btn-block my-1" data-status="보류" data-article-id="\${article.id}">보류</button>
+			                                    </div>
+			                                </div>
+			                            </td>
+			                        `);
+			                     
 			                        row.append('<td style="text-align: center;">' + article.taggedNames + '</td>');
 			                        row.append('<td style="text-align: center;">' + article.startDate.substring(2, 10) + '</td>');
 			                        row.append('<td style="text-align: center;">' + article.endDate.substring(2, 10) + '</td>');
@@ -547,7 +568,7 @@
 				</div>
             
 			<div class="overflow-x-auto">
-			    <table id="task-table-1" class="table task-table tablesorter">
+			    <table id="task-table-1" class="table task-table">
 			        <colgroup>
 			            <col style="width: 20%;">
 			            <col style="width: 10%;">
@@ -565,10 +586,22 @@
    							</th>
 			                <th style="text-align: center;">상태</th>
 			                <th style="text-align: center;">담당자</th>
-			                <th style="text-align: center;">시작일</th>
-			                <th style="text-align: center;">마감일</th>
-			                <th style="text-align: center;">등록일</th>
-			                <th style="text-align: center;">업무번호</th>
+			                <th style="text-align: center;">시작일
+			                	<button class="sort-btn" data-column="startDate" data-order="ASC">▲</button>
+	   							<button class="sort-btn" data-column="startDate" data-order="DESC">▼</button>
+			                </th>
+			                <th style="text-align: center;">마감일
+			                <button class="sort-btn" data-column="endDate" data-order="ASC">▲</button>
+	   						<button class="sort-btn" data-column="endDate" data-order="DESC">▼</button>
+			                </th>
+			                <th style="text-align: center;">등록일
+			                <button class="sort-btn" data-column="regDate" data-order="ASC">▲</button>
+	   						<button class="sort-btn" data-column="regDate" data-order="DESC">▼</button>
+			                </th>
+			                <th style="text-align: center;">업무번호
+			                <button class="sort-btn" data-column="id" data-order="ASC">▲</button>
+	   						<button class="sort-btn" data-column="id" data-order="DESC">▼</button>
+			                </th>
 			            </tr>
 			        </thead>
 			        <c:forEach var="group" items="${groupedArticles}">

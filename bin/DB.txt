@@ -231,7 +231,20 @@ LEFT JOIN `member` AS TA ON T.memberId = TA.id
 LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
-ORDER BY title asc;
+ORDER BY title ASC;
+
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+FROM article AS A
+INNER JOIN `member` AS M ON A.memberId = M.id
+LEFT JOIN tag AS T ON A.id = T.articleId
+LEFT JOIN `member` AS TA ON T.memberId = TA.id
+LEFT JOIN `group` AS G ON A.groupId = G.id
+WHERE A.projectId = 1
+GROUP BY A.id
+ORDER BY title DESC;
+
+
+
 
 SELECT `status`, COUNT(*) AS `count`
 FROM article
@@ -270,7 +283,7 @@ LEFT JOIN `member` AS TA ON T.memberId = TA.id
 LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
-ORDER BY A.id DESC;
+ORDER BY title DESC;
 
 
 /*
@@ -281,3 +294,8 @@ insert into article
 select now(), now(), FLOOR(RAND() * 2) + 1, FLOOR(RAND() * 2) + 1, concat('제목_', FLOOR(RAND() * 10000)), CONCAT('내용_', FLOOR(RAND() * 10000))
 from article;
 */
+
+
+SELECT * FROM `group`
+				WHERE projectId = 1
+				ORDER BY id DESC
