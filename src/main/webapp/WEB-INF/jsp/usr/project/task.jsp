@@ -508,7 +508,7 @@
                 <ul>
                     <li><a class="block" href="../project/detail?projectId=1">피드</a></li>
                     <li><a class="block" href="../project/task?projectId=1">업무</a></li>
-                    <li><a class="block" href="">간트차트</a></li>
+                    <li><a class="block" href="../project/gantt?projectId=1">간트차트</a></li>
                     <li><a class="block" href="">캘린더</a></li>
                     <li><a class="block" href="">파일</a></li>
                     <li><a class="block" href="">알림</a></li>

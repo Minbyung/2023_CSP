@@ -152,5 +152,19 @@ public class UsrProjectController {
 		return projectService.getMembersByName(term);
 	}
 	
+	@RequestMapping("/usr/project/gantt")
+	public String gantt(Model model, @RequestParam(defaultValue = "1") int projectId) {
+		
+		
+		
+		
+		
+		
+		return "usr/project/gantt"; 
+	}
+	
+	
+	
+	
 
 }
