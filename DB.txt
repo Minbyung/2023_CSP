@@ -166,7 +166,7 @@ content = '공지내용1',
 projectId = 1,
 groupId = 1,
 startDate = NOW(),
-endDate = NOW();
+endDate = '2023-12-31';
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -178,7 +178,7 @@ content = 'test2',
 projectId = 1,
 groupId = 1,
 startDate = NOW(),
-endDate = NOW();
+endDate = '2024-01-01';
 
 INSERT INTO `member`
 SET regDate = NOW(),
