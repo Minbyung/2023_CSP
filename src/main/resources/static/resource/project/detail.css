@@ -191,3 +191,8 @@ ul.ui-autocomplete {
 .ui-menu-item:hover {
     background-color: #ccc /* 원하는 배경색으로 변경 */
 }
+
+/* '그룹미지정'에 해당하는 막대를 숨김 */
+.highcharts-series-group .highcharts-point[data-id="그룹 미지정"] {
+    display: none;
+}
