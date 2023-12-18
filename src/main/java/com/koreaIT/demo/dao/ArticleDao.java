@@ -148,4 +148,12 @@ public interface ArticleDao {
 			GROUP BY `status`
 			""")
 	public List<Map<String, Object>> getArticleCountsByStatus(int projectId);
+
+	@Update("""
+			UPDATE article
+				SET startDate = #{startDate},
+				endDate = #{endDate}
+				WHERE id = #{articleId};
+			""")
+	public void doUpdateDate(int articleId, String startDate, String endDate);
 }

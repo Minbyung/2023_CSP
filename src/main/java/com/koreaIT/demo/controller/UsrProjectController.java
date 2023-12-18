@@ -153,9 +153,31 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/gantt")
-	public String gantt(Model model, @RequestParam(defaultValue = "1") int projectId) {
+	public String gantt(Model model, @RequestParam(defaultValue = "1") int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+		
+		Project project = projectService.getProjectByProjectId(projectId);
+		List<Article> articles = articleService.getArticles(projectId, column, order);
+		List<Group> groups = groupService.getGroups(projectId);
 		
 		
+		// groupId 별로 article을 그룹화
+		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
+		// 먼저 모든 그룹을 맵에 추가
+		for (Group group : groups) {
+		    groupedArticles.put(group.getGroup_name(), new ArrayList<>());
+		}
+		// 그런 다음 각 게시글을 해당 그룹에 추가
+		for (Article article : articles) {
+		    String groupName = article.getGroupName();
+		    if (groupedArticles.containsKey(groupName)) { 
+		        groupedArticles.get(groupName).add(article);
+		    }
+		}
+
+		model.addAttribute("project", project);
+		model.addAttribute("articles", articles);
+		model.addAttribute("groups", groups);
+		model.addAttribute("groupedArticles", groupedArticles);
 		
 		
 		

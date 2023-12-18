@@ -82,4 +82,9 @@ public class ArticleService {
 		
 		return articleDao.getArticleCountsByStatus(projectId);
 	}
+
+	public void doUpdateDate(int articleId, String startDate, String endDate) {
+		articleDao.doUpdateDate(articleId, startDate, endDate);
+		
+	}
 }
