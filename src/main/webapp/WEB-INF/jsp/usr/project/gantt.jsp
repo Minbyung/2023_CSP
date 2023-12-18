@@ -97,10 +97,12 @@
                 
                 var groupStart = Infinity;  // 그룹의 시작 날짜를 저장하는 변수
                 var groupEnd = -Infinity;  // 그룹의 끝 날짜를 저장하는 변수
-                             
+                     
+                
+                
                 for (var i = 0; i < articles.length; i++) {
                     var article = articles[i];
-                    console.log(articles[0]);
+                    
                     let start = new Date(article.startDate).getTime();
                     let end = new Date(article.endDate).getTime();
                     
@@ -131,28 +133,28 @@
                         start: start,
                         end: end,
                         groupId: groupId,
-                        y: categories.length + 1 // 각 데이터 포인트에 대해 다른 'y' 값을 설정
-                        
+                        y: categories.length + 1, // 각 데이터 포인트에 대해 다른 'y' 값을 설정
+                        color: '#0293fa'
                     });
                     categories.push(article.title);
                     
                 }
                 
                 chartData.push({
-                	id: groupId,  // 그룹의 ID
+                	id: 'group-' + groupId,  // 그룹의 ID
                     name: group,  // 그룹의 이름
                     start: groupStart,
                     end: groupEnd,
-                    y: categories.length - articles.length  // 그룹에 해당하는 막대의 'y' 값
-//                     color: groupName === '그룹 미지정' ? 'transparent' : undefined  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정
+                    y: categories.length - articles.length,  // 그룹에 해당하는 막대의 'y' 값
+                    color: groupName === '그룹 미지정' ? 'transparent' : '#acadad'  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정
                 });
                 
-                categories.push(groupName + ' Duration');
+                categories.push(groupName);
                 
                 
                 // 그룹의 시작 날짜와 끝 날짜를 바탕으로 그룹에 해당하는 막대를 추가
                 
-                
+                   
             }
          // 30일을 밀리초로 변환합니다.
             const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
@@ -216,6 +218,24 @@
 	            allowPointSelect: true,
 	            point: {
 	                events: {
+	                	drag: function(e) {
+	                		if (typeof this.options.id === 'string' && this.options.id.startsWith('group-')) {
+	                        	return false; // 그룹 바일 경우 드래그 이벤트 막기
+	                        }
+	                    },
+      	
+	                	click: function() {
+	                        if (typeof this.options.id === 'string' && this.options.id.startsWith('group-')) {
+	                            return false; // 그룹 바일 경우 클릭 이벤트 무시
+	                        }
+	                    },
+	                    mouseOver: function() {
+	                        if (typeof this.options.id === 'string' && this.options.id.startsWith('group-')) {
+	                            return false; // 그룹 바일 경우 마우스 오버 이벤트 무시
+	                        }
+	                    },
+	                	
+	                	
 	                    select: updateRemoveButtonStatus,
 	                    unselect: updateRemoveButtonStatus,
 	                    remove: updateRemoveButtonStatus,
@@ -245,12 +265,18 @@
 	                        }
 	                    },
 	                  drop: function() {
+	                	  
+
+                        if (typeof this.options.id === 'string' && this.options.id.startsWith('group-')) {
+                       		return false; // 그룹 바일 경우 드롭 이벤트 막기
+                        }
+
 	                      var point = this;
 	                      var startDate = new Date(point.start).toISOString().split('T')[0];
 	                      var endDate = new Date(point.end).toISOString().split('T')[0];
 	                      var groupStart = Infinity;
 	                      var groupEnd = -Infinity;
-	                      
+	                      console.log(this.options.id);   
 	                      // 서버에 AJAX 요청을 보내 데이터베이스를 업데이트합니다.
 	                      $.ajax({
 	                          url: '../article/doUpdateDate',  // 실제 업데이트 URL로 대체해야 합니다.
@@ -294,8 +320,9 @@
 	                      groupStart = new Date(groupStart).toISOString().split('T')[0];
 	                      groupEnd = new Date(groupEnd).toISOString().split('T')[0];
 	                      // 그룹 막대를 찾아서 시작 날짜와 종료 날짜를 업데이트합니다.
+	                     
+	                      var groupBar = this.series.chart.get('group-' + this.groupId);
 	                      
-	                      var groupBar = this.series.chart.get(this.groupId);
 	                      
 	                      if (groupBar) {
 	                    	  //Highcharts Gantt에서는 일반적으로 start와 end 값으로 유닉스 타임스탬프(밀리초 단위)를 사용

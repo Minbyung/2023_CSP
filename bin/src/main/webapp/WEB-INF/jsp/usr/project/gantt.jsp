@@ -41,6 +41,7 @@
 	var defaultOrder = 'DESC';
 	var column = localStorage.getItem('column') || defaultColumn;
 	var order = localStorage.getItem('order') || defaultOrder;
+
 	
 	const day = 1000 * 60 * 60 * 24,
 	    each = Highcharts.each,
@@ -82,26 +83,29 @@
         },
         dataType: 'json',
         success: function(data) {
-
+        	
             var chartData = [];
             var categories = [];  // 이 배열을 채워야 합니다.
             let minDate = Infinity;
     	    let maxDate = -Infinity;
+    	    var groupId, groupName;
+    	    
     	    
     	    for (var group in data) {
+    	    	
                 var articles = data[group];  // 해당 그룹의 articles 가져오기
-
+                
                 var groupStart = Infinity;  // 그룹의 시작 날짜를 저장하는 변수
                 var groupEnd = -Infinity;  // 그룹의 끝 날짜를 저장하는 변수
-                
+                             
                 for (var i = 0; i < articles.length; i++) {
                     var article = articles[i];
+                    console.log(articles[0]);
                     let start = new Date(article.startDate).getTime();
                     let end = new Date(article.endDate).getTime();
                     
-                    var groupId = article.groupId;
-                    var groupName = article.groupName;
-                    
+                    groupId = article.groupId;
+                    groupName = article.groupName;
                     
                     
                     
@@ -131,19 +135,25 @@
                         
                     });
                     categories.push(article.title);
+                    
                 }
                 
-                // 그룹의 시작 날짜와 끝 날짜를 바탕으로 그룹에 해당하는 막대를 추가
                 chartData.push({
                 	id: groupId,  // 그룹의 ID
-                    name: groupName,  // 그룹의 이름
+                    name: group,  // 그룹의 이름
                     start: groupStart,
                     end: groupEnd,
                     y: categories.length - articles.length  // 그룹에 해당하는 막대의 'y' 값
+//                     color: groupName === '그룹 미지정' ? 'transparent' : undefined  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정
                 });
+                
                 categories.push(groupName + ' Duration');
+                
+                
+                // 그룹의 시작 날짜와 끝 날짜를 바탕으로 그룹에 해당하는 막대를 추가
+                
+                
             }
-            
          // 30일을 밀리초로 변환합니다.
             const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
@@ -190,7 +200,7 @@
 	            animation: false, // Do not animate dependency connectors
 	            dragDrop: {
 	                draggableX: true,
-	                draggableY: true,
+	                draggableY: false,
 	                dragMinY: 0,
 	                dragMaxY: 6,    // 7행 밑으로 드래그 되지 않음
 	                dragPrecisionX: day / 3 // Snap to eight hours
@@ -260,7 +270,7 @@
 
 	                              $row.find('td:nth-child(4)').text(startDate);  // 'startDate'를 표시하는 셀의 내용을 업데이트합니다.
 	                              $row.find('td:nth-child(5)').text(endDate);  // 'endDate'를 표시하는 셀의 내용을 업데이트합니다.
-	                              
+	                             
 	                              
 	                          },
 	                          error: function(xhr, status, error) {
@@ -277,26 +287,30 @@
 	                    	        
 	                    	        groupStart = Math.min(groupStart, taskStart);
 	                    	        groupEnd = Math.max(groupEnd, taskEnd);
-	                    	        console.log(groupStart);
+	                    	        
 	      	                     
 	                    	    }
 	                    	}
 	                      groupStart = new Date(groupStart).toISOString().split('T')[0];
 	                      groupEnd = new Date(groupEnd).toISOString().split('T')[0];
 	                      // 그룹 막대를 찾아서 시작 날짜와 종료 날짜를 업데이트합니다.
-	                     
+	                      
 	                      var groupBar = this.series.chart.get(this.groupId);
-	                      console.log(groupBar);
+	                      
 	                      if (groupBar) {
+	                    	  //Highcharts Gantt에서는 일반적으로 start와 end 값으로 유닉스 타임스탬프(밀리초 단위)를 사용
+	                    	  var startTimestamp = new Date(groupStart).getTime();
+	                    	  var endTimestamp = new Date(groupEnd).getTime();
+	                    	  
 	                          groupBar.update({
-	                              start: groupStart,
-	                              end: groupEnd
-	                          }, true);  // 차트를 여기서는 업데이트하지 않습니다.
+	                              start: startTimestamp,
+	                              end: endTimestamp
+	                          }, false);  // 차트를 여기서는 업데이트하지 않습니다.
 	                         
 	                      }
-	                      console.log(groupBar);
+	                      
 	                      // 차트를 업데이트합니다.
-// 	                      this.series.chart.redraw();
+	                      this.series.chart.redraw();
 	                  }
 
 	                }
@@ -320,7 +334,7 @@
 		        description: 'Organization departments'
 		    },
 		    min: 0,
-		    max: categories.length  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
+		    max: categories.length - 1  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
 		},
 
 
@@ -353,9 +367,9 @@
 		    var order = $(this).data('order');
 		    
 			// 새로고침해도 정렬값이 유지
-		    localStorage.setItem('column', column);
-		    localStorage.setItem('order', order);
-		    window.location.href = '/usr/project/gantt?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
+// 		    localStorage.setItem('column', column);
+// 		    localStorage.setItem('order', order);
+// 		    window.location.href = '/usr/project/gantt?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
 
 		    $.ajax({
 		        url: "../project/task",
@@ -370,7 +384,7 @@
 		            var newOrder = $("#task-table-1 tbody").find('tr').map(function() {
 		                return this.id;
 		            }).get();
-
+					
 		            // 간트 차트의 새 데이터 배열
 		            var newData = [];
 
