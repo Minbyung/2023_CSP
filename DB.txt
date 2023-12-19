@@ -114,9 +114,6 @@ CREATE TABLE teamMember (
 INSERT INTO team
 SET teamName = '코IT';
 
-INSERT INTO teamInvite
-SET teamId = 1,
-inviteCode = 'asd21312';
 
 INSERT INTO tag
 SET projectId = 1,
@@ -128,7 +125,11 @@ SET projectId = 1,
 articleId = 2,
 memberId = 1;
 					
-		
+SELECT *
+FROM `member` AS M
+INNER JOIN teamMember AS TM
+ON M.id = TM.memberId
+WHERE loginId = 'test1@test1.com';		
 					
 -- DELETE FROM favorite
 -- WHERE memberId = 1
@@ -301,6 +302,10 @@ LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
 ORDER BY A.id DESC;
+
+SELECT * 
+				FROM teamInvite
+				WHERE inviteCode = 'f5ea763443';
 
 
 

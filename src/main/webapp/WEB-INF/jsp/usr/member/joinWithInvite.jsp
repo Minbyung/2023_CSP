@@ -58,7 +58,6 @@
 			
 			if (form.teamName.value.length == 0) {
 				alert('팀 이름을 입력해주세요');
-				form.teamName.value = '';
 				form.teamName.focus();
 				return;
 			}
@@ -112,7 +111,40 @@
 			})
 		}
 		
-		
+		$(document).ready(function() {
+			var inviteCode = getParameterByName('inviteCode');
+			
+			$("[name='inviteCode']").val(inviteCode);
+			
+			if (inviteCode) {
+				// 초대 코드를 이용해 팀의 정보를 불러옵니다.
+				var teamNameInput = $('input[name="teamName"]');
+
+				
+				$.ajax({
+					url: '../team/getTeamByInviteCode',
+					data: {
+						"inviteCode": inviteCode
+					},
+					type: 'GET',
+					success: function(data) {
+						// 팀 이름 필드에 팀의 이름을 표시하고 활성화합니다.
+						teamNameInput.val(data);
+						teamNameInput.prop('disabled', true);
+					},
+					error: function(error) {
+						console.log('Error: ', error);
+
+					}
+				});
+			}
+		});
+
+		// URL에서 쿼리 파라미터 값을 가져오는 함수
+		function getParameterByName(name) {
+		    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+		    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+		}
 		
 		
 		
@@ -121,7 +153,7 @@
 	<section class="mt-24 text-xl">
 		<div class="join-box">
 			<h1>회원가입</h1>
-			<form action="doJoin" method="post" onsubmit="joinForm_onSubmit(this); return false;">
+			<form action="doJoinWithInvite" method="post" onsubmit="joinForm_onSubmit(this); return false;">
 
 				<div class="pb-2 font-medium">이름</div>
 				<input class="input input-bordered input-primary w-full" name="name" type="text" placeholder="이름"/>
@@ -144,6 +176,7 @@
 				<input class="input input-bordered input-primary w-full" name="loginPw" type="text" placeholder="비밀번호" />
 				<div class="space-box h-7"></div>
 				<input class="input input-bordered input-primary w-full" name="loginPwChk" type="text" placeholder="비밀번호 확인" />
+				<input type="hidden" name="inviteCode" value="초대코드">
 				<button>회원가입</button>
 			</form>
 		</div>

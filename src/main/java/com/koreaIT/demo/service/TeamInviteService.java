@@ -34,7 +34,7 @@ public class TeamInviteService {
         message.setTo(to);
         message.setSubject("Team Invitation");
 
-        String signupUrl = "http://localhost:8082/usr/member/join?inviteCode=" + inviteCode;
+        String signupUrl = "http://localhost:8082/usr/member/joinWithInvite?inviteCode=" + inviteCode;
         String emailText = "Please click the following link to join our team: " + signupUrl;
 
         message.setText(emailText);

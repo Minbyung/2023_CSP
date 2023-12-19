@@ -24,9 +24,15 @@ public class UsrMemberController {
 	}
 	
 	@RequestMapping("/usr/member/join")
-	public String join(@RequestParam(required = false) String inviteCode) {
+	public String join() {
 		return "usr/member/join";
 	}
+	
+	@RequestMapping("/usr/member/joinWithInvite")
+	public String joinWithInvite(@RequestParam(required = false) String inviteCode) {
+		return "usr/member/joinWithInvite";
+	}
+	
 	
 	@RequestMapping("/usr/member/loginIdDupChk")
 	@ResponseBody
@@ -47,7 +53,7 @@ public class UsrMemberController {
 	
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String name, String teamName, String cellphoneNum, String loginId, String loginPw, String inviteCode) {
+	public String doJoin(String name, String teamName, String cellphoneNum, String loginId, String loginPw) {
 		
 		if (rq.getLoginedMemberId() != 0) {
 			return Util.jsHistoryBack("로그아웃 후 이용해주세요");
@@ -76,12 +82,43 @@ public class UsrMemberController {
 			return Util.jsHistoryBack(Util.f("이미 사용중인 아이디(%s) 입니다", loginId));
 		}
 		
-		memberService.joinMember(name, teamName, cellphoneNum, loginId, loginPw, inviteCode);
+		memberService.joinMember(name, teamName, cellphoneNum, loginId, loginPw);
 		
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
 	
-	
+	@RequestMapping("/usr/member/doJoinWithInvite")
+	@ResponseBody
+	public String doJoinWithInvite(String name, String cellphoneNum, String loginId, String loginPw, String inviteCode) {
+		
+		if (rq.getLoginedMemberId() != 0) {
+			return Util.jsHistoryBack("로그아웃 후 이용해주세요");
+		}
+		
+		if (Util.empty(loginId)) {
+			return Util.jsHistoryBack("이메일을 입력해주세요");
+		}
+		if (Util.empty(loginPw)) {
+			return Util.jsHistoryBack("비밀번호를 입력해주세요");
+		}
+		if (Util.empty(name)) {
+			return Util.jsHistoryBack("이름을 입력해주세요");
+		}
+		if (Util.empty(cellphoneNum)) {
+			return Util.jsHistoryBack("전화번호를 입력해주세요");
+		}
+		
+		
+		Member member = memberService.getMemberByLoginId(loginId);
+		
+		if (member != null) {
+			return Util.jsHistoryBack(Util.f("이미 사용중인 아이디(%s) 입니다", loginId));
+		}
+		
+		memberService.joinMemberWithInvite(name, cellphoneNum, loginId, loginPw, inviteCode);
+		
+		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
+	}
 	
 	
 	
