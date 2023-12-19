@@ -19,10 +19,9 @@ public interface MemberDao {
 					, loginId = #{loginId}
 					, loginPw = #{loginPw}
 					, name = #{name}
-					, nickname = #{teamName}
 					, cellphoneNum = #{cellphoneNum}
 			""")
-	public void joinMember(String loginId, String loginPw, String name, String cellphoneNum, String teamName);
+	public void joinMember(String name, String cellphoneNum, String loginId, String loginPw);
 	
 	@Select("""
 			SELECT * 
@@ -69,9 +68,17 @@ public interface MemberDao {
 
 	@Select("""
 			SELECT M.name 
-			FROM `member` AS M
-			INNER JOIN projectMember AS PM
-			ON PM.memberId = M.id
+				FROM `member` AS M
+				INNER JOIN projectMember AS PM
+				ON PM.memberId = M.id
 			""")
 	public List<String> getMembers();
+	
+	
+	@Insert("""
+			INSERT INTO teamMember
+				SET memberId = #{memberId},
+				teamId = #{teamId}
+			""")
+	public void insert(int memberId, int teamId);
 }

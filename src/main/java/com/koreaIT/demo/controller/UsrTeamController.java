@@ -1,26 +1,24 @@
 package com.koreaIT.demo.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.TeamInviteService;
+import com.koreaIT.demo.service.TeamService;
 import com.koreaIT.demo.util.Util;
-import com.koreaIT.demo.vo.Member;
-import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 
 @Controller
 public class UsrTeamController {
 	
 	private TeamInviteService teamInviteService;
+	private TeamService teamService;
 	private Rq rq;
 	
-	UsrTeamController(TeamInviteService teamInviteService, Rq rq) {
+	UsrTeamController(TeamInviteService teamInviteService, TeamService teamService, Rq rq) {
 		this.teamInviteService = teamInviteService;
+		this.teamService = teamService;
 		this.rq = rq;
 	}
 	
@@ -33,5 +31,10 @@ public class UsrTeamController {
         return Util.jsReplace("프로젝트를 생성했습니다", Util.f("detail?id=%d", teamId));
     }
 	
-	
+	@RequestMapping("/usr/team/getTeamByInviteCode")
+	@ResponseBody
+	public String getTeamByInviteCode(String inviteCode) {
+		
+		return teamService.getTeamByInviteCode(inviteCode);
+	}
 }

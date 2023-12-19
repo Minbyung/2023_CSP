@@ -6,12 +6,12 @@
 <!DOCTYPE html>
 <html lang="en" >
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- 제이쿼리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <link rel="stylesheet" href="/resource/dist/style.css" />
 <link rel="stylesheet" href="/resource/cards/dist/style.css" />
-<link rel="stylesheet" href="/resource/common.css" />
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="/resource/project/detail.css" />
+
 
 <head>
   <meta charset="UTF-8">
@@ -20,6 +20,38 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 </head>
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
+
+
+<script>
+$(document).ready(function() {
+	
+	
+	$("#submitBtn").click(function(){
+		
+		// 초대 메일 전송     	    	
+	var email = $("#exampleFormControlInput1").val();
+	var teamId = '1';
+	
+	$.ajax({
+	    url: '../member/doInvite',
+	    type: 'POST',
+	    data: { teamId: teamId, email: email },
+	    success: function(data) {
+	      console.log(data);
+// 	      $("#email").val("");
+	      $('.layer-bg').hide();
+		  $('.layer').hide();
+		  
+	    }
+	  });
+	});
+	
+});
+
+</script>
+
+
+
 
 <body>
 <!-- partial:index.partial.html -->
@@ -134,6 +166,29 @@
 	  </div>
 	<div class="page-content">
     	<div class="header h-20">내 프로젝트</div>
+    	
+		<div class="modal-exam"><span>초대하기 모달</span></div>
+			<div class="layer-bg"></div>
+			<div class="layer">
+				<span id="close" class="close close-btn-x">&times;</span>
+				<div>직원초대</div>
+				<div>직원들과 협업을 시작해보세요</div>
+				
+				<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 직원의 이메일을 입력해주세요" required />
+			    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
+			</div>
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
     	<div class="main-content scroll-mask overflow-auto">
     		<div class="project-home-wrap mx-20 pb-2 ">
     			<div class="project-group">

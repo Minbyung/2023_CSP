@@ -26,8 +26,7 @@ CREATE TABLE `member`(
     loginPw VARCHAR(100) NOT NULL,
     authLevel SMALLINT UNSIGNED NOT NULL DEFAULT 2 COMMENT '권한 레벨 (일반 = 2, 관리자 = 1)',
     `name` VARCHAR(20) NOT NULL,
-    teamName VARCHAR(20) NOT NULL,
-    cellphoneNum VARCHAR(20) NOT NULL,
+    cellphoneNum VARCHAR(20),
     delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (탈퇴 전 = 0, 탈퇴 후 = 1)',
     delDate DATETIME COMMENT '탈퇴 날짜'
 );
@@ -91,20 +90,33 @@ CREATE TABLE `group` (
     group_name VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE team (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    teamName TEXT NOT NULL
+);
+
 CREATE TABLE teamInvite (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     teamId INT NOT NULL,
     inviteCode TEXT NOT NULL
 );
 
+CREATE TABLE teamMember (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    memberId INT NOT NULL,
+    teamId INT NOT NULL
+);
 
-SELECT *
-FROM teamInvite
+
+
+
+
+INSERT INTO team
+SET teamName = '코IT';
 
 INSERT INTO teamInvite
 SET teamId = 1,
-inviteCode = 'asd';
-
+inviteCode = 'asd21312';
 
 INSERT INTO tag
 SET projectId = 1,
@@ -135,7 +147,9 @@ memberId = 1;
 -- ON PM.memberId = M.id
 -- WHERE `name` LIKE '%%'
 --  
-
+SELECT * FROM team;
+SELECT * FROM teamInvite;
+SELECT * FROM teamMember;
 SELECT * FROM tag;
 SELECT * FROM project;
 SELECT * FROM projectMember;
@@ -201,9 +215,7 @@ loginId = 'admin@admin.com',
 loginPw = 'admin',
 authLevel = 1,
 `name` = '관리자',
-cellphoneNum = '010-0000-0000',
-teamName = '코리아IT';
-
+cellphoneNum = '010-0000-0000';
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -212,8 +224,7 @@ loginId = 'test1@test1.com',
 loginPw = 'test1',
 authLevel = 2,
 `name` = '유저1',
-cellphoneNum = '010-1111-2222',
-teamName = '코리아IT';
+cellphoneNum = '010-1111-2222';
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -222,8 +233,7 @@ loginId = 'test2@test2.com',
 loginPw = 'test2',
 authLevel = 2,
 `name` = '유저2',
-cellphoneNum = '010-2222-3333',
-teamName = '코리아IT';
+cellphoneNum = '010-2222-3333';
 
 INSERT INTO board
 SET regDate = NOW(),
@@ -252,6 +262,12 @@ FROM article
 WHERE projectId = 1
 GROUP BY `status`;
 
+
+SELECT t.*, TI.teamId AS teamId, TI.inviteCode AS inviteCode
+FROM team AS T
+INNER JOIN teamInvite AS TI
+ON T.id = TI.teamId
+WHERE inviteCode = '55c8b54bae';
 
 SELECT * 
 FROM project AS P
@@ -285,6 +301,7 @@ LEFT JOIN `group` AS G ON A.groupId = G.id
 WHERE A.projectId = 1
 GROUP BY A.id
 ORDER BY A.id DESC;
+
 
 
 /*

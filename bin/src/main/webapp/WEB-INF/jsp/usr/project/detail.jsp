@@ -480,9 +480,6 @@
 								        </c:choose>
 								    </c:forEach>
 								</select> 
-								  
-								  
-								  
 								</div>
 								<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">제목</label>
@@ -494,9 +491,8 @@
 								</div>
 						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
 						</div>
+						
 						<div id="postList">
-						 
-				
 							<c:forEach var="article" items="${articles }">
 								<div class="card z-0">
 								  <div class="card-body z-0">

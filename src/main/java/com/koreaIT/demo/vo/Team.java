@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TeamInvite {
+public class Team {
 	private int id;
-	private String inviteCode;
+    private String teamName;
     private int teamId;
+    private String inviteCode;
 }

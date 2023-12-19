@@ -59,7 +59,7 @@ public class Util {
 	}
 	
 	public static String generateInviteCode() {
-	    return UUID.randomUUID().toString();
+		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 	}
 	
 	

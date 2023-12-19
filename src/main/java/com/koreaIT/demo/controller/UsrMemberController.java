@@ -3,6 +3,7 @@ package com.koreaIT.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.MemberService;
@@ -23,7 +24,7 @@ public class UsrMemberController {
 	}
 	
 	@RequestMapping("/usr/member/join")
-	public String join() {
+	public String join(@RequestParam(required = false) String inviteCode) {
 		return "usr/member/join";
 	}
 	
@@ -46,7 +47,7 @@ public class UsrMemberController {
 	
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String loginId, String loginPw, String name, String teamName, String cellphoneNum) {
+	public String doJoin(String name, String teamName, String cellphoneNum, String loginId, String loginPw, String inviteCode) {
 		
 		if (rq.getLoginedMemberId() != 0) {
 			return Util.jsHistoryBack("로그아웃 후 이용해주세요");
@@ -75,10 +76,14 @@ public class UsrMemberController {
 			return Util.jsHistoryBack(Util.f("이미 사용중인 아이디(%s) 입니다", loginId));
 		}
 		
-		memberService.joinMember(loginId, loginPw, name, teamName, cellphoneNum);
+		memberService.joinMember(name, teamName, cellphoneNum, loginId, loginPw, inviteCode);
 		
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
+	
+	
+	
+	
 	
 	@RequestMapping("/usr/member/login")
 	public String login() {

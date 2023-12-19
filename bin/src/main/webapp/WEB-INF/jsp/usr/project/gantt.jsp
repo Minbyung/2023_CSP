@@ -88,8 +88,7 @@
             var categories = [];  // 이 배열을 채워야 합니다.
             let minDate = Infinity;
     	    let maxDate = -Infinity;
-    	    var groupId, groupName;
-    	    
+    	    var groupId;
     	    
     	    for (var group in data) {
     	    	
@@ -98,7 +97,9 @@
                 var groupStart = Infinity;  // 그룹의 시작 날짜를 저장하는 변수
                 var groupEnd = -Infinity;  // 그룹의 끝 날짜를 저장하는 변수
                      
+                var groupName = articles.length > 0 ? articles[0].groupName : null;
                 
+                categories.push(groupName);
                 
                 for (var i = 0; i < articles.length; i++) {
                     var article = articles[i];
@@ -133,30 +134,31 @@
                         start: start,
                         end: end,
                         groupId: groupId,
-                        y: categories.length + 1, // 각 데이터 포인트에 대해 다른 'y' 값을 설정
+                        y: categories.length, // 각 데이터 포인트에 대해 다른 'y' 값을 설정
                         color: '#0293fa'
                     });
+                    
                     categories.push(article.title);
                     
                 }
-                
+                // 막대 관련
                 chartData.push({
                 	id: 'group-' + groupId,  // 그룹의 ID
                     name: group,  // 그룹의 이름
                     start: groupStart,
                     end: groupEnd,
-                    y: categories.length - articles.length,  // 그룹에 해당하는 막대의 'y' 값
-                    color: groupName === '그룹 미지정' ? 'transparent' : '#acadad'  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정
+                    y: categories.length - articles.length - 1,  // 그룹에 해당하는 막대의 'y' 값
+                    color: groupName === '그룹 미지정' ? 'transparent' : '#acadad',  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정		
                 });
                 
-                categories.push(groupName);
+                
                 
                 
                 // 그룹의 시작 날짜와 끝 날짜를 바탕으로 그룹에 해당하는 막대를 추가
                 
                    
             }
-         // 30일을 밀리초로 변환합니다.
+         // 30일 밀리초로 변환
             const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
             // 만약 범위가 30일 미만이면, 범위를 30일로 늘립니다.
@@ -274,9 +276,12 @@
 	                      var point = this;
 	                      var startDate = new Date(point.start).toISOString().split('T')[0];
 	                      var endDate = new Date(point.end).toISOString().split('T')[0];
+	                  	 // 'yyyy-mm-dd'를 'yy-mm-dd'로 변환
+	                      startDate = startDate.slice(2);
+	                      endDate = endDate.slice(2);
 	                      var groupStart = Infinity;
 	                      var groupEnd = -Infinity;
-	                      console.log(this.options.id);   
+	                      console.log(endDate);   
 	                      // 서버에 AJAX 요청을 보내 데이터베이스를 업데이트합니다.
 	                      $.ajax({
 	                          url: '../article/doUpdateDate',  // 실제 업데이트 URL로 대체해야 합니다.
@@ -360,8 +365,15 @@
 		    accessibility: {
 		        description: 'Organization departments'
 		    },
+		    labels: {
+	            style: {
+	                fontSize: '14px', // 레이블의 글자 크기를 14px로 설정
+	               	fontFamily: 'NanumSquareNeo-Variable'
+	            } 
+	        },
 		    min: 0,
-		    max: categories.length - 1  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
+		    max: categories.length - 1,  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
+		    staticScale: 32 // y축 행 높이
 		},
 
 
