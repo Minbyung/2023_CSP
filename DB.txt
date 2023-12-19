@@ -60,7 +60,8 @@ CREATE TABLE reply(
 CREATE TABLE project(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     project_name VARCHAR(100) NOT NULL,
-    project_description TEXT NOT NULL
+    project_description TEXT NOT NULL,
+    teamId INT NOT NULL
 );
 
 
@@ -108,13 +109,6 @@ CREATE TABLE teamMember (
 );
 
 
-
-
-
-INSERT INTO team
-SET teamName = '코IT';
-
-
 INSERT INTO tag
 SET projectId = 1,
 articleId = 1,
@@ -125,11 +119,11 @@ SET projectId = 1,
 articleId = 2,
 memberId = 1;
 					
-SELECT *
-FROM `member` AS M
-INNER JOIN teamMember AS TM
-ON M.id = TM.memberId
-WHERE loginId = 'test1@test1.com';		
+SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE loginId = 'alszk1234@naver.com';	
 					
 -- DELETE FROM favorite
 -- WHERE memberId = 1
@@ -183,7 +177,9 @@ memberId = 3,
 
 INSERT INTO project
 SET project_name = '[IT/개발] 기능 개발 프로젝트',
-project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.';
+project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.',
+teamId = 1;
+
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -218,23 +214,6 @@ authLevel = 1,
 `name` = '관리자',
 cellphoneNum = '010-0000-0000';
 
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'test1@test1.com',
-loginPw = 'test1',
-authLevel = 2,
-`name` = '유저1',
-cellphoneNum = '010-1111-2222';
-
-INSERT INTO `member`
-SET regDate = NOW(),
-updateDate = NOW(),
-loginId = 'test2@test2.com',
-loginPw = 'test2',
-authLevel = 2,
-`name` = '유저2',
-cellphoneNum = '010-2222-3333';
 
 INSERT INTO board
 SET regDate = NOW(),
@@ -303,9 +282,8 @@ WHERE A.projectId = 1
 GROUP BY A.id
 ORDER BY A.id DESC;
 
-SELECT * 
-				FROM teamInvite
-				WHERE inviteCode = 'f5ea763443';
+
+
 
 
 

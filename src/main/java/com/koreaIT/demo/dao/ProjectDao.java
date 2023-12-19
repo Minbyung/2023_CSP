@@ -17,8 +17,9 @@ public interface ProjectDao {
 			INSERT INTO project
 				SET project_name = #{name}
 					, project_description = #{description}
+					, teamId = #{teamId}
 			""")
-	public void makeProject(String name, String description);
+	public void makeProject(String name, String description, int teamId);
 	
 	@Select("""
 			SELECT *
@@ -39,4 +40,11 @@ public interface ProjectDao {
 	
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
+	
+	@Select("""
+			SELECT *
+				FROM project
+				WHERE teamId = #{teamId}
+			""")
+	public List<Project> getProjectsByTeamId(int teamId);
 }

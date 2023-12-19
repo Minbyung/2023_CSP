@@ -46,23 +46,25 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/make")
-	public String make() {
+	public String make(Model model, int teamId) {
+		
+		model.addAttribute("teamId", teamId);
+		
 		return "usr/project/make";
 	}
 	
 	@RequestMapping("/usr/project/doMake")
 	@ResponseBody
-	public String doMake(String project_name, @RequestParam(defaultValue = "") String project_description) {
+	public String doMake(String project_name, @RequestParam(defaultValue = "") String project_description, int teamId) {
 		
 		if (Util.empty(project_name)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
 		}
 
-		projectService.makeProject(project_name, project_description);
+		projectService.makeProject(project_name, project_description, teamId);
 		
-		int id = projectService.getLastInsertId();
 		
-		return Util.jsReplace("프로젝트를 생성했습니다", Util.f("detail?id=%d", id));
+		return Util.jsReplace(Util.f("%s 을 생성했습니다", project_name), "/usr/dashboard/dashboard?teamId=" + teamId);
 	}
 	
 	@RequestMapping("/usr/project/detail")

@@ -80,4 +80,9 @@ public class MemberService {
 		
 		return memberDao.getMembers();
 	}
+
+	public List<Member> getMembersByTeamId(int teamId) {
+		
+		return memberDao.getMembersByTeamId(teamId);
+	}
 }

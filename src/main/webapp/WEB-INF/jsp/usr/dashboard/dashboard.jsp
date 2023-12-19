@@ -65,7 +65,7 @@ $(document).ready(function() {
 	    </div>
 	    <div class="left-content">
 	      <ul class="action-list">
-	       	<a href="../project/make">
+	       	<a href="../project/make?teamId=${teamId }">
 	        	<button class="btn btn-warning">새 프로젝트</button>
 	        </a>
 	        <li class="item mt-8">
@@ -194,99 +194,24 @@ $(document).ready(function() {
     			<div class="project-group">
     			<div class="mb-2.5">즐겨찾기</div>
     			<div class="cards">
-    				<a href="../project/detail?projectId=1">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>테스트용</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="../project/detail?id=1">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
+	    			<c:forEach items="${projects}" var="project">
+	    				<a href="../project/detail?projectId=1">
+							<article class="information [ card ] bg-gray-50">
+								<div class="ml-4">
 									<div>테스트용</div>
+									<div class="pt-6 h-12">
+										<div>${project.project_name }</div>
+									</div>
+									<div class="pt-10">프로젝트참여수</div>
 								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="../project/detail?id=1">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="bg-yellow-50 w-full h-full">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="bg-yellow-50 w-full h-full">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
+							</article>
+						</a>
+					</c:forEach>	
 				</div>
 				<div class="mt-8 mb-2.5">	
     				<div>진행중</div>
     			</div>
     			<div class="cards">
-					<a href="bg-yellow-50 w-full h-full">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="bg-yellow-50 w-full h-full">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
-					<a href="bg-yellow-50 w-full h-full">
-						<article class="information [ card ] bg-gray-50">
-							<div class="ml-4">
-								<div>즐겨찾기아이콘</div>
-								<div class="pt-6 h-12">
-									<div>프로젝트이름</div>
-								</div>
-								<div class="pt-10">프로젝트참여수</div>
-							</div>
-						</article>
-					</a>
 					<a href="bg-yellow-50 w-full h-full">
 						<article class="information [ card ] bg-gray-50">
 							<div class="ml-4">
@@ -315,6 +240,13 @@ $(document).ready(function() {
         <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
       <div class="count">6</div>
     </div>
+    
+    <div>
+	    <c:forEach items="${teamMembers}" var="member">
+	    <p>팀원 : ${member.name}</p>
+		</c:forEach>
+	</div>
+	
     <div class="header">Schedule</div>
     <div class="right-content">
       <div class="task-box yellow">

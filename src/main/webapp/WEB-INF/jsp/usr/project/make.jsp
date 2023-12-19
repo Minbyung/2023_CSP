@@ -27,6 +27,7 @@
 				<h1>프로젝트 만들기</h1>
 			</div>
 			<form action="doMake" method="post" onsubmit="projectForm_onSubmit(this); return false;">
+			<input type="hidden" name="teamId" value="${teamId }"/>
 			<div>제목</div>
 			<input type="text" placeholder="제목을 입력하세요." name="project_name" class="input input-bordered w-full" />
 			<div class="space-box h-7"></div>

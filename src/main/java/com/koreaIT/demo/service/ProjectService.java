@@ -17,8 +17,8 @@ public class ProjectService {
 		this.projectDao = projectDao;
 	}
 	
-	public void makeProject(String name, String description) {
-		projectDao.makeProject(name, description);
+	public void makeProject(String name, String description, int teamId) {
+		projectDao.makeProject(name, description, teamId);
 	}
 
 	public Project getProjectByProjectId(int projectId) {
@@ -33,6 +33,11 @@ public class ProjectService {
 	public List<String> getMembersByName(String name) {
 		
 		return projectDao.getMembersByName(name);
+	}
+
+	public List<Project> getProjectsByTeamId(int teamId) {
+		
+		return projectDao.getProjectsByTeamId(teamId);
 	}
 
 }

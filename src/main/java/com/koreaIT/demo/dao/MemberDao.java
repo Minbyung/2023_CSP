@@ -34,9 +34,11 @@ public interface MemberDao {
 	public int getLastInsertId();
 
 	@Select("""
-			SELECT *
-				FROM `member`
-				WHERE loginId = #{loginId}
+			SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE loginId = #{loginId};
 			""")
 	public Member getMemberByLoginId(String loginId);
 
@@ -81,4 +83,14 @@ public interface MemberDao {
 				teamId = #{teamId}
 			""")
 	public void insert(int memberId, int teamId);
+
+	
+	@Select("""
+			SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE teamId = #{teamId};
+			""")
+	public List<Member> getMembersByTeamId(int teamId);
 }

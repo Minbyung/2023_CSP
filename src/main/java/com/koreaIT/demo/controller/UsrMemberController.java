@@ -144,6 +144,8 @@ public class UsrMemberController {
 		
 		Member member = memberService.getMemberByLoginId(loginId);
 		
+		
+		
 		if (member == null) {
 			return Util.jsHistoryBack(Util.f("%s은(는) 존재하지 않는 아이디입니다", loginId));
 		}
@@ -154,7 +156,9 @@ public class UsrMemberController {
 		
 		rq.login(member);
 		
-		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/dashboard/dashboard");
+		int teamId = member.getTeamId();
+		
+		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/dashboard/dashboard?teamId=" + teamId);
 	}
 	
 	@RequestMapping("/usr/member/doLogout")
