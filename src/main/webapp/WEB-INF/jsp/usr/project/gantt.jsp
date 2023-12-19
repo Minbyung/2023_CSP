@@ -141,14 +141,14 @@
                     categories.push(article.title);
                     
                 }
-                
+                // 막대 관련
                 chartData.push({
                 	id: 'group-' + groupId,  // 그룹의 ID
                     name: group,  // 그룹의 이름
                     start: groupStart,
                     end: groupEnd,
                     y: categories.length - articles.length - 1,  // 그룹에 해당하는 막대의 'y' 값
-                    color: groupName === '그룹 미지정' ? 'transparent' : '#acadad'  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정
+                    color: groupName === '그룹 미지정' ? 'transparent' : '#acadad',  // '그룹미지정'인 그룹의 막대 색상을 투명하게 설정		
                 });
                 
                 
@@ -365,8 +365,15 @@
 		    accessibility: {
 		        description: 'Organization departments'
 		    },
+		    labels: {
+	            style: {
+	                fontSize: '14px', // 레이블의 글자 크기를 14px로 설정
+	               	fontFamily: 'NanumSquareNeo-Variable'
+	            } 
+	        },
 		    min: 0,
-		    max: categories.length - 1  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
+		    max: categories.length - 1,  // 이 부분은 그룹과 그룹의 업무 수에 따라 달라집니다.
+		    staticScale: 32 // y축 행 높이
 		},
 
 
