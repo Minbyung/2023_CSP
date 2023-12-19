@@ -91,6 +91,20 @@ CREATE TABLE `group` (
     group_name VARCHAR(50) NOT NULL
 );
 
+CREATE TABLE teamInvite (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    teamId INT NOT NULL,
+    inviteCode TEXT NOT NULL
+);
+
+
+SELECT *
+FROM teamInvite
+
+INSERT INTO teamInvite
+SET teamId = 1,
+inviteCode = 'asd';
+
 
 INSERT INTO tag
 SET projectId = 1,

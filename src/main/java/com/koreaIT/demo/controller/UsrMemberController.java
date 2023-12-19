@@ -209,4 +209,6 @@ public class UsrMemberController {
 		
 		return Util.jsReplace("비밀번호가 변경되었습니다", "myPage");
 	}
+	
+	
 }

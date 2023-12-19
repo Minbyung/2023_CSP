@@ -1,5 +1,7 @@
 package com.koreaIT.demo.util;
 
+import java.util.UUID;
+
 public class Util {
 	public static boolean empty(String str) {
 		
@@ -44,16 +46,21 @@ public class Util {
 		}
 		
 		return Util.f("""
-					<script>
-						const msg = '%s'.trim();
-						
-						if (msg.length > 0) {
-							alert(msg);
-						}
-						
-						location.replace('%s');
-					</script>
-				""", msg, uri);
+				<script>
+					const msg = '%s'.trim();
+					
+					if (msg.length > 0) {
+						alert(msg);
+					}
+					
+					location.replace('%s');
+				</script>
+			""", msg, uri);
 	}
+	
+	public static String generateInviteCode() {
+	    return UUID.randomUUID().toString();
+	}
+	
 	
 }
