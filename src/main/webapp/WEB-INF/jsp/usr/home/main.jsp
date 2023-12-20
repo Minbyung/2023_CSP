@@ -6,48 +6,17 @@
 	
 	<%@ include file="../common/head.jsp" %>
 	
-	
 		<!-- HTML 파일에 SockJS와 STOMP 라이브러리를 포함 -->
 	<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
 	
 	<script>
-	var stompClient = null;
-	
-	function connect() {
-	    var socket = new SockJS('/ws');
-	    stompClient = Stomp.over(socket);
-	    stompClient.connect({}, function(frame) {
-	        console.log('Connected: ' + frame);
-	        stompClient.subscribe('/topic/public', function(greeting) {
-	            console.log(JSON.parse(greeting.body).content);
-	        });
-	    });
+	function openChatWindow() {
+	    // 실제 채팅 페이지의 URL로 대체해주세요.
+	    window.open("/usr/home/chat", "chatWindow", "width=400,height=600");
 	}
-	
-	function disconnect() {
-	    if (stompClient !== null) {
-	        stompClient.disconnect();
-	    }
-	    console.log("Disconnected");
-	}
-	
-	function sendMessage() {
-	    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({'content': $("#messageInput").val()}));
-	}
-	
-	connect(); // 웹 페이지 로드 시 웹소켓 연결
 	</script>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	<section class="mt-8">
 		<div class="container mx-auto">
 			<div>
@@ -58,10 +27,8 @@
 		sfdsfsdfsdfdsdsdsdsfdsfsddsfddsfddsfdf
 		dfsdfsdf</div>
 		
-		<input type="text" id="messageInput" />
-		<button onclick="sendMessage()">Send</button>
-		
-		
+		<button onclick="openChatWindow()">Open Chat</button>
+		<a href="testHtml">htmltest</a>
 	</section>
 	
 	<%@ include file="../common/foot.jsp" %>

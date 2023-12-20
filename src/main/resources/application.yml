@@ -16,6 +16,10 @@ spring:
     view:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    view-names: th/* 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/SB_CS?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull
