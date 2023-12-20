@@ -178,24 +178,13 @@ $(document).ready(function() {
 			    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
 			</div>
     	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
     	<div class="main-content scroll-mask overflow-auto">
     		<div class="project-home-wrap mx-20 pb-2 ">
     			<div class="project-group">
     			<div class="mb-2.5">즐겨찾기</div>
     			<div class="cards">
 	    			<c:forEach items="${projects}" var="project">
-	    				<a href="../project/detail?projectId=1">
+	    				<a href="../project/detail?projectId=${project.id}">
 							<article class="information [ card ] bg-gray-50">
 								<div class="ml-4">
 									<div>테스트용</div>

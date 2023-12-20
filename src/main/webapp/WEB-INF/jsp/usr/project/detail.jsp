@@ -25,7 +25,8 @@
 		var status = "요청"; // Default status 
 		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
-		var projectId = $('#favoriteIcon').data('project-id');
+		var projectId = $("#projectId").val();
+		
 	     $.ajax({
 	         url: '../favorite/getFavorite',
 	         method: 'GET',
@@ -110,6 +111,7 @@
 	        }
 		    var title = $("#exampleFormControlInput1").val();
 		    var content = $("#exampleFormControlTextarea1").val();
+		    
 		    
 		 // 시작일과 마감일을 가져옵니다.
 		    var startDate = $("#start-date").val();
@@ -418,9 +420,9 @@
     		</div>
     		<nav class="menu-box-1">
     			<ul>
-    				<li><a class="block" href="../project/detail?projectId=1">피드</a></li>
-    				<li><a class="block" href="../project/task?projectId=1">업무</a></li>
-    				<li><a class="block" href="">간트차트</a></li>
+    				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
+    				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
+    				<li><a class="block" href="../project/gantt?projectId=${project.id }">간트차트</a></li>
     				<li><a class="block" href="">캘린더</a></li>
     				<li><a class="block" href="">파일</a></li>
     				<li><a class="block" href="">알림</a></li>
@@ -446,6 +448,7 @@
 						<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
+							<input type="hidden" id="projectId" value="${project.id }">
 							<div id="status">
 						      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
 						      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>

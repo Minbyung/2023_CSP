@@ -124,6 +124,10 @@ SELECT M.*, TM.teamId AS teamId
 				INNER JOIN teamMember AS TM
 				ON M.id = TM.memberId
 				WHERE loginId = 'alszk1234@naver.com';	
+
+
+
+
 					
 -- DELETE FROM favorite
 -- WHERE memberId = 1

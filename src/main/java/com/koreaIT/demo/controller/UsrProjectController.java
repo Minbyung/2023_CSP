@@ -75,6 +75,7 @@ public class UsrProjectController {
 		List<Group> groups = groupService.getGroups(projectId);
 		
 		model.addAttribute("project", project);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
 		
