@@ -93,4 +93,24 @@ public interface MemberDao {
 				WHERE teamId = #{teamId};
 			""")
 	public List<Member> getMembersByTeamId(int teamId);
+
+	
+	
+	@Select("""
+			SELECT COUNT(*) 
+				FROM teamMember
+				WHERE teamId = #{teamId}
+			""")
+	public int getTeamMembersCnt(int teamId);
+
+	
+	@Select("""
+			SELECT M.*, PM.projectId AS projectId
+				FROM `member` AS M
+				INNER JOIN  projectMember AS PM
+				ON M.id = PM.memberId
+				WHERE projectId = #{projectId}
+				ORDER BY id ASC
+			""")
+	public List<Member> getprojectMembersByprojectId(int projectId);
 }

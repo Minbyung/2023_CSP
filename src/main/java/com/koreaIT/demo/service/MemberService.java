@@ -85,4 +85,14 @@ public class MemberService {
 		
 		return memberDao.getMembersByTeamId(teamId);
 	}
+
+	public int getTeamMembersCnt(int teamId) {
+		
+		return memberDao.getTeamMembersCnt(teamId);
+	}
+
+	public List<Member> getprojectMembersByprojectId(int projectId) {
+		
+		return memberDao.getprojectMembersByprojectId(projectId);
+	}
 }

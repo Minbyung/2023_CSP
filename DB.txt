@@ -68,9 +68,9 @@ CREATE TABLE project(
 CREATE TABLE projectMember (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
     projectId INT UNSIGNED NOT NULL, 
-    memberId INT UNSIGNED NOT NULL, 
-    `role` VARCHAR(30) NOT NULL
+    memberId INT UNSIGNED NOT NULL 
 );
+
 
 CREATE TABLE favorite (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -120,10 +120,10 @@ articleId = 2,
 memberId = 1;
 					
 SELECT M.*, TM.teamId AS teamId
-				FROM `member` AS M
-				INNER JOIN teamMember AS TM
-				ON M.id = TM.memberId
-				WHERE loginId = 'alszk1234@naver.com';	
+FROM `member` AS M
+INNER JOIN teamMember AS TM
+ON M.id = TM.memberId
+WHERE loginId = 'alszk1234@naver.com';	
 
 
 
@@ -156,9 +156,25 @@ SELECT * FROM `member`;
 SELECT * FROM favorite;
 SELECT * FROM article;
 SELECT * FROM `group`;
--- TRUNCATE TABLE project;
+
 -- TRUNCATE TABLE projectMember;
+
 -- TRUNCATE TABLE favorite;
+
+
+SELECT M.*, PM.projectId AS projectId
+FROM `member` AS M
+INNER JOIN  projectMember AS PM
+ON M.id = PM.memberId
+WHERE projectId = 1
+ORDER BY id ASC;
+
+INSERT INTO team
+SET teamName = '코리아IT';
+
+INSERT INTO teamMember
+SET memberId = 1,
+teamId = 1;
 
 SELECT * FROM `group`
 WHERE projectId = 1
@@ -166,18 +182,8 @@ ORDER BY id DESC;
 
 INSERT INTO projectMember
 SET projectId = 1,
-memberId = 1,
-`role` = '팀장';
+memberId = 1;
 
-INSERT INTO projectMember
-SET projectId = 1,
-memberId = 2,
-`role` = '팀원';
-
-INSERT INTO projectMember
-SET projectId = 2,
-memberId = 3,
-`role` = '팀장';
 
 INSERT INTO project
 SET project_name = '[IT/개발] 기능 개발 프로젝트',
@@ -266,6 +272,8 @@ SELECT * FROM recommendPoint;
 SELECT * FROM reply;
 SELECT * FROM project;
 SELECT * FROM `group`;
+SELECT * FROM teamMember;
+SELECT * FROM projectMember;
 
 
 SELECT A.*, G.group_name AS group_name FROM article AS A 
@@ -287,7 +295,10 @@ GROUP BY A.id
 ORDER BY A.id DESC;
 
 
-
+SELECT *
+FROM project AS P
+INNER JOIN projectMember PM ON P.id = PM.projectId
+WHERE PM.memberId = 2 AND P.teamId = 1
 
 
 

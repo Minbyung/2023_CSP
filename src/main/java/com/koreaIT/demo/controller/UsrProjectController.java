@@ -21,7 +21,10 @@ import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.Group;
+import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
+import com.koreaIT.demo.vo.RecommendPoint;
+import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 
 @Controller
@@ -60,8 +63,9 @@ public class UsrProjectController {
 		if (Util.empty(project_name)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
 		}
-
-		projectService.makeProject(project_name, project_description, teamId);
+		int memberId = rq.getLoginedMemberId();
+		
+		projectService.makeProject(project_name, project_description, teamId, memberId);
 		
 		
 		return Util.jsReplace(Util.f("%s 을 생성했습니다", project_name), "/usr/dashboard/dashboard?teamId=" + teamId);
@@ -73,17 +77,22 @@ public class UsrProjectController {
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
+		int teamId = project.getTeamId();
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
+		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId);
 		
 		model.addAttribute("project", project);
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
+		model.addAttribute("teamMembers", teamMembers);
+		model.addAttribute("projectMembers", projectMembers);
 		
 		return "usr/project/detail";
 	}
 	
 	@RequestMapping("/usr/project/task")
-	public String task(Model model, @RequestParam(defaultValue = "1") int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
@@ -122,6 +131,7 @@ public class UsrProjectController {
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
 		
+		
 		// groupId 별로 article을 그룹화
 		
 		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
@@ -156,7 +166,7 @@ public class UsrProjectController {
 	}
 	
 	@RequestMapping("/usr/project/gantt")
-	public String gantt(Model model, @RequestParam(defaultValue = "1") int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+	public String gantt(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
@@ -178,6 +188,7 @@ public class UsrProjectController {
 		}
 
 		model.addAttribute("project", project);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
 		model.addAttribute("groupedArticles", groupedArticles);
@@ -187,6 +198,21 @@ public class UsrProjectController {
 		
 		return "usr/project/gantt"; 
 	}
+	
+	@RequestMapping("/usr/project/inviteProjectMember")
+	@ResponseBody
+	public ResultData inviteProjectMember(int memberId, int projectId) {
+
+		if (projectService.isMemberAlreadyInProject(memberId, projectId)) {
+	        return ResultData.from("F-1", "이미 프로젝트에 참여중인 멤버입니다");
+	    }
+		
+		projectService.addMemberToProject(memberId, projectId);
+		
+		return ResultData.from("S-1", "멤버 초대 성공");
+	}
+	
+	
 	
 	
 	

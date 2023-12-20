@@ -33,5 +33,14 @@ public interface TeamDao {
 	public Team getTeamByInviteCode(String inviteCode);
 	
 	@Select("SELECT LAST_INSERT_ID()")
-	public int getLastInsertId();	
+	public int getLastInsertId();
+
+	
+	
+	@Select("""
+			SELECT *
+				FROM team
+				WHERE id = #{teamId}
+			""")
+	public Team getTeamNameByTeamId(int teamId);	
 }

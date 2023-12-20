@@ -401,7 +401,9 @@
 				            <path
 				              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 				          </svg>
-				          <span>대시보드</span>
+				          <a href="../dashboard/dashboard?teamId=${project.teamId }">
+				         	 <span>대시보드</span>
+				          </a>
 				        </li>
 				        <li class="item">
 				          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -493,7 +495,7 @@
             <div class="h-20 bg-gray-100 detail-header flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex items-center">
-                        <i data-project-id="1" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
+                        <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
                         <div class="ml-4">
                             <h1 class="text-xl font-bold">${project.project_name}</h1>
                             <div class="mt-1">${project.project_description}</div>
@@ -504,9 +506,9 @@
             </div>
             <nav class="menu-box-1">
                 <ul>
-                    <li><a class="block" href="../project/detail?projectId=1">피드</a></li>
-                    <li><a class="block" href="../project/task?projectId=1">업무</a></li>
-                    <li><a class="block" href="../project/gantt?projectId=1">간트차트</a></li>
+                    <li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
+    				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
+    				<li><a class="block" href="../project/gantt?projectId=${project.id }">간트차트</a></li>
                     <li><a class="block" href="">캘린더</a></li>
                     <li><a class="block" href="">파일</a></li>
                     <li><a class="block" href="">알림</a></li>

@@ -18,4 +18,12 @@ public class TeamService {
 		String teamName = team.getTeamName();
 		return teamName;
 	}
+
+	public String getTeamNameByTeamId(int teamId) {
+		Team team = teamDao.getTeamNameByTeamId(teamId);
+		
+		String teamName = team.getTeamName();
+		
+		return teamName;
+	}
 }

@@ -11,4 +11,6 @@ public class Project {
 	private int id;
 	private String project_name;
 	private String project_description;
+	private int teamId;
+	
 }

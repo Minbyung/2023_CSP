@@ -17,8 +17,12 @@ public class ProjectService {
 		this.projectDao = projectDao;
 	}
 	
-	public void makeProject(String name, String description, int teamId) {
+	public void makeProject(String name, String description, int teamId, int memberId) {
 		projectDao.makeProject(name, description, teamId);
+		
+		int projectId = getLastInsertId();
+		projectDao.addMemberToProject(memberId, projectId);
+		
 	}
 
 	public Project getProjectByProjectId(int projectId) {
@@ -35,9 +39,20 @@ public class ProjectService {
 		return projectDao.getMembersByName(name);
 	}
 
-	public List<Project> getProjectsByTeamId(int teamId) {
+	public List<Project> getProjectsByTeamIdAndMemberId(int teamId, int memberId) {
 		
-		return projectDao.getProjectsByTeamId(teamId);
+		return projectDao.getProjectsByTeamIdAndMemberId(teamId, memberId);
+	}
+
+	public void addMemberToProject(int memberId, int projectId) {
+		projectDao.addMemberToProject(memberId, projectId);
+		
+		
+	}
+
+	public boolean isMemberAlreadyInProject(int memberId, int projectId) {
+		
+		return projectDao.isMemberAlreadyInProject(memberId, projectId);
 	}
 
 }

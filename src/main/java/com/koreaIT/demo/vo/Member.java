@@ -22,4 +22,5 @@ public class Member {
 	private String delDate;
 	
 	private int teamId;
+	private int projectId;
 }

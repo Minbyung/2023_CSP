@@ -38,13 +38,39 @@ public interface ProjectDao {
 			""")
 	public List<String> getMembersByName(@Param("name") String name);
 	
-	@Select("SELECT LAST_INSERT_ID()")
-	public int getLastInsertId();
 	
 	@Select("""
 			SELECT *
-				FROM project
-				WHERE teamId = #{teamId}
+				FROM project AS P
+				INNER JOIN projectMember PM ON P.id = PM.projectId
+				WHERE PM.memberId = #{memberId} AND P.teamId = #{teamId}
 			""")
-	public List<Project> getProjectsByTeamId(int teamId);
+	public List<Project> getProjectsByTeamIdAndMemberId(int teamId, int memberId);
+
+	
+	@Insert("""
+			INSERT INTO projectMember
+				SET memberId = #{memberId},
+				projectId = #{projectId}
+			""")
+	public void addMemberToProject(int memberId, int projectId);
+	
+	
+	
+	@Select("""
+			SELECT COUNT(*) > 0
+	        FROM projectMember
+	        WHERE memberId = #{memberId}
+	          AND projectId = #{projectId}
+			""")
+	public boolean isMemberAlreadyInProject(int memberId, int projectId);
+	
+	
+	@Select("SELECT LAST_INSERT_ID()")
+	public int getLastInsertId();
+
+	
+	
+	
+	
 }
