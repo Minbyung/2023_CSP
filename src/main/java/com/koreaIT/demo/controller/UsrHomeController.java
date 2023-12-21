@@ -18,7 +18,7 @@ public class UsrHomeController {
 	
 	@RequestMapping("/usr/home/testHtml")
 	public String testHtml() {
-		return "th/home2";
+		return "usr/home/chat";
 	}
 	
 }
