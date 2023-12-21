@@ -324,6 +324,14 @@
 		        });
 		    });
 			
+			
+		    $('.chat-btn').click(function() {
+		    	  var memberId = $(this).data('member-id');
+		   		  // 채팅방 URL에 memberId를 쿼리 파라미터로 추가
+		   		  var chatWindowUrl = '/usr/home/chat?memberId=' + encodeURIComponent(memberId);
+		   		  // 새 창(팝업)으로 채팅방 열기
+		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
+		    	});
 
 
 
@@ -581,6 +589,7 @@
 						        ${member.name}
 						        <!-- 버튼에 클래스와 data- 속성 추가 -->
 						        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
+						        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
 						    </div>
 						</c:forEach>
 						 

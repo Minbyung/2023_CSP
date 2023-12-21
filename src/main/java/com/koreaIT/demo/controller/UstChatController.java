@@ -4,11 +4,25 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.vo.ChatMessage;
+import com.koreaIT.demo.vo.Member;
+import com.koreaIT.demo.vo.Rq;
 
 @Controller
 public class UstChatController {
+	
+	private MemberService memberService;
+	private Rq rq;
+	
+	UstChatController(Rq rq, MemberService memberService) {
+		this.rq = rq;
+		this.memberService = memberService;
+	}
 	
 	/*
 	  우체국에 비유
@@ -34,4 +48,26 @@ public class UstChatController {
     }
     
     // 여기에 채팅방 입장, 퇴장 등의 메소드를 추가
+	
+	
+	
+	 // 채팅방 페이지를 보여주기 위한 메서드
+    @GetMapping("/usr/home/chat")
+    public String showChatPage(@RequestParam("memberId") int memberId, Model model) {
+    	Member member = memberService.getMemberById(memberId);
+    	
+    	Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
+    	
+    	String myName = myMember.getName();
+    	
+    	model.addAttribute("member", member);
+    	model.addAttribute("myName", myName);
+    	
+        return "usr/home/chat"; // "chat.jsp" 페이지로 이동
+    }
+	
+	
+	
+	
+	
 }
