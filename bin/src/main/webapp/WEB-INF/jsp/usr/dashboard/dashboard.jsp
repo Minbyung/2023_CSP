@@ -76,7 +76,9 @@ $(document).ready(function() {
 	            <path
 	              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 	          </svg>
-	          <span>대시보드</span>
+	          <a href="../dashboard/dashboard?teamId=${teamId }">
+	         	<span>대시보드</span>
+		      </a>
 	        </li>
 	        <li class="item">
 	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -166,18 +168,7 @@ $(document).ready(function() {
 	  </div>
 	<div class="page-content">
     	<div class="header h-20">내 프로젝트</div>
-    	
-		<div class="modal-exam"><span>초대하기 모달</span></div>
-			<div class="layer-bg"></div>
-			<div class="layer">
-				<span id="close" class="close close-btn-x">&times;</span>
-				<div>직원초대</div>
-				<div>직원들과 협업을 시작해보세요</div>
-				
-				<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 직원의 이메일을 입력해주세요" required />
-			    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
-			</div>
-    	
+
     	<div class="main-content scroll-mask overflow-auto">
     		<div class="project-home-wrap mx-20 pb-2 ">
     			<div class="project-group">
@@ -219,20 +210,32 @@ $(document).ready(function() {
     	</div>
 	</div>
 	<div class="right-bar">
-    <div class="top-part">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        class="feather feather-users">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-      <div class="count">6</div>
+	<div class="flex justify-end items-center">
+		<div class="modal-exam text-base cursor-pointer"><span>초대하기</span></div>
+			<div class="layer-bg"></div>
+			<div class="layer">
+				<span id="close" class="close close-btn-x">&times;</span>
+				<div>직원초대</div>
+				<div>직원들과 협업을 시작해보세요</div>
+				
+				<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 직원의 이메일을 입력해주세요" required />
+			    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
+			</div>
+	    <div class="top-part">
+	      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+	        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+	        class="feather feather-users">
+	        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+	        <circle cx="9" cy="7" r="4" />
+	        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+	        <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+	      <div class="count">${teamMembersCnt }</div>
+	    </div>
     </div>
-    
     <div>
-	    <c:forEach items="${teamMembers}" var="member">
-	    <p>팀원 : ${member.name}</p>
+	   <div>${teamName }의 팀원</div>
+	   <c:forEach items="${teamMembers}" var="member">
+	    	<p> ${member.name}</p>
 		</c:forEach>
 	</div>
 	

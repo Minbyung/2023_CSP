@@ -25,7 +25,7 @@
 		var status = "요청"; // Default status 
 		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
-		var projectId = $("#projectId").val();
+		var projectId = ${project.id};
 		
 	     $.ajax({
 	         url: '../favorite/getFavorite',
@@ -269,22 +269,64 @@
 					return acc + val;
 				}, 0);
 				
-				var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너를 가져옵니다.
+				var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너 가져오기
 				$.each(data, function(i, item) {
 					var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
-					var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성합니다.
-					$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정합니다.
-					$infoContainer.append($infoElement); // 요소를 컨테이너에 추가합니다.
+					var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성
+					$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정
+					$infoContainer.append($infoElement); // 요소를 컨테이너에 추가
 				});
-		
-		
-		
 		    },
 		    error: function(jqXHR, textStatus, errorThrown) {
 		        console.log(textStatus, errorThrown);
 		    }
 		});
-							
+		
+
+
+// 			function inviteProjectMember(memberId) {
+// 				console.log("작동");
+// 		        var projectId = ${projectId}; // 현재 페이지의 프로젝트 ID
+// 		        $.ajax({
+// 		            url: '../project/inviteProjectMember',
+// 		            method: 'POST',
+// 		            data: { memberId: memberId, projectId: projectId },
+// 		            success: function(response) {
+// 		                alert('팀원이 초대되었습니다.');
+// 		            },
+// 		            error: function(err) {
+// 		                alert('초대에 실패했습니다.');
+// 		            }
+// 		        });
+// 		    }
+
+			// invite-btn 클래스를 가진 버튼에 대해 클릭 이벤트 리스너를 바인딩합니다.
+		    $('.invite-btn').on('click', function() {
+		        var memberId = $(this).data('member-id'); // data-member-id 속성을 통해 memberId를 가져옵니다.
+		        var projectId = ${projectId}; // 현재 페이지의 프로젝트 ID
+		        // AJAX 요청을 통해 서버에 memberId와 projectId를 전송합니다.
+		        $.ajax({
+		            url: '../project/inviteProjectMember',
+		            method: 'POST',
+		            data: { memberId: memberId, projectId: projectId },
+		            success: function(data) {
+						if (data.resultCode === "F-1") {
+				            alert(data.msg);
+				        } else {
+				            // 초대 성공 후, 멤버를 목록에서 제거합니다.
+				            alert('팀원이 프로젝트에 초대되었습니다.');
+				            location.reload();
+				        }
+		            },
+		            error: function(err) {
+		                alert('초대에 실패했습니다.');
+		            }
+		        });
+		    });
+			
+
+
+
 
 
 	});
@@ -315,7 +357,11 @@
 		            <path
 		              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 		          </svg>
+		          
+		          <a href="../dashboard/dashboard?teamId=${project.teamId }">
 		          <span>대시보드</span>
+		          </a>
+		          
 		        </li>
 		        <li class="item">
 		          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -407,7 +453,7 @@
   		  <div class="h-20 bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
-                <i data-project-id="1" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
+                <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
                 <div class="ml-4">
                     <h1 class="text-xl font-bold">${project.project_name }</h1>
                     <div class="mt-1">${project.project_description }</div>
@@ -430,7 +476,7 @@
     		</nav>
     		
     		<section class="project-detail-container overflow-auto">
-				<div class="mt-5 detail-wrap mx-auto">
+				<div class="mt-5 detail-wrap mx-auto flex">
     				<div class="postTimeline">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
@@ -521,22 +567,36 @@
 									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
 								    </div>
 								    <p class="card-text">내용: ${article.content }</p>
-								    
-								    
 								  </div>
 								</div>
 							</c:forEach>
 						</div>
 						 
-						</div>
-						  
-						  
-						  
-						  
-						  
-						  
-						  
-						</div>
+				 
+					 </div>
+					 <div class="bg-white">
+					 	<h1>우리 소속 멤버</h1>
+						<c:forEach items="${teamMembers}" var="member">
+						    <div id="member-${member.id}">
+						        ${member.name}
+						        <!-- 버튼에 클래스와 data- 속성 추가 -->
+						        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
+						    </div>
+						</c:forEach>
+						 
+						<h1>현재 참여중인 프로젝트 멤버</h1>
+						<c:forEach items="${projectMembers}" var="projectMember">
+						    <div>
+						  		${projectMember.name}
+						    </div>
+						</c:forEach>
+						 
+						 
+					 </div>
+				</div>
+						
+						
+						
 						
 						
     				</div>
