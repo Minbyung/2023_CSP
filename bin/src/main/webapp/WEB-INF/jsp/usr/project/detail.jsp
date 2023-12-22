@@ -300,9 +300,9 @@
 // 		        });
 // 		    }
 
-			// invite-btn 클래스를 가진 버튼에 대해 클릭 이벤트 리스너를 바인딩합니다.
+			// invite-btn 클래스를 가진 버튼에 대해 클릭 이벤트 리스너를 바인딩
 		    $('.invite-btn').on('click', function() {
-		        var memberId = $(this).data('member-id'); // data-member-id 속성을 통해 memberId를 가져옵니다.
+		        var memberId = $(this).data('member-id');
 		        var projectId = ${projectId}; // 현재 페이지의 프로젝트 ID
 		        // AJAX 요청을 통해 서버에 memberId와 projectId를 전송합니다.
 		        $.ajax({
@@ -313,7 +313,7 @@
 						if (data.resultCode === "F-1") {
 				            alert(data.msg);
 				        } else {
-				            // 초대 성공 후, 멤버를 목록에서 제거합니다.
+				            // 초대 성공 후, 멤버를 목록에서 제거
 				            alert('팀원이 프로젝트에 초대되었습니다.');
 				            location.reload();
 				        }
@@ -324,6 +324,14 @@
 		        });
 		    });
 			
+			
+		    $('.chat-btn').click(function() {
+		    	  var memberId = $(this).data('member-id');
+		   		  // 채팅방 URL에 memberId를 쿼리 파라미터로 추가
+		   		  var chatWindowUrl = '/usr/home/chat?memberId=' + encodeURIComponent(memberId);
+		   		  // 새 창(팝업)으로 채팅방 열기
+		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
+		    	});
 
 
 
@@ -581,6 +589,7 @@
 						        ${member.name}
 						        <!-- 버튼에 클래스와 data- 속성 추가 -->
 						        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
+						        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
 						    </div>
 						</c:forEach>
 						 

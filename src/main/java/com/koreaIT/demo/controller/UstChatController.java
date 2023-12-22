@@ -22,14 +22,12 @@ import com.koreaIT.demo.vo.Rq;
 @Controller
 public class UstChatController {
 	
-	private SimpMessagingTemplate messagingTemplate;
 	private MemberService memberService;
 	private Rq rq;
 	
-	UstChatController(Rq rq, MemberService memberService, SimpMessagingTemplate messagingTemplate) {
+	UstChatController(Rq rq, MemberService memberService) {
 		this.rq = rq;
-		this.memberService = memberService;
-		this.messagingTemplate = messagingTemplate;
+		this.memberService = memberService;		
 	}
 	
 	/*
@@ -54,6 +52,17 @@ public class UstChatController {
  
 		
 		
+		// MemberService를 통해 현재 로그인한 사용자의 이름을 가져옵니다.
+	    String senderName = memberService.getMemberById(Integer.parseInt(message.getSenderId())).getName();
+	    if (senderName != null) {
+	        message.setSenderName(senderName);
+	    } else {
+	        // senderName이 null인 경우 로깅하거나 대체값을 설정할 수 있습니다.
+	        message.setSenderName("Unknown");
+	    }
+
+		
+		
 		// 메시지 처리 로직...
         return message;
     }
@@ -69,11 +78,11 @@ public class UstChatController {
     	
     	Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
     	
-//    	String myName = myMember.getName();
+    	String myName = myMember.getName();
     	int myId = rq.getLoginedMemberId();
     	
     	model.addAttribute("member", member);
-//    	model.addAttribute("myName", myName);
+    	model.addAttribute("myName", myName);
     	model.addAttribute("myId", myId);
     	
         return "usr/home/chat"; // "chat.jsp" 페이지로 이동

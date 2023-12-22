@@ -5,13 +5,11 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
-    <link rel="stylesheet" href="/resource/chat/chat.css" />
 </head>
 <script>
 	var stompClient = null;
 	var memberId = '${member.id}'; // 수신자 ID
 	var myName = '${myName}';
-	var senderId = '${myId}';
 	
 	function connect() {
 	    var socket = new SockJS('/chat'); // 서버로 연결을 시도(문)
@@ -26,11 +24,11 @@
 
 	function showMessage(messageOutputBody) {
 		var message = JSON.parse(messageOutputBody);
-	    var messageType = (message.senderName === myName) ? 'my-message' : 'other-message';
+// 	    var messageType = (message.sender === myName) ? 'my-message' : 'other-message';
 	    
 	    // 메시지를 보낸 사람 이름과 메시지 내용을 포함하는 요소를 생성
-	    var messageElement = $('<div class="' + messageType + '"><b>' + message.senderName + '</b>: ' + message.content + '</div>');
-//  	    var messageElement = $('<div>' + message.content + '</div>');
+// 	    var messageElement = $('<div class="' + messageType + '"><b>' + message.sender + '</b>: ' + message.content + '</div>');
+ 	    var messageElement = $('<div>' + message.content + '</div>');
 		
 	    // 채팅 창에 메시지 요소를 추가
 	    $('.chat-box').append(messageElement);
@@ -43,12 +41,8 @@
 	
 	function sendMessage() {
 	    var messageContent = $('#messageInput').val();
-	    var chatMessage = {
-	            senderId: senderId,
-	            content: messageContent
-	        };
-	    
-	 	   stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage));
+
+	        stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify({content: messageContent}));
 	        
 	        console.log(memberId);
 	        $('#messageInput').val('');
@@ -71,26 +65,16 @@
 
 <style>
 .chat-box {
-	height: 90vh;
+	height: 100px;
 }
 </style>
 
 
 <body>
 	    
-	    
-<!-- 		<div class="chat-box bg-green-200" id="chat"></div> -->
-<!-- 		<div> -->
-<!-- 			<input type="text" id="messageInput" /> -->
-<!-- 		    <button id="sendButton" onclick="sendMessage()">보내기</button> -->
-<!-- 	    </div> -->
-
-
-	<div class="chat-box bg-green-200" id="chat"></div>
-    <div class="input-group"> <!-- 입력 필드와 버튼을 감싸는 div에 클래스를 추가 -->
-        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..."/>
-        <button id="sendButton" onclick="sendMessage()">보내기</button>
-    </div>
+	    <input type="text" id="messageInput" />
+	    <button id="sendButton" onclick="sendMessage()">보내기</button>
+		<div class="chat-box bg-green-200" id="chat"></div>
     
 </body>
 </html>
