@@ -27,10 +27,13 @@
 	function showMessage(messageOutputBody) {
 		var message = JSON.parse(messageOutputBody);
 	    var messageType = (message.senderName === myName) ? 'my-message' : 'other-message';
-	    
-	    // 메시지를 보낸 사람 이름과 메시지 내용을 포함하는 요소를 생성
-	    var messageElement = $('<div class="' + messageType + '"><b>' + message.senderName + '</b>: ' + message.content + '</div>');
-//  	    var messageElement = $('<div>' + message.content + '</div>');
+// 	    // 메시지를 보낸 사람 이름과 메시지 내용을 포함하는 요소를 생성
+// 	    var messageElement = $('<div class="' + messageType + '"><b>' + message.senderName + '</b>: ' + message.content + '</div>');
+		
+		var messageContent = (message.senderName === myName) ? 
+        message.content : '<b>' + message.senderName + '</b>: ' + message.content;
+
+  	 	var messageElement = $('<div class="' + messageType + '">' + messageContent + '</div>');
 		
 	    // 채팅 창에 메시지 요소를 추가
 	    $('.chat-box').append(messageElement);
@@ -39,7 +42,8 @@
 	    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
 	    
 	}
-	
+
+			
 	
 	function sendMessage() {
 	    var messageContent = $('#messageInput').val();
