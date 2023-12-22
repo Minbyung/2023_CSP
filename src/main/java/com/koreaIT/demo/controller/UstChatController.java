@@ -1,8 +1,14 @@
 package com.koreaIT.demo.controller;
 
+import java.security.Principal;
+
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +22,14 @@ import com.koreaIT.demo.vo.Rq;
 @Controller
 public class UstChatController {
 	
+	private SimpMessagingTemplate messagingTemplate;
 	private MemberService memberService;
 	private Rq rq;
 	
-	UstChatController(Rq rq, MemberService memberService) {
+	UstChatController(Rq rq, MemberService memberService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;
+		this.messagingTemplate = messagingTemplate;
 	}
 	
 	/*
@@ -38,16 +46,19 @@ public class UstChatController {
 	  클라이언트는 이 채널을 구독함으로써 서버로부터 실시간으로 메시지를 받을 수 있음
 	 */
 	
-	@MessageMapping("/chat") // 클라이언트가 '/app/chat'으로 메시지를 보내면 이 메서드가 호출
-    @SendTo("/topic/messages") // handleChatMessage 메서드는 클라이언트로부터 오는 메시지를 받아서 처리. 처리가 끝나면 메시지를 /topic/messages로 다시 보내서, 이 주소를 구독하고 있는 다른 클라이언트들에게 메시지를 브로드캐스트
-    public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
-        
-		 // 여기서 메시지를 처리하고, 결과를 '/topic/messages'로 브로드캐스트
+	// 클라이언트로부터 메시지를 받는 메서드
+	@MessageMapping("/chat.private.{memberId}")
+    @SendTo("/room/{memberId}")
+    public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
+                                            @DestinationVariable String memberId) {
+ 
 		
-		return chatMessage;
+		
+		// 메시지 처리 로직...
+        return message;
     }
     
-    // 여기에 채팅방 입장, 퇴장 등의 메소드를 추가
+    
 	
 	
 	
@@ -58,10 +69,12 @@ public class UstChatController {
     	
     	Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
     	
-    	String myName = myMember.getName();
+//    	String myName = myMember.getName();
+    	int myId = rq.getLoginedMemberId();
     	
     	model.addAttribute("member", member);
-    	model.addAttribute("myName", myName);
+//    	model.addAttribute("myName", myName);
+    	model.addAttribute("myId", myId);
     	
         return "usr/home/chat"; // "chat.jsp" 페이지로 이동
     }

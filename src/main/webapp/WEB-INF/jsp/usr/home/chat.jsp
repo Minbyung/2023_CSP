@@ -8,28 +8,28 @@
 </head>
 <script>
 	var stompClient = null;
+	var memberId = '${member.id}'; // 수신자 ID
+	var myName = '${myName}';
 	
 	function connect() {
 	    var socket = new SockJS('/chat'); // 서버로 연결을 시도(문)
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
-	    	// '/topic/messages' 채널을 구독
-	        stompClient.subscribe('/topic/messages', function(messageOutput) {
-	        	console.log("작동");
-	            var message = JSON.parse(messageOutput.body);
-	            showMessage(message.content);
+	    	
+	        stompClient.subscribe('/room/'+memberId, function(messageOutput) {
+	        	showMessage(messageOutput.body);
 	        });
 	    });
 	}
 
-	function showMessage(messageOutput) {
-		var myName = '${myName}';
-		var message = JSON.parse(messageOutput.body);
-	    var messageType = (message.sender === myName) ? 'my-message' : 'other-message';
+	function showMessage(messageOutputBody) {
+		var message = JSON.parse(messageOutputBody);
+// 	    var messageType = (message.sender === myName) ? 'my-message' : 'other-message';
 	    
 	    // 메시지를 보낸 사람 이름과 메시지 내용을 포함하는 요소를 생성
-	    var messageElement = $('<div class="' + messageType + '"><b>' + message.sender + '</b>: ' + message.content + '</div>');
-
+// 	    var messageElement = $('<div class="' + messageType + '"><b>' + message.sender + '</b>: ' + message.content + '</div>');
+ 	    var messageElement = $('<div>' + message.content + '</div>');
+		
 	    // 채팅 창에 메시지 요소를 추가
 	    $('.chat-box').append(messageElement);
 
@@ -41,18 +41,13 @@
 	
 	function sendMessage() {
 	    var messageContent = $('#messageInput').val();
-	    var senderName = '${member.name}';
-	    
-	    if (messageContent.trim() !== '') { // 메시지 내용이 비어있지 않은지 확인
-	        var chatMessage = {
-	            content: messageContent,
-	            sender: senderName
-	            // sender, timestamp 등의 필드를 추가예정
-	        };
-	        stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
+
+	        stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify({content: messageContent}));
+	        
+	        console.log(memberId);
 	        $('#messageInput').val('');
 	    }
-	}
+	
 
 
 	$(document).ready(function() {
@@ -62,7 +57,6 @@
 	            sendMessage();
 	        }
 	    });
-	    $('#sendButton').click(sendMessage); 
 	    
 		connect();
 	});	
