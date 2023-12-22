@@ -24,10 +24,12 @@ public class UstChatController {
 	
 	private MemberService memberService;
 	private Rq rq;
+	private SimpMessagingTemplate messagingTemplate;
 	
-	UstChatController(Rq rq, MemberService memberService) {
+	UstChatController(Rq rq, MemberService memberService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;		
+		this.messagingTemplate = messagingTemplate;		
 	}
 	
 	/*
@@ -46,7 +48,6 @@ public class UstChatController {
 	
 	// 클라이언트로부터 메시지를 받는 메서드
 	@MessageMapping("/chat.private.{memberId}")
-    @SendTo("/room/{memberId}")
     public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
                                             @DestinationVariable String memberId) {
  
@@ -60,7 +61,16 @@ public class UstChatController {
 	        // senderName이 null인 경우 로깅하거나 대체값을 설정할 수 있습니다.
 	        message.setSenderName("Unknown");
 	    }
-
+	    String currentUserId = message.getSenderId();
+//	    String currentUserId = String.valueOf(rq.getLoginedMemberId());
+        
+        // 현재 사용자의 고유 대기열로 메시지 전송
+        messagingTemplate.convertAndSend("/queue/chat-" + currentUserId, message);
+        
+        // 다른 사용자의 고유 대기열로 메시지 전송
+        messagingTemplate.convertAndSend("/queue/chat-" + memberId, message);
+	    
+	    
 		
 		
 		// 메시지 처리 로직...

@@ -18,7 +18,7 @@
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	    	
-	        stompClient.subscribe('/room/'+memberId, function(messageOutput) {
+	        stompClient.subscribe('/queue/chat-' + senderId, function(messageOutput) {
 	        	showMessage(messageOutput.body);
 	        });
 	    });
