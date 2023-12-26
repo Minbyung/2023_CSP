@@ -69,62 +69,52 @@
 // 				calendar.unselect();
 // 			}
 			// 이벤트 
-	        events: [
-	          {
-	            title: 'All Day Event',
-	            start: '2023-12-01',
-	          },
-	          {
-	            title: 'Long Event',
-	            start: '2023-12-07',
-	            end: '2023-12-10'
-	          },
-	          {
-	            groupId: 999,
-	            title: 'Repeating Event',
-	            start: '2023-12-09T16:00:00'
-	          },
-	          {
-	            groupId: 999,
-	            title: 'Repeating Event',
-	            start: '2023-12-16T16:00:00'
-	          },
-	          {
-	            title: 'Conference',
-	            start: '2023-12-11',
-	            end: '2023-12-13'
-	          },
-	          {
-	            title: 'Meeting',
-	            start: '2023-12-12T10:30:00',
-	            end: '2023-12-12T12:30:00'
-	          },
-	          {
-	            title: 'Lunch',
-	            start: '2023-12-12T12:00:00'
-	          },
-	          {
-	            title: 'Meeting',
-	            start: '2023-12-12T14:30:00'
-	          },
-	          {
-	            title: 'Happy Hour',
-	            start: '2023-12-12T17:30:00'
-	          },
-	          {
-	            title: 'Dinner',
-	            start: '2023-12-12T20:00:00'
-	          },
-	          {
-	            title: 'Birthday Party',
-	            start: '2023-12-13T07:00:00'
-	          },
-	          {
-	            title: 'Click for Google',
-	            url: 'http://google.com/', // 클릭시 해당 url로 이동
-	            start: '2023-12-28'
-	          }
-	        ]	 
+	        events: function(fetchInfo, successCallback, failureCallback) { 
+	        	$.ajax({
+	        		url: '/usr/project/getGroupedArticles', // 서버의 API 엔드포인트
+	                method: 'GET',
+	                dataType: 'json',
+	                data: {
+	                  // 필요한 경우 서버에 전송할 추가 데이터를 여기에 포함시킵니다.
+	                  // 예: start: fetchInfo.startStr, end: fetchInfo.endStr
+	                },	
+	                success: function(response) {
+	                  // 여기에서 response는 서버로부터 받은 이벤트 데이터 배열이어야 합니다.
+	                  // FullCalendar가 이해할 수 있는 형식으로 데이터가 구성되어 있어야 합니다.
+	                  successCallback(response);
+	               },
+	       	
+	               error: function(xhr, status, error) {
+	                   // 오류 처리
+	                   failureCallback(error);
+	                 }
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	});
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        }
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
+	        	
 		});
 		calendar.render(); // 캘린더 렌더링
 	});
