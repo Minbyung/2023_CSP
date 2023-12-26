@@ -148,6 +148,7 @@ public class UsrProjectController {
 		    }
 		}
 		
+		System.out.println(groupedArticles);
 		return groupedArticles;
 	}
 	
@@ -213,7 +214,12 @@ public class UsrProjectController {
 	}
 	
 	
-	
+	@RequestMapping("/usr/project/schd")
+	public String gantt(Model model, int projectId) {
+		
+
+		return "usr/project/schd"; 
+	}
 	
 	
 	

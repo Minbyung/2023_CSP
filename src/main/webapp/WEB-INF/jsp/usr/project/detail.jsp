@@ -477,7 +477,7 @@
     				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
     				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
     				<li><a class="block" href="../project/gantt?projectId=${project.id }">간트차트</a></li>
-    				<li><a class="block" href="">캘린더</a></li>
+    				<li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
     				<li><a class="block" href="">파일</a></li>
     				<li><a class="block" href="">알림</a></li>
     			</ul>
