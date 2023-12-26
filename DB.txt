@@ -108,6 +108,13 @@ CREATE TABLE teamMember (
     teamId INT NOT NULL
 );
 
+CREATE TABLE chatRoom (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    chatRoomId VARCHAR(100) NOT NULL,
+    senderId INT NOT NULL,
+    recipientId INT NOT NULL
+);
+
 
 INSERT INTO tag
 SET projectId = 1,
@@ -146,6 +153,9 @@ WHERE loginId = 'alszk1234@naver.com';
 -- ON PM.memberId = M.id
 -- WHERE `name` LIKE '%%'
 --  
+
+
+
 SELECT * FROM team;
 SELECT * FROM teamInvite;
 SELECT * FROM teamMember;
@@ -272,8 +282,8 @@ SELECT * FROM recommendPoint;
 SELECT * FROM reply;
 SELECT * FROM project;
 SELECT * FROM `group`;
-SELECT * FROM teamMember;
-SELECT * FROM projectMember;
+select * from teamMember;
+select * from projectMember;
 
 
 SELECT A.*, G.group_name AS group_name FROM article AS A 
@@ -296,7 +306,7 @@ ORDER BY A.id DESC;
 
 
 SELECT *
-FROM project AS P
+FROM project as P
 INNER JOIN projectMember PM ON P.id = PM.projectId
 WHERE PM.memberId = 2 AND P.teamId = 1
 

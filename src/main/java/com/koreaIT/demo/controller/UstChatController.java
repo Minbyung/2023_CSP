@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.Member;
@@ -23,12 +24,14 @@ import com.koreaIT.demo.vo.Rq;
 public class UstChatController {
 	
 	private MemberService memberService;
+	private ChatService chatService;
 	private Rq rq;
 	private SimpMessagingTemplate messagingTemplate;
 	
-	UstChatController(Rq rq, MemberService memberService, SimpMessagingTemplate messagingTemplate) {
+	UstChatController(Rq rq, MemberService memberService, ChatService chatService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;		
+		this.chatService = chatService;		
 		this.messagingTemplate = messagingTemplate;		
 	}
 	
@@ -58,21 +61,23 @@ public class UstChatController {
 	    if (senderName != null) {
 	        message.setSenderName(senderName);
 	    } else {
-	        // senderName이 null인 경우 로깅하거나 대체값을 설정할 수 있습니다.
+	        // senderName이 null인 경우
 	        message.setSenderName("Unknown");
 	    }
 	    String currentUserId = message.getSenderId();
+	    
+	    
+	    int senderId = Integer.parseInt(currentUserId);
+	    int recipientId = Integer.parseInt(memberId);
+	    
+	    String chatRoomId = chatService.getOrCreateChatRoomId(senderId, recipientId);
+	    
+	    
 //	    String currentUserId = String.valueOf(rq.getLoginedMemberId());
         
-        // 현재 사용자의 고유 대기열로 메시지 전송
-        messagingTemplate.convertAndSend("/queue/chat-" + currentUserId, message);
-        
-        // 다른 사용자의 고유 대기열로 메시지 전송
-        messagingTemplate.convertAndSend("/queue/chat-" + memberId, message);
-	    
-	    
-		
-		
+        // 사용자간의 고유 대기열로 메시지 전송
+        messagingTemplate.convertAndSend("/queue/chat-" + chatRoomId, message);
+
 		// 메시지 처리 로직...
         return message;
     }
@@ -91,9 +96,15 @@ public class UstChatController {
     	String myName = myMember.getName();
     	int myId = rq.getLoginedMemberId();
     	
+    	String recipientName = member.getName();
+    
+    	String chatRoomId = chatService.getOrCreateChatRoomId(myId, memberId);
+    	
     	model.addAttribute("member", member);
     	model.addAttribute("myName", myName);
     	model.addAttribute("myId", myId);
+    	model.addAttribute("recipientName", recipientName);
+    	model.addAttribute("chatRoomId", chatRoomId);
     	
         return "usr/home/chat"; // "chat.jsp" 페이지로 이동
     }

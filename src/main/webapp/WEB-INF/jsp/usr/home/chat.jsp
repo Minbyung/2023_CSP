@@ -11,14 +11,17 @@
 	var stompClient = null;
 	var memberId = '${member.id}'; // 수신자 ID
 	var myName = '${myName}';
+	var recipientName = '${recipientName}';
 	var senderId = '${myId}';
+	var chatRoomId = "${chatRoomId}";
+	
 	
 	function connect() {
 	    var socket = new SockJS('/chat'); // 서버로 연결을 시도(문)
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	    	
-	        stompClient.subscribe('/queue/chat-' + senderId, function(messageOutput) {
+	        stompClient.subscribe('/queue/chat-' + chatRoomId, function(messageOutput) {
 	        	showMessage(messageOutput.body);
 	        });
 	    });
@@ -40,7 +43,6 @@
 
 	    // 채팅 창을 스크롤하여 최신 메시지가 보이도록 함
 	    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
-	    
 	}
 
 			
@@ -54,7 +56,6 @@
 	    
 	 	   stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage));
 	        
-	        console.log(memberId);
 	        $('#messageInput').val('');
 	    }
 	
@@ -88,13 +89,16 @@
 <!-- 			<input type="text" id="messageInput" /> -->
 <!-- 		    <button id="sendButton" onclick="sendMessage()">보내기</button> -->
 <!-- 	    </div> -->
-
-
-	<div class="chat-box bg-green-200" id="chat"></div>
-    <div class="input-group"> <!-- 입력 필드와 버튼을 감싸는 div에 클래스를 추가 -->
-        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..."/>
-        <button id="sendButton" onclick="sendMessage()">보내기</button>
+	<div class="chat-container">
+		<div id="chat-header">
+	    	<div id="recipient-name">채팅 상대: <span id="recipientName">${member.name}</span></div>
+		</div>	
+	
+		<div class="chat-box bg-green-200" id="chat"></div>
+	    <div class="input-group"> <!-- 입력 필드와 버튼을 감싸는 div에 클래스를 추가 -->
+	        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..."/>
+	        <button id="sendButton" onclick="sendMessage()">보내기</button>
+	    </div>
     </div>
-    
 </body>
 </html>
