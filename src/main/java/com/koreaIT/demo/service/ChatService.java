@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.koreaIT.demo.dao.ArticleDao;
 import com.koreaIT.demo.dao.ChatDao;
@@ -13,6 +14,7 @@ import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.ChatRoom;
 
 @Service
+@Transactional
 public class ChatService {
 	
 	private ChatDao chatDao;

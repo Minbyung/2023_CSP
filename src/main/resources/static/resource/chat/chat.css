@@ -108,6 +108,15 @@
     max-width: 70%;
 }
 
+.timestamp {
+    display: block; /* 또는 inline-block, 필요에 따라 선택 */
+    font-size: 0.8em; /* 타임스탬프의 글자 크기 */
+    color: #888; /* 타임스탬프의 글자 색상 */
+    margin-top: 5px; /* 메시지와의 간격 */
+    text-align: right; /* 오른쪽 정렬 */
+}
+
+
 /* 보내기 버튼 스타일 */
 #sendButton {
     padding: 10px 20px; /* 내부 여백 */

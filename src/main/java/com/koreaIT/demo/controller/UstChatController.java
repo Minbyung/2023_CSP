@@ -1,6 +1,8 @@
 package com.koreaIT.demo.controller;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -62,8 +64,10 @@ public class UstChatController {
 	        // senderName이 null인 경우
 	        message.setSenderName("Unknown");
 	    }
-	    String currentUserId = message.getSenderId();
 	    
+	    message.setRegDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+	    
+	    String currentUserId = message.getSenderId();
 	    
 	    int senderId = Integer.parseInt(currentUserId);
 	    int recipientId = Integer.parseInt(memberId);
@@ -75,7 +79,6 @@ public class UstChatController {
         // 사용자간의 고유 대기열로 메시지 전송
         messagingTemplate.convertAndSend("/queue/chat-" + chatRoomId, message);
 
-		// 메시지 처리 로직...
         return message;
     }
     

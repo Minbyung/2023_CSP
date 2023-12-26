@@ -110,6 +110,7 @@ CREATE TABLE teamMember (
 
 CREATE TABLE chatMessage (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     content TEXT NOT NULL,    
     senderName TEXT NOT NULL,
     senderId TEXT NOT NULL,
@@ -117,14 +118,12 @@ CREATE TABLE chatMessage (
     chatRoomId TEXT NOT NULL
 );
 
-
 CREATE TABLE chatRoom (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     chatRoomId VARCHAR(100) NOT NULL,
     senderId INT NOT NULL,
     recipientId INT NOT NULL
 );
-
 
 INSERT INTO tag
 SET projectId = 1,
@@ -141,11 +140,7 @@ FROM `member` AS M
 INNER JOIN teamMember AS TM
 ON M.id = TM.memberId
 WHERE loginId = 'alszk1234@naver.com';	
-
-
-
-
-					
+				
 -- DELETE FROM favorite
 -- WHERE memberId = 1
 -- AND projectId = 1
