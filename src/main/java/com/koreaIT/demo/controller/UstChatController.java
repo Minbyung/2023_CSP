@@ -1,6 +1,7 @@
 package com.koreaIT.demo.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -53,9 +54,6 @@ public class UstChatController {
 	@MessageMapping("/chat.private.{memberId}")
     public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
                                             @DestinationVariable String memberId) {
- 
-		
-		
 		// MemberService를 통해 현재 로그인한 사용자의 이름을 가져옵니다.
 	    String senderName = memberService.getMemberById(Integer.parseInt(message.getSenderId())).getName();
 	    if (senderName != null) {
@@ -71,10 +69,9 @@ public class UstChatController {
 	    int recipientId = Integer.parseInt(memberId);
 	    
 	    String chatRoomId = chatService.getOrCreateChatRoomId(senderId, recipientId);
-	    
-	    
-//	    String currentUserId = String.valueOf(rq.getLoginedMemberId());
-        
+    
+	    chatService.saveMessage(message);
+	     
         // 사용자간의 고유 대기열로 메시지 전송
         messagingTemplate.convertAndSend("/queue/chat-" + chatRoomId, message);
 
@@ -100,11 +97,15 @@ public class UstChatController {
     
     	String chatRoomId = chatService.getOrCreateChatRoomId(myId, memberId);
     	
+    	List<ChatMessage> messages = chatService.getMessageHistory(chatRoomId);
+    	
+    	
     	model.addAttribute("member", member);
     	model.addAttribute("myName", myName);
     	model.addAttribute("myId", myId);
     	model.addAttribute("recipientName", recipientName);
     	model.addAttribute("chatRoomId", chatRoomId);
+    	model.addAttribute("messages", messages);
     	
         return "usr/home/chat"; // "chat.jsp" 페이지로 이동
     }

@@ -11,8 +11,8 @@
 	var stompClient = null;
 	var memberId = '${member.id}'; // 수신자 ID
 	var myName = '${myName}';
-	var recipientName = '${recipientName}';
 	var senderId = '${myId}';
+	var recipientName = '${recipientName}';
 	var chatRoomId = "${chatRoomId}";
 	
 	
@@ -51,7 +51,10 @@
 	    var messageContent = $('#messageInput').val();
 	    var chatMessage = {
 	            senderId: senderId,
-	            content: messageContent
+	            content: messageContent,
+	            recipientId: memberId,
+	            senderName: myName,
+	            chatRoomId: chatRoomId
 	        };
 	    
 	 	   stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage));
@@ -94,7 +97,13 @@
 	    	<div id="recipient-name">채팅 상대: <span id="recipientName">${member.name}</span></div>
 		</div>	
 	
-		<div class="chat-box bg-green-200" id="chat"></div>
+		<div class="chat-box bg-green-200" id="chat">
+			<c:forEach items="${messages}" var="message">
+		        <div class="${message.senderId == myId ? 'my-message' : 'other-message'}">
+		            <b>${message.senderName}</b>: ${message.content}
+		        </div>
+	   	 	</c:forEach>
+	   	</div> 	
 	    <div class="input-group"> <!-- 입력 필드와 버튼을 감싸는 div에 클래스를 추가 -->
 	        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..."/>
 	        <button id="sendButton" onclick="sendMessage()">보내기</button>

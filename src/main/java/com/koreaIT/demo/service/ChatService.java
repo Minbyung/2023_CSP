@@ -9,6 +9,7 @@ import com.koreaIT.demo.dao.ArticleDao;
 import com.koreaIT.demo.dao.ChatDao;
 import com.koreaIT.demo.dao.MemberDao;
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.ChatRoom;
 
 @Service
@@ -43,6 +44,15 @@ public class ChatService {
         // 정렬된 ID를 하이픈으로 연결하여 문자열로 만듭니다.
         return minId + "-" + maxId;
     }
+
+	public void saveMessage(ChatMessage message) {
+		chatDao.saveMessage(message);
+	}
+
+	public List<ChatMessage> getMessageHistory(String chatRoomId) {
+		
+		return chatDao.getMessageHistory(chatRoomId);
+	}
 	
 	
 	

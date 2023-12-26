@@ -108,6 +108,16 @@ CREATE TABLE teamMember (
     teamId INT NOT NULL
 );
 
+CREATE TABLE chatMessage (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    content TEXT NOT NULL,    
+    senderName TEXT NOT NULL,
+    senderId TEXT NOT NULL,
+    recipientId TEXT NOT NULL,
+    chatRoomId TEXT NOT NULL
+);
+
+
 CREATE TABLE chatRoom (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     chatRoomId VARCHAR(100) NOT NULL,
