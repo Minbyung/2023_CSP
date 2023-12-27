@@ -25,4 +25,10 @@ public class Article {
 	private String groupName;
 	private int groupId;
 	
+	public String getContentBr() {
+        if (content == null) {
+            return null;
+        }
+        return content.replaceAll("(\r\n|\n)", "<br>");
+    }
 }

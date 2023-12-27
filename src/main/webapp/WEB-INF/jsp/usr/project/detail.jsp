@@ -18,7 +18,7 @@
 
 </head>
 <!-- partial:index.partial.html -->
-<link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet"> -->
 <body>
 	<script>
 	$(document).ready(function() {
@@ -335,15 +335,35 @@
 
 
 
+		    
+		    
+		    $('.more-btn').click(function() {
+		        // 현재 버튼에 가장 가까운 게시글 내용 요소를 찾습니다.
+		        var $this = $(this);
+		        var $content = $this.closest('.article-content');
+		        var $summary = $content.find('.content-summary');
+		        var $fullContent = $content.find('.content-full');
 
+		        // 요약 내용과 전체 내용의 표시 상태를 토글합니다.
+		        $summary.toggleClass('hidden');
+		        $fullContent.toggleClass('hidden');
+
+		        // 버튼의 텍스트를 토글합니다.
+		        $this.text($fullContent.hasClass('hidden') ? '더보기' : '접기');
+		      });
+
+		    
+// 		    $('.article-content').each(function() {
+// 		        var content = $(this).text();
+// 		        $(this).html(content.replace(/\n/g, '<br>'));
+// 		      });
+		    
+		    
 
 	});
 
 	
-	</script>
-
-
-
+</script>
 	<div class="task-manager">
 		<div class="left-bar">
 		    <div class="upper-part">
@@ -574,32 +594,45 @@
 									    <div>시작일: ${article.startDate.substring(2, 10)}</div>
 									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
 								    </div>
-								    <p class="card-text">내용: ${article.content }</p>
+								    <div class="article-content">
+									    <p class="content-summary">${fn:substring(article.contentBr, 0, 100) }</p>
+									    <p class="content-full hidden">${article.contentBr }</p>
+									    <a href="#!" class="more-btn">더보기</a>
+								    </div>
 								  </div>
 								</div>
 							</c:forEach>
 						</div>
 					 </div>
-					 <div class="bg-white">
-					 	<h1>우리 소속 멤버</h1>
-						<c:forEach items="${teamMembers}" var="member">
-						    <div id="member-${member.id}">
-						        ${member.name}
-						        <!-- 버튼에 클래스와 data- 속성 추가 -->
-						        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
-						        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
-						    </div>
-						</c:forEach>
-						 
-						<h1>현재 참여중인 프로젝트 멤버</h1>
-						<c:forEach items="${projectMembers}" var="projectMember">
-						    <div>
-						  		${projectMember.name}
-						    </div>
-						</c:forEach>
-						 
-						 
+					 <div class="participants-section">
+						 <div class="participants-container">
+						 	<h1>우리 소속 멤버</h1>
+							<c:forEach items="${teamMembers}" var="member">
+							    <div class="participant flex justify-between">
+								    <div id="member-${member.id}">
+								        ${member.name}
+								    </div>
+								    <div>   
+								        <!-- 버튼에 클래스와 data- 속성 추가 -->
+<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
+								        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
+								    </div>
+							    </div>
+							</c:forEach>
+							 
+							<h1>현재 참여중인 프로젝트 멤버</h1>
+							<c:forEach items="${projectMembers}" var="projectMember">
+							    <div>
+							  		${projectMember.name}
+							    </div>
+							</c:forEach>
+							 
+							 
+						 </div>
 					 </div>
+					 
+					 
+					 
 				</div>
 						
 						

@@ -34,8 +34,8 @@
     padding-right: 1em;
   }
   #calendar-container {
-  	padding-left: 20px;
-  	padding-right: 20px;
+  	padding-left: 30px;
+  	padding-right: 30px;
   }
 </style>
 

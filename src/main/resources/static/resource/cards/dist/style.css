@@ -28,6 +28,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  
 /*  width: 90%;*/
 /*  max-width: 1000px;*/
 /*  margin: 10vh auto;*/
@@ -40,6 +41,7 @@
   box-shadow: 0 30px 30px -25px rgba(65, 51, 183, 0.25);
   max-width: 300px;
   overflow: hidden;
+  margin-top: 20px;
   
 }
 
