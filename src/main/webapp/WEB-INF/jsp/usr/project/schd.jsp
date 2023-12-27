@@ -75,46 +75,38 @@
 	                method: 'GET',
 	                dataType: 'json',
 	                data: {
+	                	projectId: 1
 	                  // 필요한 경우 서버에 전송할 추가 데이터를 여기에 포함시킵니다.
 	                  // 예: start: fetchInfo.startStr, end: fetchInfo.endStr
 	                },	
-	                success: function(response) {
-	                  // 여기에서 response는 서버로부터 받은 이벤트 데이터 배열이어야 합니다.
-	                  // FullCalendar가 이해할 수 있는 형식으로 데이터가 구성되어 있어야 합니다.
-	                  successCallback(response);
+	                success: function(data) {
+	                	let events = [];
+	                	
+	                	for (let group in data) {
+	                		var articles = data[group];
+	                	
+	                	    console.log(articles);
+	                	    for (var i = 0; i < articles.length; i++) {
+	                            var article = articles[i];
+	                            events.push({
+	                                id: article.id,
+	                                title: article.title,
+	                                start: article.startDate,
+	                                end: article.endDate,
+	                            });
+	                	    }
+	                	}
+	                  successCallback(events);
 	               },
 	       	
 	               error: function(xhr, status, error) {
 	                   // 오류 처리
 	                   failureCallback(error);
 	                 }
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
+
 	        	});
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        }
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
-	        	
+
+	        } 	
 		});
 		calendar.render(); // 캘린더 렌더링
 	});
