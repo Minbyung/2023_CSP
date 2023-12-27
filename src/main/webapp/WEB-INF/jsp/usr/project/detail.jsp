@@ -102,7 +102,7 @@
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
 	    	})
 	    	
-//           글쓰기	     	    	
+//  		글쓰기	     	    	
 	    	$("#submitBtn").click(function(){
 	    	var selectedGroupId = parseInt($('#groupSelect').val());
 	    	if (!selectedGroupId) {
@@ -498,7 +498,7 @@
 
 
     					</div>
-							<div class="modal-exam"><span>글 작성</span></div>
+						<div class="modal-exam"><span>글 작성</span></div>
 						<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
@@ -579,8 +579,6 @@
 								</div>
 							</c:forEach>
 						</div>
-						 
-				 
 					 </div>
 					 <div class="bg-white">
 					 	<h1>우리 소속 멤버</h1>

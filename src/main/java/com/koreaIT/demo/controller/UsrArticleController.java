@@ -71,7 +71,14 @@ public class UsrArticleController {
 	@ResponseBody
 	public String doUpdateDate(int articleId, String startDate, String endDate) {
 		
+		System.out.println(startDate);
+		
+		
+		
+		
 		articleService.doUpdateDate(articleId, startDate, endDate);
+		
+		
 		
 		int id = articleId;
 		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));

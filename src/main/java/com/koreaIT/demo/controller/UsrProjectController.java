@@ -216,8 +216,13 @@ public class UsrProjectController {
 	
 	@RequestMapping("/usr/project/schd")
 	public String gantt(Model model, int projectId) {
+		List<Group> groups = groupService.getGroups(projectId);
+		Project project = projectService.getProjectByProjectId(projectId);
 		
-
+		
+		model.addAttribute("projectId", projectId);
+		model.addAttribute("project", project);
+		model.addAttribute("groups", groups);
 		return "usr/project/schd"; 
 	}
 	

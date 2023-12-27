@@ -1,6 +1,10 @@
 package com.koreaIT.demo.util;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.UUID;
+import java.text.ParseException;
 
 public class Util {
 	public static boolean empty(String str) {
@@ -61,6 +65,27 @@ public class Util {
 	public static String generateInviteCode() {
 		return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
 	}
+	
+	public class DateFormatConverter {
+	    public static String convertToMySqlFormat(String isoDate) {
+	        // ISO 8601 날짜 형식을 파싱합니다.
+	        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	        isoFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // UTC 시간대를 설정합니다.
+	        
+	        try {
+	            Date date = isoFormat.parse(isoDate);
+	            // MySQL 형식으로 날짜를 포맷합니다.
+	            SimpleDateFormat mysqlFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            return mysqlFormat.format(date);
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+	    }
+	}
+	
+	
+	
 	
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.koreaIT.demo.dao.ArticleDao;
 import com.koreaIT.demo.dao.MemberDao;
+import com.koreaIT.demo.util.Util.DateFormatConverter;
 import com.koreaIT.demo.vo.Article;
 
 @Service
@@ -84,7 +85,10 @@ public class ArticleService {
 	}
 
 	public void doUpdateDate(int articleId, String startDate, String endDate) {
-		articleDao.doUpdateDate(articleId, startDate, endDate);
+		String convertStartDate = DateFormatConverter.convertToMySqlFormat(startDate);
+		String convertEndDate = DateFormatConverter.convertToMySqlFormat(endDate);
+		
+		articleDao.doUpdateDate(articleId, convertStartDate, convertEndDate);
 		
 	}
 }
