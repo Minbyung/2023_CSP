@@ -1,6 +1,5 @@
 package com.koreaIT.demo.controller;
 
-import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -8,10 +7,7 @@ import java.util.List;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.MemberService;
+import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.vo.ChatMessage;
+import com.koreaIT.demo.vo.GroupChatMessage;
+import com.koreaIT.demo.vo.GroupChatRoom;
 import com.koreaIT.demo.vo.Member;
+import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.Rq;
 
 @Controller
@@ -28,13 +28,15 @@ public class UstChatController {
 	
 	private MemberService memberService;
 	private ChatService chatService;
+	private ProjectService projectService;
 	private Rq rq;
 	private SimpMessagingTemplate messagingTemplate;
 	
-	UstChatController(Rq rq, MemberService memberService, ChatService chatService, SimpMessagingTemplate messagingTemplate) {
+	UstChatController(Rq rq, MemberService memberService, ChatService chatService, ProjectService projectService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;		
 		this.chatService = chatService;		
+		this.projectService = projectService;		
 		this.messagingTemplate = messagingTemplate;		
 	}
 	
@@ -52,7 +54,7 @@ public class UstChatController {
 	  클라이언트는 이 채널을 구독함으로써 서버로부터 실시간으로 메시지를 받을 수 있음
 	 */
 	
-	// 클라이언트로부터 메시지를 받는 메서드
+	// 클라이언트로부터 1:1메시지를 받는 메서드
 	@MessageMapping("/chat.private.{memberId}")
     public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
                                             @DestinationVariable String memberId) {
@@ -82,11 +84,7 @@ public class UstChatController {
         return message;
     }
     
-    
-	
-	
-	
-	 // 채팅방 페이지를 보여주기 위한 메서드
+	 // 1:1 채팅방 페이지를 보여주기 위한 메서드
     @GetMapping("/usr/home/chat")
     public String showChatPage(@RequestParam("memberId") int memberId, Model model) {
     	Member member = memberService.getMemberById(memberId);
@@ -112,7 +110,69 @@ public class UstChatController {
     	
         return "usr/home/chat"; // "chat.jsp" 페이지로 이동
     }
+    
+    
+    @MessageMapping("/chat.group.{groupChatRoomProjectId}")
+    public GroupChatMessage handleGroupMessage(@Payload GroupChatMessage message,
+                                          @DestinationVariable String groupChatRoomProjectId) {
+        // 메시지에 시간을 추가합니다.
+        message.setRegDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+
+        // 채팅방 식별자를 통해 채팅방을 찾고, 메시지를 저장합니다.
+        // chatService.saveGroupMessage(message, chatRoomId);
+
+        // 채팅방의 모든 구성원에게 메시지를 브로드캐스트합니다.
+        messagingTemplate.convertAndSend("/topic/chat-group-" + groupChatRoomProjectId, message);
+
+        return message;
+    }
+    
+    
+    
+    
+    
 	
+    @GetMapping("/usr/home/groupChat")
+    public String showGroupChatPage(@RequestParam("groupChatRoomProjectId") int groupChatRoomProjectId, Model model) {
+        
+    	Project project = projectService.getProjectByProjectId(groupChatRoomProjectId);
+    	String projectName = project.getProject_name();
+    	
+    	
+    	List<Integer> projectMemberIds = memberService.getprojectMembersIdByprojectId(groupChatRoomProjectId);
+    	
+    	
+    	// 채팅방 정보
+        GroupChatRoom groupChatRoom = chatService.getGroupChatRoomById(groupChatRoomProjectId);
+        
+        
+        
+        
+    	// 채팅방이 존재하지 않는 경우 새로 생성
+        if (groupChatRoom == null) {
+            groupChatRoom = chatService.insertGroupChatRoom(groupChatRoomProjectId, projectName, projectMemberIds);
+        }
+        
+        List<Member> members = chatService.findMembersByGroupChatRoomProjectId(groupChatRoomProjectId);
+        Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
+        String myName = myMember.getName();
+    	int myId = rq.getLoginedMemberId();
+        
+    	
+    	model.addAttribute("myName", myName);
+    	model.addAttribute("myId", myId);
+        model.addAttribute("groupChatRoom", groupChatRoom);
+        model.addAttribute("members", members);
+        model.addAttribute("groupChatRoomProjectId", groupChatRoomProjectId);
+        model.addAttribute("projectName", projectName);
+        
+        return "usr/home/groupChat"; // 단체 채팅을 위한 뷰 페이지로 이동
+    }
+    
+    
+    
+    
+    
 	
 	
 	

@@ -170,6 +170,23 @@ public class UsrMemberController {
 		return Util.jsReplace("정상적으로 로그아웃 되었습니다", "/");
 	}
 	
+	@RequestMapping("/usr/member/getMemberDetails")
+	@ResponseBody
+	public Member getMemberDetails(int memberId) {
+		
+		Member member = memberService.getMemberById(memberId);
+		
+		return member;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@RequestMapping("/usr/member/myPage")
 	public String myPage(Model model) {
 		

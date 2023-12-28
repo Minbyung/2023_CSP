@@ -94,6 +94,7 @@
 	    	$('.layer-bg').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		$('.layer-memeber-detail').hide();
 	    		// 회색바탕 눌러서 끄면 안에 내용 빈칸으로 초기화
 	    		$('.tag').remove();
 	    		$('#exampleFormControlInput1').val('');
@@ -331,6 +332,7 @@
 		   		  var chatWindowUrl = '/usr/home/chat?memberId=' + encodeURIComponent(memberId);
 		   		  // 새 창(팝업)으로 채팅방 열기
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
+		   		  $('#member-modal').hide();
 		    	});
 
 
@@ -357,6 +359,62 @@
 // 		        var content = $(this).text();
 // 		        $(this).html(content.replace(/\n/g, '<br>'));
 // 		      });
+
+
+		 // 멤버 이름 클릭 이벤트
+		    $('.participants-container').on('click', '.participant div[id^=member-]', function() {
+		    	
+		      var memberId = $(this).data('member-id');
+		      var memberName = $(this).text();
+		      var $memberDetails = $('#member-details');
+		      
+		      $('.chat-btn').data('member-id', memberId);
+		      
+		   // AJAX 요청을 통해 멤버의 세부 정보를 가져옵니다.
+		      $.ajax({
+		        url: '../member/getMemberDetails', 
+		        type: 'GET',
+		        data: { memberId: memberId }, // 요청과 함께 서버로 보낼 데이터
+		        dataType: 'json', // 서버로부터 기대하는 응답의 데이터 타입
+		        success: function(data) {
+		          // 성공 시, 응답 데이터로 모달의 내용을 채웁니다.
+		          $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+		                              '<p>이메일: ' + data.email + '</p>' +
+		                              '<p>전화번호: ' + data.cellphoneNum + '</p>'
+		                              );
+		          // 모달 창 표시.
+		          $('#member-modal').fadeIn();
+		        },
+		        error: function(jqXHR, textStatus, errorThrown) {
+		          // 오류 처리
+		          console.error('AJAX 요청에 실패했습니다: ' + textStatus, errorThrown);
+		        }
+		      });
+		    });
+
+
+		    // 모달 닫기 버튼
+		    $('.close').click(function() {
+		      $('#member-modal').fadeOut();
+		    });
+
+		    // 모달 외부 클릭 시 모달 숨기기
+		    $(window).click(function(event) {
+		      if ($(event.target).hasClass('modal')) {
+		        $('#member-modal').fadeOut();
+		      }
+		    });	
+
+		    $('.group-chat-btn').click(function() {
+		    	  var groupChatRoomProjectId = $(this).data('groupChatRoomProjectId');
+		    	  console.log(groupChatRoomProjectId);
+		   		  // 채팅방 URL에 memberId를 쿼리 파라미터로 추가
+		   		  var chatWindowUrl = '/usr/home/groupChat?groupChatRoomProjectId=' + encodeURIComponent(groupChatRoomProjectId);
+		   		  // 새 창(팝업)으로 채팅방 열기
+		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
+		    	});
+
+		
 		    
 		    
 
@@ -609,7 +667,7 @@
 						 	<h1>우리 소속 멤버</h1>
 							<c:forEach items="${teamMembers}" var="member">
 							    <div class="participant flex justify-between">
-								    <div id="member-${member.id}">
+								    <div id="member-${member.id}" data-member-id="${member.id}">
 								        ${member.name}
 								    </div>
 								    <div>   
@@ -626,12 +684,28 @@
 							  		${projectMember.name}
 							    </div>
 							</c:forEach>
-							 
-							 
+							<button class="group-chat-btn p-4 flex-grow text-center border border-red-300" data-group-chat-room-project-id="${projectId}">채팅하기</button>
+					 		<button class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
 						 </div>
 					 </div>
-					 
-					 
+					 <div id="member-modal" class="member-modal">
+					 	<div class="modal-memberContent">
+					 		<span class="close">&times;</span>
+					 		<h2>멤버 세부 정보</h2>
+					 		<div id="member-details" >
+					 		<!-- 여기에 AJAX를 통해 가져온 멤버 정보를 채웁니다 -->
+					 		</div>
+					 		<div class="flex justify-center">
+					 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
+					 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+					 		</div>	
+					 	</div>
+					 </div>
+					
+					
+					
+					
+
 					 
 				</div>
 						

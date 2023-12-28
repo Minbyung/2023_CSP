@@ -113,4 +113,14 @@ public interface MemberDao {
 				ORDER BY id ASC
 			""")
 	public List<Member> getprojectMembersByprojectId(int projectId);
+
+	
+	@Select("""
+			SELECT M.id
+				FROM `member` AS M
+				INNER JOIN  projectMember AS PM
+				ON M.id = PM.memberId
+				WHERE projectId = #{groupChatRoomId}
+			""")
+	public List<Integer> getprojectMembersIdByprojectId(int groupChatRoomId);
 }

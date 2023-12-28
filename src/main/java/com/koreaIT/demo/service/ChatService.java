@@ -12,6 +12,8 @@ import com.koreaIT.demo.dao.MemberDao;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.ChatRoom;
+import com.koreaIT.demo.vo.GroupChatRoom;
+import com.koreaIT.demo.vo.Member;
 
 @Service
 @Transactional
@@ -55,8 +57,47 @@ public class ChatService {
 		
 		return chatDao.getMessageHistory(chatRoomId);
 	}
+
+	public GroupChatRoom insertGroupChatRoom(int groupChatRoomProjectId, String projectName, List<Integer> projectMemberIds) {
+		
+		chatDao.insertGroupChatRoom(groupChatRoomProjectId, projectName);
+		
+		
+		
+		
+		chatDao.insertChatRoomMembers(groupChatRoomProjectId, projectMemberIds);
+		
+		
+		
+		
+		
+		
+		
+		
+		return chatDao.getGroupChatRoomById(groupChatRoomProjectId);
+	}
+
 	
 	
+	
+	
+	
+	public GroupChatRoom getGroupChatRoomById(int groupChatRoomId) {
+		
+		return chatDao.getGroupChatRoomById(groupChatRoomId);
+	}
+
+
+	
+	
+	public int getLastInsertId() {
+		return chatDao.getLastInsertId();
+	}
+
+	public List<Member> findMembersByGroupChatRoomProjectId(int groupChatRoomProjectId) {
+		
+		return chatDao.findMembersByGroupChatRoomProjectId(groupChatRoomProjectId);
+	}
 	
 	
 	

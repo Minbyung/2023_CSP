@@ -95,4 +95,9 @@ public class MemberService {
 		
 		return memberDao.getprojectMembersByprojectId(projectId);
 	}
+
+	public List<Integer> getprojectMembersIdByprojectId(int groupChatRoomId) {
+		
+		return memberDao.getprojectMembersIdByprojectId(groupChatRoomId);
+	}
 }

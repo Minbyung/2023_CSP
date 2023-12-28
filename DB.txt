@@ -125,6 +125,19 @@ CREATE TABLE chatRoom (
     recipientId INT NOT NULL
 );
 
+CREATE TABLE groupChatRoom (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    groupChatRoomProjectId INT NOT NULL,
+    `name` VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE groupChatRoomMembers (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    groupChatRoomProjectId INT NOT NULL,
+    memberId INT NOT NULL
+);
+
+
 INSERT INTO tag
 SET projectId = 1,
 articleId = 1,
