@@ -662,50 +662,48 @@
 							</c:forEach>
 						</div>
 					 </div>
-					 <div class="participants-section">
-						 <div class="participants-container">
-						 	<h1>우리 소속 멤버</h1>
-							<c:forEach items="${teamMembers}" var="member">
-							    <div class="participant flex justify-between">
-								    <div id="member-${member.id}" data-member-id="${member.id}">
-								        ${member.name}
+					 <div class="right-detail-content flex">
+						 <div class="participants-section">
+							 <div class="participants-container">
+							 	<h1>우리 소속 멤버</h1>
+								<c:forEach items="${teamMembers}" var="member">
+								    <div class="participant flex justify-between">
+									    <div id="member-${member.id}" data-member-id="${member.id}">
+									        ${member.name}
+									    </div>
+									    <div>   
+									        <!-- 버튼에 클래스와 data- 속성 추가 -->
+	<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
+									        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
+									    </div>
 								    </div>
-								    <div>   
-								        <!-- 버튼에 클래스와 data- 속성 추가 -->
-<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
-								        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
+								</c:forEach>
+								 
+								<h1>현재 참여중인 프로젝트 멤버</h1>
+								<c:forEach items="${projectMembers}" var="projectMember">
+								    <div>
+								  		${projectMember.name}
 								    </div>
-							    </div>
-							</c:forEach>
-							 
-							<h1>현재 참여중인 프로젝트 멤버</h1>
-							<c:forEach items="${projectMembers}" var="projectMember">
-							    <div>
-							  		${projectMember.name}
-							    </div>
-							</c:forEach>
-							<button class="group-chat-btn p-4 flex-grow text-center border border-red-300" data-group-chat-room-project-id="${projectId}">채팅하기</button>
-					 		<button class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+								</c:forEach>
+								<button class="group-chat-btn p-4 flex-grow text-center border border-red-300" data-group-chat-room-project-id="${projectId}">채팅하기</button>
+						 		<button class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+							 </div>
 						 </div>
-					 </div>
-					 <div id="member-modal" class="member-modal">
-					 	<div class="modal-memberContent">
-					 		<span class="close">&times;</span>
-					 		<h2>멤버 세부 정보</h2>
-					 		<div id="member-details" >
-					 		<!-- 여기에 AJAX를 통해 가져온 멤버 정보를 채웁니다 -->
-					 		</div>
-					 		<div class="flex justify-center">
-					 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
-					 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
-					 		</div>	
-					 	</div>
-					 </div>
-					
-					
-					
-					
-
+						 <div id="member-modal" class="member-modal">
+						 	<div class="modal-memberContent">
+						 		<span class="close">&times;</span>
+						 		<h2>멤버 세부 정보</h2>
+						 		<div id="member-details" >
+						 		<!-- 여기에 AJAX를 통해 가져온 멤버 정보를 채웁니다 -->
+						 		</div>
+						 		<div class="flex justify-center">
+						 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
+						 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+						 		</div>	
+						 	</div>
+						 </div>
+						<div>dfgdfgddfg</div>
+					</div>
 					 
 				</div>
 						

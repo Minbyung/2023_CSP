@@ -14,6 +14,7 @@ import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ArticleAndTagInfo;
 import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.ChatRoom;
+import com.koreaIT.demo.vo.GroupChatMessage;
 import com.koreaIT.demo.vo.GroupChatRoom;
 import com.koreaIT.demo.vo.Member;
 
@@ -103,6 +104,37 @@ public interface ChatDao {
 			    WHERE GM.groupChatRoomProjectId = #{groupChatRoomProjectId}
 			""")
 	List<Member> findMembersByGroupChatRoomProjectId(int groupChatRoomProjectId);
+
+
+	
+	
+	@Insert("""
+			INSERT INTO groupChatMessage
+				SET content = #{content},
+				senderName = #{senderName},
+				senderId = #{senderId},
+				groupChatRoomProjectId = #{groupChatRoomProjectId}
+			""")
+	void saveGroupMessage(GroupChatMessage message);
+
+
+	
+	@Select("""
+			SELECT *
+				FROM groupChatMessage
+				WHERE groupChatRoomProjectId = #{groupChatRoomProjectId}
+			""")
+	List<GroupChatMessage> getGroupMessageHistory(int groupChatRoomProjectId);
+
+
+	
+	
+	@Select("""
+			SELECT COUNT(*)
+				FROM groupChatRoomMembers
+				WHERE groupChatRoomProjectId = #{groupChatRoomProjectId}
+			""")
+	int getgroupChatRoomMembersCount(int groupChatRoomProjectId);
 	
 	
 	

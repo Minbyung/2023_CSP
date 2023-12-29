@@ -1,8 +1,5 @@
 package com.koreaIT.demo.vo;
 
-import java.awt.TrayIcon.MessageType;
-import java.sql.Timestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +14,8 @@ public class GroupChatMessage {
     private String content; // 메시지 내용
     private String senderName; // 메시지를 보낸 사람의 이름 
     private String senderId; // 메시지를 보낸 사람의 ID
-    private String recipientId; // 메시지를 받은 사람의 ID
-    private String chatRoomId; 
+    private String groupChatRoomProjectId; 
     
     
-    // 다른 필드들...
+   
 }

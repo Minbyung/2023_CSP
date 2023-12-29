@@ -119,7 +119,7 @@ public class UstChatController {
         message.setRegDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
         // 채팅방 식별자를 통해 채팅방을 찾고, 메시지를 저장합니다.
-        // chatService.saveGroupMessage(message, chatRoomId);
+         chatService.saveGroupMessage(message);
 
         // 채팅방의 모든 구성원에게 메시지를 브로드캐스트합니다.
         messagingTemplate.convertAndSend("/topic/chat-group-" + groupChatRoomProjectId, message);
@@ -154,10 +154,17 @@ public class UstChatController {
         }
         
         List<Member> members = chatService.findMembersByGroupChatRoomProjectId(groupChatRoomProjectId);
+        int groupChatRoomMembersCount = chatService.getgroupChatRoomMembersCount(groupChatRoomProjectId);
         Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
         String myName = myMember.getName();
     	int myId = rq.getLoginedMemberId();
         
+    	
+    	List<GroupChatMessage> messages = chatService.getGroupMessageHistory(groupChatRoomProjectId);
+    	
+    	
+    	
+    	
     	
     	model.addAttribute("myName", myName);
     	model.addAttribute("myId", myId);
@@ -165,6 +172,8 @@ public class UstChatController {
         model.addAttribute("members", members);
         model.addAttribute("groupChatRoomProjectId", groupChatRoomProjectId);
         model.addAttribute("projectName", projectName);
+        model.addAttribute("messages", messages);
+        model.addAttribute("groupChatRoomMembersCount", groupChatRoomMembersCount);
         
         return "usr/home/groupChat"; // 단체 채팅을 위한 뷰 페이지로 이동
     }

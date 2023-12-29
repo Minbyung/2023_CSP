@@ -137,6 +137,27 @@ CREATE TABLE groupChatRoomMembers (
     memberId INT NOT NULL
 );
 
+CREATE TABLE groupChatMessage (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    content TEXT NOT NULL,    
+    senderName TEXT NOT NULL,
+    senderId TEXT NOT NULL,
+    groupChatRoomProjectId TEXT NOT NULL
+);
+
+
+SELECT COUNT(*)
+FROM groupChatRoomMembers
+WHERE groupChatRoomProjectId = 1
+
+
+INSERT INTO groupChatMessage
+SET regDate = NOW(),
+content = '1',
+senderName = '관리자',
+senderId = '1',
+groupChatRoomProjectId = 1
 
 INSERT INTO tag
 SET projectId = 1,
@@ -190,18 +211,18 @@ SELECT * FROM `group`;
 -- TRUNCATE TABLE favorite;
 
 
-SELECT M.*, PM.projectId AS projectId
-FROM `member` AS M
-INNER JOIN  projectMember AS PM
-ON M.id = PM.memberId
-WHERE projectId = 1
-ORDER BY id ASC;
+select M.*, PM.projectId as projectId
+from `member` as M
+inner join  projectMember AS PM
+on M.id = PM.memberId
+where projectId = 1
+order by id asc;
 
-INSERT INTO team
-SET teamName = '코리아IT';
+insert into team
+set teamName = '코리아IT';
 
-INSERT INTO teamMember
-SET memberId = 1,
+insert into teamMember
+set memberId = 1,
 teamId = 1;
 
 SELECT * FROM `group`
