@@ -146,6 +146,23 @@ CREATE TABLE groupChatMessage (
     groupChatRoomProjectId TEXT NOT NULL
 );
 
+CREATE TABLE `tb_file` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '파일 번호 (PK)',
+  `article_id` INT UNSIGNED NOT NULL COMMENT '게시글 번호 (FK)',
+  `original_name` VARCHAR(255) NOT NULL COMMENT '원본 파일명',
+  `save_name` VARCHAR(40) NOT NULL COMMENT '저장 파일명',
+  `size` INT(11) NOT NULL COMMENT '파일 크기',
+  `delete_yn` TINYINT(1) NOT NULL COMMENT '삭제 여부',
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
+  `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시',
+  PRIMARY KEY (`id`),
+  KEY `fk_article_file` (`article_id`),
+  CONSTRAINT `fk_article_file` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`)
+) COMMENT '파일';
+
+
+SELECT * FROM tb_file
+
 
 SELECT COUNT(*)
 FROM groupChatRoomMembers

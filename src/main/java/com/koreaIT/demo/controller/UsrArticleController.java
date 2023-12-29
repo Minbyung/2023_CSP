@@ -7,25 +7,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
+import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ReplyService;
+import com.koreaIT.demo.util.FileUtils;
 import com.koreaIT.demo.util.Util;
+import com.koreaIT.demo.vo.FileRequest;
 import com.koreaIT.demo.vo.Rq;
 
 @Controller
 public class UsrArticleController {
 	
 	private ArticleService articleService;
+	private FileService fileService;
+	private FileUtils fileUtils;
 	private BoardService boardService;
 	private ReplyService replyService;
 	private MemberService memberService;
 	private Rq rq;
 	
-	UsrArticleController(ArticleService articleService, BoardService boardService, ReplyService replyService, MemberService memberService, Rq rq) {
+	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, BoardService boardService, ReplyService replyService, MemberService memberService, Rq rq) {
 		this.articleService = articleService;
+		this.fileService = fileService;
+		this.fileUtils = fileUtils;
 		this.boardService = boardService;
 		this.replyService = replyService;
 		this.memberService = memberService;
@@ -34,7 +42,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate) {
+	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate, @RequestParam(value = "files", required = false) List<MultipartFile> fileRequests) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
@@ -48,6 +56,10 @@ public class UsrArticleController {
 		
 		int id = articleService.getLastInsertId();
 		
+		
+		List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
+        fileService.saveFiles(id, files);
+
 		
     
 		

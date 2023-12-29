@@ -124,11 +124,39 @@
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
 		        return $(this).clone().children().remove().end().text();
 		    }).get();
+		 
+		 
+		    var formData = new FormData();
+		 
+		 // 기존 폼 데이터를 FormData 객체에 추가
+		    formData.append('title', title);
+		    formData.append('content', content);
+		    formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
+		    formData.append('projectId', projectId); // projectId 변수가 정의되어 있어야 합니다.
+		    formData.append('selectedGroupId', selectedGroupId);
+		    formData.append('startDate', startDate);
+		    formData.append('endDate', endDate);
+		    
+		    // 담당자 정보를 FormData 객체에 추가
+		    $.each(managers, function(i, manager) {
+		        formData.append('managers[]', manager);
+		    });
+		    
+		    // 파일 데이터 추가
+		    var fileInput = $('#fileInput')[0];
+		    if(fileInput.files.length > 0) {
+		        for (var i = 0; i < fileInput.files.length; i++) {
+		            formData.append('files', fileInput.files[i]);
+		        }
+		    }
+		 
 		 	
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
-		        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId, startDate: startDate, endDate: endDate },
+		        data: formData,
+		        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
+		        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
 		        success: function(data) {
 		          console.log(selectedGroupId);
 		          $("#title").val("");
@@ -579,52 +607,73 @@
 						<!-- 모달창 -->
 						<div class="layer-bg"></div>
 						<div class="layer">
+							
 							<span id="close" class="close close-btn-x">&times;</span>
-							<input type="hidden" id="projectId" value="${project.id }">
-							<div id="status">
-						      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-						      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-						      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-						      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-						      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+							
+							
+							<div class="flex flex-col">
+								<div class="write-modal-body">
+									<input type="hidden" id="projectId" value="${project.id }">
+		<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+									<div id="status">
+								      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+								      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+								      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+								      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+								      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+								    </div>
+										<div id="inputArea">
+										  <div class="autocomplete-container flex flex-col">
+											  <!-- 기존의 입력 필드 -->
+											  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+											  <!-- 자동완성 목록 -->
+											  <section id="autocomplete-results" style="width:20%;"></section>
+										  </div>
+		
+										<label for="start-date">시작일:</label>
+										<input type="date" id="start-date" name="start-date">
+		
+									    <label class ="bg-red-100" for="end-date">마감일:</label>
+									    <input type="date" id="end-date" name="end-date">		
+										  		
+										  						  
+										<select id="groupSelect" class="select w-full max-w-xs">
+										    <c:forEach var="group" items="${groups}">
+										        <c:choose>
+										            <c:when test="${group.group_name eq '그룹 미지정'}">
+										                <option value="${group.id}" selected>${group.group_name}</option>
+										            </c:when>
+										            <c:otherwise>
+										                <option value="${group.id}">${group.group_name}</option>
+										            </c:otherwise>
+										        </c:choose>
+										    </c:forEach>
+										</select> 
+										</div>
+										<div class="mb-3">
+										  <label for="exampleFormControlInput1" class="form-label">제목</label>
+										  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+										</div>
+										<div class="mb-3">
+										  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+										  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+										</div>
+										<div class="file_input">
+					                        
+					                        <label> 첨부파일
+					                            <input type="file" name="files" onchange="selectFile(this);" />
+					                        </label>
+					                        <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
+		                   					<button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
+			
+					                    </div>
+									</div>	
+									
+								<div class="write-modal-footer flex justify-end">	
+							 	   <button id="submitBtn" type="button">제출</button>
+							    </div>
 						    </div>
-								<div id="inputArea">
-								  <div class="autocomplete-container flex flex-col">
-									  <!-- 기존의 입력 필드 -->
-									  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-									  <!-- 자동완성 목록 -->
-									  <section id="autocomplete-results" style="width:20%;"></section>
-								  </div>
-
-								<label for="start-date">시작일:</label>
-								<input type="date" id="start-date" name="start-date">
-
-							    <label class ="bg-red-100" for="end-date">마감일:</label>
-							    <input type="date" id="end-date" name="end-date">		
-								  		
-								  						  
-								<select id="groupSelect" class="select w-full max-w-xs">
-								    <c:forEach var="group" items="${groups}">
-								        <c:choose>
-								            <c:when test="${group.group_name eq '그룹 미지정'}">
-								                <option value="${group.id}" selected>${group.group_name}</option>
-								            </c:when>
-								            <c:otherwise>
-								                <option value="${group.id}">${group.group_name}</option>
-								            </c:otherwise>
-								        </c:choose>
-								    </c:forEach>
-								</select> 
-								</div>
-								<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">제목</label>
-								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
-								</div>
-								<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-								  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-								</div>
-						    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
+						    
 						</div>
 						
 						<div id="postList">
@@ -701,7 +750,7 @@
 						 		<span class="close">&times;</span>
 						 		<h2>멤버 세부 정보</h2>
 						 		<div id="member-details" >
-						 		<!-- 여기에 AJAX를 통해 가져온 멤버 정보를 채웁니다 -->
+						 		<!--  멤버 정보 -->
 						 		</div>
 						 		<div class="flex justify-center">
 						 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>

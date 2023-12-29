@@ -136,6 +136,4 @@ public interface ChatDao {
 			""")
 	int getgroupChatRoomMembersCount(int groupChatRoomProjectId);
 	
-	
-	
 }

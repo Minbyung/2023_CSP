@@ -1,5 +1,10 @@
 package com.koreaIT.demo.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +29,12 @@ public class Article {
 	private String taggedNames;
 	private String groupName;
 	private int groupId;
+	private List<MultipartFile> files = new ArrayList<>();    // 첨부파일 List
+
+	
+	
+	
+	
 	
 	public String getContentBr() {
         if (content == null) {
