@@ -535,7 +535,7 @@
 		      </ul>
 		    </div>
 		  </div>
-		<div class="page-content bg-red-100 p-0">
+		<div class="page-content bg-red-100 p-0 overflow-auto relative">
   		  <div class="h-20 bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
@@ -560,9 +560,9 @@
     				<li><a class="block" href="">알림</a></li>
     			</ul>
     		</nav>
-    		
+    		<div class="project-detail-content pt-5 flex">
     		<section class="project-detail-container overflow-auto">
-				<div class="mt-5 detail-wrap mx-auto flex">
+				<div class="detail-wrap mx-auto flex">
     				<div class="postTimeline">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
@@ -571,12 +571,12 @@
 								<!--차트가 그려질 부분-->
 								<canvas id="donutChart"></canvas>
 							</div>
-							<div id="infoContainer"></div>
+							<div id="infoContainer" class="pl-5"></div>
 						</div>
 
 
     					</div>
-						<div class="modal-exam"><span>글 작성</span></div>
+						<!-- 모달창 -->
 						<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
@@ -662,32 +662,39 @@
 							</c:forEach>
 						</div>
 					 </div>
-					 <div class="right-detail-content flex">
+				</div>	
+			</section>
+			<div class="right-detail-content flex flex-col">
 						 <div class="participants-section">
 							 <div class="participants-container">
-							 	<h1>우리 소속 멤버</h1>
-								<c:forEach items="${teamMembers}" var="member">
-								    <div class="participant flex justify-between">
-									    <div id="member-${member.id}" data-member-id="${member.id}">
-									        ${member.name}
+							 	<div class="p-3">
+								 	<h1>우리 소속 멤버</h1>
+									<c:forEach items="${teamMembers}" var="member">
+									    <div class="participant flex justify-between">
+										    <div id="member-${member.id}" data-member-id="${member.id}">
+										        ${member.name}
+										    </div>
+										    <div>   
+										        <!-- 버튼에 클래스와 data- 속성 추가 -->
+		<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
+										        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
+										    </div>
 									    </div>
-									    <div>   
-									        <!-- 버튼에 클래스와 data- 속성 추가 -->
-	<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
-									        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
+									</c:forEach>
+									 
+									<h1>현재 참여중인 프로젝트 멤버</h1>
+									<c:forEach items="${projectMembers}" var="projectMember">
+									    <div>
+									  		${projectMember.name}
 									    </div>
-								    </div>
-								</c:forEach>
-								 
-								<h1>현재 참여중인 프로젝트 멤버</h1>
-								<c:forEach items="${projectMembers}" var="projectMember">
-								    <div>
-								  		${projectMember.name}
-								    </div>
-								</c:forEach>
-								<button class="group-chat-btn p-4 flex-grow text-center border border-red-300" data-group-chat-room-project-id="${projectId}">채팅하기</button>
-						 		<button class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
-							 </div>
+									</c:forEach>
+								</div>
+								<div class="flex">
+									<button class="group-chat-btn p-4 flex-grow text-center w-1/2 border border-red-300" data-group-chat-room-project-id="${projectId}">그룹 채팅하기</button>
+							 		<button class="p-4 flex-grow text-center w-1/2 border border-red-300">화상회의</button>
+						 		</div>
+						 		
+							 	</div>
 						 </div>
 						 <div id="member-modal" class="member-modal">
 						 	<div class="modal-memberContent">
@@ -702,18 +709,16 @@
 						 		</div>	
 						 	</div>
 						 </div>
-						<div>dfgdfgddfg</div>
+						
 					</div>
-					 
-				</div>
-						
-						
-						
-						
-						
-    				</div>
+			</div>
+    	</div>
+    	<div class="write-pen modal-exam"><i class="fa-solid fa-pen"></i></div>
+    	
+    	
+    	
 	</div>
-    		</section>
+    		
 
 
 
