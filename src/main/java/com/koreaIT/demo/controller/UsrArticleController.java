@@ -1,9 +1,15 @@
 package com.koreaIT.demo.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,6 +36,7 @@ public class UsrArticleController {
 	private MemberService memberService;
 	private Rq rq;
 	
+	
 	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, BoardService boardService, ReplyService replyService, MemberService memberService, Rq rq) {
 		this.articleService = articleService;
 		this.fileService = fileService;
@@ -42,6 +49,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
+	@Transactional //writeArticle 메서드와 관련된 모든 데이터베이스 쓰기 작업(게시물 및 태그 삽입 등)을 하나의 트랜잭션 안에서 수행합니다. 이렇게 하면 getLastInsertId()는 여전히 게시물 삽입에 대한 마지막 ID를 반환할 것입니다.
 	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate, @RequestParam(value = "fileRequests[]", required = false) List<MultipartFile> fileRequests) {
 		
 		if (Util.empty(title)) {
@@ -52,15 +60,15 @@ public class UsrArticleController {
 			return Util.jsHistoryBack("내용을 입력해주세요");
 		}
 		
-		articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers, startDate, endDate);
+		int id = articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers, startDate, endDate);
 		
-		int id = articleService.getLastInsertId();
+//		int id = articleService.getLastInsertId();
 		
-		
-		List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
-        fileService.saveFiles(id, files);
-
-		
+		if (fileRequests != null && !fileRequests.isEmpty()) {
+			List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
+			
+	        fileService.saveFiles(id, files);
+		}
     
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));

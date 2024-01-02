@@ -31,6 +31,7 @@ public class FileUtils {
             if (multipartFile.isEmpty()) {
                 continue;
             }
+            System.out.println(multipartFile.getOriginalFilename());
             files.add(uploadFile(multipartFile));
         }
         return files;
@@ -51,7 +52,7 @@ public class FileUtils {
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")).toString();
         String uploadPath = getUploadPath(today) + File.separator + saveName;
         File uploadFile = new File(uploadPath);
-
+        
         try {
             multipartFile.transferTo(uploadFile);
         } catch (IOException e) {

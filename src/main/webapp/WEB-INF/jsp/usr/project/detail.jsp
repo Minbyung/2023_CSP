@@ -376,26 +376,40 @@
 
 		    
 		    
-		    $('.more-btn').click(function() {
-		        // 현재 버튼에 가장 가까운 게시글 내용 요소를 찾습니다.
+		    $('.article-content').each(function() {
+		        var $content = $(this);
+		        var $summary = $content.find('.content-summary');
+		        var $fullContent = $content.find('.content-full');
+		        var $moreBtn = $content.find('.more-btn');
+		        
+		        // 5줄 이상일 경우 더보기 버튼을 표시하고, 5줄 미만이면 숨깁니다.
+		        // 이를 위해 CSS에서 설정한 line-height와 비교합니다.
+		        var lineHeight = parseInt($summary.css('line-height'));
+		        var contentHeight = $summary[0].scrollHeight;
+		        var maxLines = 5;
+
+		        if (contentHeight > lineHeight * maxLines) {
+		          // 내용이 5줄 이상이면 '더보기' 버튼을 표시합니다.
+		          $moreBtn.show();
+		        } else {
+		          // 5줄 미만이면 '더보기' 버튼을 숨깁니다.
+		          $moreBtn.hide();
+		        }
+		      });
+
+		      $('.more-btn').click(function() {
 		        var $this = $(this);
 		        var $content = $this.closest('.article-content');
 		        var $summary = $content.find('.content-summary');
 		        var $fullContent = $content.find('.content-full');
-
-		        // 요약 내용과 전체 내용의 표시 상태를 토글합니다.
+		        
 		        $summary.toggleClass('hidden');
 		        $fullContent.toggleClass('hidden');
-
-		        // 버튼의 텍스트를 토글합니다.
+		        
 		        $this.text($fullContent.hasClass('hidden') ? '더보기' : '접기');
 		      });
 
 		    
-// 		    $('.article-content').each(function() {
-// 		        var content = $(this).text();
-// 		        $(this).html(content.replace(/\n/g, '<br>'));
-// 		      });
 
 
 		 // 멤버 이름 클릭 이벤트
@@ -751,7 +765,8 @@
 									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
 								    </div>
 								    <div class="article-content">
-									    <p class="content-summary">${fn:substring(article.contentBr, 0, 100) }</p>
+<%-- 									    <p class="content-summary">${fn:substring(article.contentBr, 0, 100) }</p> --%>
+									    <p class="content-summary">${article.contentBr }</p>
 									    <p class="content-full hidden">${article.contentBr }</p>
 									    <a href="#!" class="more-btn">더보기</a>
 								    </div>
@@ -774,7 +789,7 @@
 										    </div>
 										    <div>   
 										        <!-- 버튼에 클래스와 data- 속성 추가 -->
-		<%-- 								        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button> --%>
+										        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
 										        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
 										    </div>
 									    </div>
@@ -788,8 +803,8 @@
 									</c:forEach>
 								</div>
 								<div class="flex">
-									<button class="group-chat-btn p-4 flex-grow text-center w-1/2 border border-red-300" data-group-chat-room-project-id="${projectId}">그룹 채팅하기</button>
-							 		<button class="p-4 flex-grow text-center w-1/2 border border-red-300">화상회의</button>
+									<button class="group-chat-btn p-4 flex-grow text-center w-1/2 border border-red-300" data-group-chat-room-project-id="${projectId}">그룹 채팅</button>
+							 		<button class="p-4 flex-grow text-center w-1/2 border border-red-300">화상 회의</button>
 						 		</div>
 						 		
 							 	</div>

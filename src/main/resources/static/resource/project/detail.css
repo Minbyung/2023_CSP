@@ -330,3 +330,16 @@ ul.ui-autocomplete {
 .write-pen:hover {
   background-color: chartreuse;
 }
+
+/* 기본적으로 요약 내용은 5줄까지만 표시하고, 나머지는 숨깁니다. */
+.content-summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+/* 요약 내용을 표시하는 클래스 */
+.hidden {
+  display: none;
+}

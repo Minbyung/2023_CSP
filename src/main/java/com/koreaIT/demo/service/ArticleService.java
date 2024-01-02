@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.koreaIT.demo.dao.ArticleDao;
 import com.koreaIT.demo.dao.MemberDao;
@@ -60,8 +61,9 @@ public class ArticleService {
 	public void increaseHitCount(int id) {
 		articleDao.increaseHitCount(id);
 	}
-
-	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, List<String> managers, String startDate, String endDate) {
+	
+	@Transactional
+	public int writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, List<String> managers, String startDate, String endDate) {
 		articleDao.writeArticle(memberId, title, content, status, projectId, selectedGroupId, startDate, endDate);
 		
 		int articleId = getLastInsertId();
@@ -72,6 +74,7 @@ public class ArticleService {
                 articleDao.insertTag(articleId, managerId, projectId);
             }
         }
+		return articleId;
 	}
 
 	public void updateStatus(int articleId, String newStatus) {
