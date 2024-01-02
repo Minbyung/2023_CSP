@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
+import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
@@ -33,15 +35,17 @@ public class UsrProjectController {
 	private ProjectService projectService;
 	private ArticleService articleService;
 	private GroupService groupService;
+	private FileService fileService;
 	private BoardService boardService;
 	private ReplyService replyService;
 	private MemberService memberService;
 	private Rq rq;
 	
-	UsrProjectController(ProjectService projectService, BoardService boardService, ReplyService replyService, MemberService memberService, ArticleService articleService, GroupService groupService, Rq rq) {
+	UsrProjectController(ProjectService projectService, BoardService boardService, ReplyService replyService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, Rq rq) {
 		this.projectService = projectService;
 		this.articleService = articleService;
 		this.groupService = groupService;
+		this.fileService = fileService;
 		this.boardService = boardService;
 		this.replyService = replyService;
 		this.memberService = memberService;
@@ -76,6 +80,13 @@ public class UsrProjectController {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
+		
+		for (Article article : articles) {
+	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
+	        article.setInfoFiles(infoFiles); // Article 객체에 파일 목록을 설정합니다.
+	    }
+		
+		
 		List<Group> groups = groupService.getGroups(projectId);
 		int teamId = project.getTeamId();
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);

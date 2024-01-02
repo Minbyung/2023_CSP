@@ -770,6 +770,15 @@
 									    <p class="content-full hidden">${article.contentBr }</p>
 									    <a href="#!" class="more-btn">더보기</a>
 								    </div>
+<%-- 									<c:if test="${not empty article.infofiles}"> --%>
+<!-- 										<div class="files"> -->
+<!-- 										    <ul> -->
+<%-- 										        <c:forEach var="file" items="${article.infoFiles}"> --%>
+<%-- 													<li><a href="#">${file.originalName}</a></li> --%>
+<%-- 												</c:forEach> --%>
+<!-- 										    </ul> -->
+<!-- 										</div> -->
+<%-- 									</c:if> --%>
 								  </div>
 								</div>
 							</c:forEach>

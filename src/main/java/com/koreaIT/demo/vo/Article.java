@@ -30,7 +30,7 @@ public class Article {
 	private String groupName;
 	private int groupId;
 	private List<MultipartFile> files = new ArrayList<>();    // 첨부파일 List
-
+	private List<FileResponse> infoFiles;
 	
 	
 	

@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.koreaIT.demo.dao.FileDao;
 import com.koreaIT.demo.vo.FileRequest;
+import com.koreaIT.demo.vo.FileResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,5 +29,19 @@ public class FileService {
         fileDao.saveAll(files);
     }
 
+    
+    
+    /**
+     * 파일 리스트 조회
+     * @param postId - 게시글 번호 (FK)
+     * @return 파일 리스트
+     */
+    public List<FileResponse> findAllFileByArticleId(final int articleId) {
+        return fileDao.findAllByArticleId(articleId);
+    }
+
+
+
+    
 }
 

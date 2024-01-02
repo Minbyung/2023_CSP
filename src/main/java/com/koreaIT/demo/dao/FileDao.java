@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Update;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ArticleAndTagInfo;
 import com.koreaIT.demo.vo.FileRequest;
+import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.TeamInvite;
 
@@ -38,7 +39,42 @@ public interface FileDao {
     })
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void saveAll(List<FileRequest> files);
-}
+
 
 	
+	/**
+	 * 파일 리스트 조회
+	 * @param postId - 게시글 번호 (FK)
+	 * @return 파일 리스트
+	 */
+	
+	
+	
+	@Select("""
+			SELECT * 
+				FROM tb_file
+				WHERE delete_yn = 0
+				AND article_id = #{articleId}
+				ORDER BY id
+			""")
+	List<FileResponse> findAllByArticleId(int articleId);
+	
+	/**
+	 * 파일 리스트 조회
+	 * @param ids - PK 리스트
+	 * @return 파일 리스트
+	 */
+	List<FileResponse> findAllByIds(List<Long> ids);
+	
+	/**
+	 * 파일 삭제
+	 * @param ids - PK 리스트
+	 */
+	void deleteAllByIds(List<Long> ids);
+
+
+
+}
+
+
 
