@@ -197,8 +197,8 @@
 			        var newValue = ui.item.value;
 			        $('#search').val('');
 			
-			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-			        $('#inputArea').prepend(tag);
+			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+			        $('#tag-contianer').prepend(tag);
 			
 			        $('#search').prependTo('.autocomplete-container');
 			
@@ -623,6 +623,7 @@
 								      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 								    </div>
 										<div id="inputArea">
+										  <div id ="tag-contianer"></div>
 										  <div class="autocomplete-container flex flex-col">
 											  <!-- 기존의 입력 필드 -->
 											  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
