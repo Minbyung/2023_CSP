@@ -87,6 +87,11 @@
 	    		$('.tag').remove();
 	    		$('#exampleFormControlInput1').val('');
 	    		$('#exampleFormControlTextarea1').val('');
+	    		// 파일 입력 필드들을 제거합니다.
+	    	    $('.file_list .file_input:not(:first)').remove();
+	    	    // 기본 파일 입력 필드를 초기화합니다.
+	    	    $('.file_list .file_input:first input[type="file"]').val('');
+	    	    $('.file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
 	    	})
@@ -99,6 +104,11 @@
 	    		$('.tag').remove();
 	    		$('#exampleFormControlInput1').val('');
 	    		$('#exampleFormControlTextarea1').val('');
+	    		// 파일 입력 필드들을 제거합니다.
+	    	    $('.file_list .file_input:not(:first)').remove();
+	    	    // 기본 파일 입력 필드를 초기화합니다.
+	    	    $('.file_list .file_input:first input[type="file"]').val('');
+	    	    $('.file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
 	    	})
@@ -142,14 +152,13 @@
 		        formData.append('managers[]', manager);
 		    });
 		    
-		    // 파일 데이터 추가
-		    var fileInput = $('#fileInput')[0];
-		    if(fileInput.files.length > 0) {
-		        for (var i = 0; i < fileInput.files.length; i++) {
-		            formData.append('files', fileInput.files[i]);
+		 // 파일 데이터 추가
+		    $('.file_input input[type="file"]').each(function(index, element) {
+		        if (element.files.length > 0) {
+		            // 'files[]'를 사용하여 서버에 배열로 전송
+		            formData.append('fileRequests[]', element.files[0]);
 		        }
-		    }
-		 
+		    });
 		 	
 		    $.ajax({
 		        url: '../article/doWrite',
@@ -441,13 +450,52 @@
 		   		  // 새 창(팝업)으로 채팅방 열기
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
 		    	});
-
-		
-		    
 		    
 
 	});
 
+	
+	function selectFile(element) {
+        var file = $(element).prop('files')[0];
+        var filename = $(element).closest('.file_input').find('input[type="text"]');
+
+        if (!file) {
+            filename.val('');
+            return false;
+        }
+
+        var fileSize = Math.floor(file.size / 1024 / 1024);
+        if (fileSize > 10) {
+            alert('10MB 이하의 파일로 업로드해 주세요.');
+            filename.val('');
+            $(element).val('');
+            return false;
+        }
+
+        filename.val(file.name);
+    }
+    
+	function addFile() {
+		console.log("작동");
+	    var fileInputHTML =
+	        '<div class="file_input pb-3 flex items-center">' +
+	        '<div> 첨부파일 ' +
+	        '<input type="file" name="files" onchange="selectFile(this); " />' +
+	        '</div>' +
+	        '<button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>';
+
+	    $('.file_list').append(fileInputHTML);
+	}
+    
+    function removeFile(element) {
+        var fileAddBtn = $(element).next('.fn_add_btn');
+        if (fileAddBtn.length) {
+            var inputs = $(element).prev('.file_input').find('input');
+            inputs.val('');
+            return false;
+        }
+        $(element).parent().remove();
+    }
 	
 </script>
 	<div class="task-manager">
@@ -626,7 +674,7 @@
 										  <div id ="tag-contianer"></div>
 										  <div class="autocomplete-container flex flex-col">
 											  <!-- 기존의 입력 필드 -->
-											  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+											  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
 											  <!-- 자동완성 목록 -->
 											  <section id="autocomplete-results" style="width:20%;"></section>
 										  </div>
@@ -659,17 +707,17 @@
 										  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
 										  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 										</div>
-										<div class="file_input">
-					                        
-					                        <label> 첨부파일
-					                            <input type="file" name="files" onchange="selectFile(this);" />
-					                        </label>
-					                        <button type="button" onclick="removeFile(this);" class="btns del_btn"><span>삭제</span></button>
-		                   					<button type="button" onclick="addFile();" class="btns fn_add_btn"><span>파일 추가</span></button>
-			
+										
+										<div class="file_list">
+											<div class="file_input pb-3 flex items-center">
+						                        <div> 첨부파일
+						                            <input type="file" name="files" onchange="selectFile(this);" />
+						                        </div>
+						                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+			                   					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+						                    </div>
 					                    </div>
 									</div>	
-									
 								<div class="write-modal-footer flex justify-end">	
 							 	   <button id="submitBtn" type="button">제출</button>
 							    </div>

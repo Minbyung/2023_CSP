@@ -42,7 +42,7 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate, @RequestParam(value = "files", required = false) List<MultipartFile> fileRequests) {
+	public String doWrite(String title, String content, String status, int projectId, int selectedGroupId, @RequestParam(value="managers[]") List<String> managers, String startDate, String endDate, @RequestParam(value = "fileRequests[]", required = false) List<MultipartFile> fileRequests) {
 		
 		if (Util.empty(title)) {
 			return Util.jsHistoryBack("제목을 입력해주세요");
