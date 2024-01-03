@@ -1,24 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>    
 <%@ include file="../common/head2.jsp" %>
 	 
 <!DOCTYPE html>
 <html lang="en" >
-<link rel="stylesheet" href="/resource/dist/style.css" />
+<head>
 <link rel="stylesheet" href="/resource/cards/dist/style.css" />
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 <link rel="stylesheet" href="/resource/project/detail.css" />
+<link rel="stylesheet" href="/resource/dist/style.css" />
+</head>
 
 
-<head>
 <!--   <meta charset="UTF-8"> -->
-  <title>dashboard</title>
 <!--   <link rel="stylesheet" href="./style.css"> -->
 <!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
-</head>
+
 <!-- <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet"> -->
+
+
+
 
 
 <script>
