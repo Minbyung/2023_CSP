@@ -97,7 +97,7 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     width: 100%;
     height: 132x;
     border-bottom: 1px solid #dee0ea;
-    position: fixed;
+    position: relative;
     background: #fff;
     z-index: 999;
 }

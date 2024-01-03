@@ -17,18 +17,23 @@
 	}
 	</script>
 
-	<section class="mt-8">
-		<div class="container mx-auto">
-			<div>
-				안녕하세요
-			</div>
-		</div>
-		<div class="test widget-my-prj js-filter-widget update-hr">dsfsdfsdfsfsfddfdsffdsfd
-		sfdsfsdfsdfdsdsdsdsfdsfsddsfddsfddsfdf
-		dfsdfsdf</div>
+
+
+	<div>
+	대시보드 들어가려면(본 기능) 로그인
+	</div>
+<!-- 	<section class="mt-8"> -->
+<!-- 		<div class="container mx-auto"> -->
+<!-- 			<div> -->
+<!-- 				안녕하세요 -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class="test widget-my-prj js-filter-widget update-hr">dsfsdfsdfsfsfddfdsffdsfd -->
+<!-- 		sfdsfsdfsdfdsdsdsdsfdsfsddsfddsfddsfdf -->
+<!-- 		dfsdfsdf</div> -->
 		
-		<button onclick="openChatWindow()">Open Chat</button>
-		<a href="testHtml">htmltest</a>
-	</section>
+<!-- 		<button onclick="openChatWindow()">Open Chat</button> -->
+<!-- 		<a href="testHtml">htmltest</a> -->
+<!-- 	</section> -->
 	
 	<%@ include file="../common/foot.jsp" %>

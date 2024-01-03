@@ -5,7 +5,6 @@
 	 
 <!DOCTYPE html>
 <html lang="en" >
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="/resource/dist/style.css" />
 <link rel="stylesheet" href="/resource/cards/dist/style.css" />
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -14,12 +13,12 @@
 
 
 <head>
-  <meta charset="UTF-8">
+<!--   <meta charset="UTF-8"> -->
   <title>dashboard</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<!--   <link rel="stylesheet" href="./style.css"> -->
+<!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
 </head>
-<link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet"> -->
 
 
 <script>

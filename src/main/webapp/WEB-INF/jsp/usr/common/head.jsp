@@ -17,7 +17,7 @@
 <script src="/resource/common.js" defer="defer"></script>
 </head>
 <body>
-	<div class="top">
+	<div class="top flex flex-col">
 		<div class="h-20 flex mx-auto text-4xl nav">
 			<div class="brand">
 				<a href="/"><span>로고</span></a>
@@ -41,11 +41,5 @@
 					</c:if>
 				</ul>
 			</nav>
-			
-			</div>
+		</div>	
 	</div>		
-	<section class="my-3 text-2xl">
-		<div class="container mx-auto px-3">
-			<h1>${pageTitle }</h1>
-		</div>
-	</section>

@@ -161,7 +161,7 @@
 						<div class="files">
 						    <ul class="border border-black">
 						        <c:forEach var="file" items="${projectFiles}">
-									<li class="p-4 border border-b"><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
+									<li class="p-4 border border-b hover:hover:bg-gray-300"><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
 								</c:forEach>
 						    </ul>
 						</div>
