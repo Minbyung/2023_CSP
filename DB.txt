@@ -147,27 +147,38 @@ CREATE TABLE groupChatMessage (
 );
 
 CREATE TABLE `tb_file` (
-  `id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '파일 번호 (PK)',
+  `id` BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '파일 번호 (PK)',
   `article_id` INT UNSIGNED NOT NULL COMMENT '게시글 번호 (FK)',
   `original_name` VARCHAR(255) NOT NULL COMMENT '원본 파일명',
   `save_name` VARCHAR(40) NOT NULL COMMENT '저장 파일명',
   `size` INT(11) NOT NULL COMMENT '파일 크기',
   `delete_yn` TINYINT(1) NOT NULL COMMENT '삭제 여부',
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
-  `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시',
-  PRIMARY KEY (`id`),
-  KEY `fk_article_file` (`article_id`),
-  CONSTRAINT `fk_article_file` FOREIGN KEY (`article_id`) REFERENCES `article` (`id`)
-) COMMENT '파일';
+  `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
+);
+DROP TABLE `tb_file`
+DROP TABLE article
+DROP TABLE tag
 
-
+DELETE  FROM article
 SELECT * FROM tb_file
+SELECT * FROM article
+SELECT * FROM tag
 
+SELECT * 
+				FROM tb_file
+				WHERE delete_yn = 0
+				AND article_id = 1
+				ORDER BY id
 
 SELECT COUNT(*)
 FROM groupChatRoomMembers
 WHERE groupChatRoomProjectId = 1
 
+SELECT * 
+				FROM tb_file
+				WHERE delete_yn = 0
+				AND id = 1
 
 INSERT INTO groupChatMessage
 SET regDate = NOW(),
