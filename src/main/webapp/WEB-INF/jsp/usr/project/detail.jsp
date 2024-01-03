@@ -651,7 +651,7 @@
     			</ul>
     		</nav>
     		<div class="project-detail-content pt-5 flex">
-    		<section class="project-detail-container overflow-auto">
+    		<section class="project-detail-container overflow-y-auto overflow-x-hidden">
 				<div class="detail-wrap mx-auto flex">
     				<div class="postTimeline">
     					<div class="reportArea">
