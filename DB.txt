@@ -149,6 +149,7 @@ CREATE TABLE groupChatMessage (
 CREATE TABLE `tb_file` (
   `id` BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '파일 번호 (PK)',
   `article_id` INT UNSIGNED NOT NULL COMMENT '게시글 번호 (FK)',
+  `project_id` INT UNSIGNED NOT NULL COMMENT '프로젝트 번호 (FK)',
   `original_name` VARCHAR(255) NOT NULL COMMENT '원본 파일명',
   `save_name` VARCHAR(40) NOT NULL COMMENT '저장 파일명',
   `size` INT(11) NOT NULL COMMENT '파일 크기',
