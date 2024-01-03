@@ -50,5 +50,12 @@ public class FileService {
         return fileDao.findFileById(id);
     }
 
+
+
+	public List<FileResponse> findAllFileByProjectId(int projectId) {
+		
+		return fileDao.findAllFileByProjectId(projectId);
+	}
+
 }
 

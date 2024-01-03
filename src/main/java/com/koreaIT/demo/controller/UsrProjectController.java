@@ -238,7 +238,17 @@ public class UsrProjectController {
 		return "usr/project/schd"; 
 	}
 	
-	
+	@RequestMapping("/usr/project/file")
+	public String file(Model model, int projectId) {
+		Project project = projectService.getProjectByProjectId(projectId);
+		List<FileResponse> projectFiles = fileService.findAllFileByProjectId(projectId);
+		
+		
+		model.addAttribute("project", project);
+		model.addAttribute("projectFiles", projectFiles);
+		
+		return "usr/project/file"; 
+	}
 	
 
 }

@@ -88,6 +88,17 @@ public interface FileDao {
 			""")
     FileResponse findFileById(Long id);
 
+
+
+	@Select("""
+			SELECT * 
+				FROM tb_file
+				WHERE delete_yn = 0
+				AND project_id = #{projectId}
+				ORDER BY id
+			""")
+	List<FileResponse> findAllFileByProjectId(int projectId);
+
 }
 
 
