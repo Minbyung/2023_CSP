@@ -715,8 +715,8 @@
 		      </ul>
 		    </div>
 		  </div>
-		<div class="page-content bg-red-100 p-0">
-  		  <div class="h-20 bg-gray-100 detail-header">
+		<div class="page-content bg-red-100 p-0 overflow-auto relative flex flex-col">
+  		  <div class="bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
                 <i data-project-id="{projectId }" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>

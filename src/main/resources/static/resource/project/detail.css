@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .detail-header {
-	padding: 0 30px;
+	padding: 15px 30px;
 }
 
 .menu-box-1 {
@@ -343,3 +343,4 @@ ul.ui-autocomplete {
 .hidden {
   display: none;
 }
+

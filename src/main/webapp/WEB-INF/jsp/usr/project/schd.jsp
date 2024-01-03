@@ -5,18 +5,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8' />
-  <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) -->
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<!--   <meta charset='utf-8' /> -->
+<!--   <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) --> 
+<!--   <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="/resource/dist/style.css" />
+  <link rel="stylesheet" href="/resource/project/detail.css" />	
   <!-- fullcalendar CDN -->
   <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
   <!-- fullcalendar 언어 CDN -->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
 <!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
-   <link rel="stylesheet" href="/resource/dist/style.css" /> 
 <!-- <!-- 글작성 양식 -->
-  <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   
   
@@ -24,8 +25,8 @@
   /* body 스타일 */
   html, body {
     overflow: hidden;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
+/*     font-family: Arial, Helvetica Neue, Helvetica, sans-serif; */
+/*     font-size: 14px; */
   }
   /* 캘린더 위의 해더 스타일(날짜가 있는 부분) */
   .fc-header-toolbar {
@@ -420,8 +421,8 @@
 		      </ul>
 		    </div>
 		  </div>
-		<div class="page-content bg-red-100 p-0">
-  		  <div class="h-20 bg-gray-100 detail-header">
+		<div class="page-content bg-red-100 p-0 overflow-auto relative flex flex-col">
+  		  <div class="bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
                 <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
@@ -508,6 +509,8 @@
   </div>
 
 
+</div>
+</div>
 
 </body>
 </html>
