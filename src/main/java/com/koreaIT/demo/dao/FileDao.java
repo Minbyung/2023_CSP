@@ -22,11 +22,12 @@ public interface FileDao {
 	@Insert({
         "<script>",
         "INSERT INTO tb_file (",
-        "    article_id, original_name, save_name, size, delete_yn, created_date, deleted_date",
+        "    article_id, project_id, original_name, save_name, size, delete_yn, created_date, deleted_date",
         ") VALUES",
         "<foreach item='file' collection='list' separator=','>",
         "    (",
         "        #{file.articleId},",
+        "        #{file.projectId},",
         "        #{file.originalName},",
         "        #{file.saveName},",
         "        #{file.size},",

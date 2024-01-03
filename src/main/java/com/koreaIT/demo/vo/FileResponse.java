@@ -9,6 +9,7 @@ public class FileResponse {
 
     private Long id;                      // 파일 번호 (PK)
     private int article_id;                  // 게시글 번호 (FK)
+    private int project_id;                  // 프로젝트 번호 (FK)
     private String original_name;          // 원본 파일명
     private String save_name;              // 저장 파일명
     private long size;                    // 파일 크기

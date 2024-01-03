@@ -67,13 +67,7 @@ public class UsrArticleController {
 		if (fileRequests != null && !fileRequests.isEmpty()) {
 			List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
 			
-			
-			for (FileRequest file : files) {
-				
-			}
-			
-			
-	        fileService.saveFiles(id, files);
+	        fileService.saveFiles(id, projectId, files);
 		}
     
 		

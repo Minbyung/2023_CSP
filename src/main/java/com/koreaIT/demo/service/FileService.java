@@ -19,12 +19,13 @@ public class FileService {
     private final FileDao fileDao;
 
     @Transactional
-    public void saveFiles(final int id, final List<FileRequest> files) {
+    public void saveFiles(final int id, final int projectId, final List<FileRequest> files) {
         if (CollectionUtils.isEmpty(files)) {
             return;
         }
         for (FileRequest file : files) {
             file.setArticleId(id);
+            file.setProjectId(id);
         }
         fileDao.saveAll(files);
     }
