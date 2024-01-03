@@ -25,7 +25,7 @@ public class FileService {
         }
         for (FileRequest file : files) {
             file.setArticleId(id);
-            file.setProjectId(id);
+            file.setProjectId(projectId);
         }
         fileDao.saveAll(files);
     }
