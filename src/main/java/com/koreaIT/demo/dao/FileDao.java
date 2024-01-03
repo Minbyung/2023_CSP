@@ -57,7 +57,7 @@ public interface FileDao {
 				AND article_id = #{articleId}
 				ORDER BY id
 			""")
-	List<FileResponse> findAllByArticleId(int articleId);
+	List<FileResponse> findAllFileByArticleId(int articleId);
 	
 	/**
 	 * 파일 리스트 조회
@@ -73,6 +73,19 @@ public interface FileDao {
 	void deleteAllByIds(List<Long> ids);
 
 
+	
+	 /**
+     * 파일 상세정보 조회
+     * @param id - PK
+     * @return 파일 상세정보
+     */
+	@Select("""
+			SELECT * 
+				FROM tb_file
+				WHERE delete_yn = 0
+				AND id = #{id}
+			""")
+    FileResponse findFileById(Long id);
 
 }
 

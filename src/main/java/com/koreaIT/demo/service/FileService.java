@@ -36,12 +36,18 @@ public class FileService {
      * @param postId - 게시글 번호 (FK)
      * @return 파일 리스트
      */
-    public List<FileResponse> findAllFileByArticleId(final int articleId) {
-        return fileDao.findAllByArticleId(articleId);
+    public List<FileResponse> findAllFileByArticleId(int articleId) {
+        return fileDao.findAllFileByArticleId(articleId);
+    }
+    
+    /**
+     * 파일 상세정보 조회
+     * @param id - PK
+     * @return 파일 상세정보
+     */
+    public FileResponse findFileById(final Long id) {
+        return fileDao.findFileById(id);
     }
 
-
-
-    
 }
 

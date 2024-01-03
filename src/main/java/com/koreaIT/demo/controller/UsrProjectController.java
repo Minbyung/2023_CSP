@@ -83,7 +83,8 @@ public class UsrProjectController {
 		
 		for (Article article : articles) {
 	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
-	        article.setInfoFiles(infoFiles); // Article 객체에 파일 목록을 설정합니다.
+	        
+	        article.setInfoFiles(infoFiles); 
 	    }
 		
 		
