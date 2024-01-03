@@ -774,8 +774,8 @@
 										<div class="files">
 										    <ul>
 										        <c:forEach var="file" items="${article.infoFiles}">
-<%-- 													<li><a href="../file/downloadFile?articleId=${file.artice_id }&fileId=${file.id }">${file.original_name}</a></li> --%>
-													<li><a href="#">${file.original_name}</a></li>
+													<li><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
+<%-- 													<li><a href="#">${file.original_name}</a></li> --%>
 												</c:forEach>
 										    </ul>
 										</div>

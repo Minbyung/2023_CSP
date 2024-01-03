@@ -29,7 +29,7 @@ public class UsrFileController {
 	
 	// 첨부파일 다운로드
     @GetMapping("/usr/file/downloadFile")
-    public ResponseEntity<Resource> downloadFile(@PathVariable final int articleId, @PathVariable final Long fileId) {
+    public ResponseEntity<Resource> downloadFile(int articleId, Long fileId) {
         FileResponse file = fileService.findFileById(fileId);
         Resource resource = fileUtils.readFileAsResource(file);
         try {
