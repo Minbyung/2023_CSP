@@ -1,0 +1,84 @@
+@charset "EUC-KR";
+
+.page-content {
+	
+	
+    
+/*    background-color: #f2e1f2;*/
+	background-color: #f7e4f7;
+}
+
+.dashboard-container {
+	min-width: 1020px;
+    max-width: 1020px;
+    padding: 80px 0 60px;
+    margin: 0 auto;
+}
+
+
+.dashboard-profile-name {
+	font-size: 27px;
+	font-weight: 700;
+}
+
+.widget-date {
+	font-size: 16px;
+}
+
+
+.widget-container {
+	padding: 20px 0 50px;
+}
+
+
+.card-long {
+    width: 668px;
+    height: 247px;
+    border: 1px solid #ddd; /* 경계선 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    border-radius: 13px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    margin:5px;
+    padding: 17px 0 10px;
+  }
+  
+.card-long-header, .card-short-header {
+	padding: 0 30px;
+	margin: 0 0 10px;
+}  
+
+.card-long-header > p {
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.card-long-body, .card-short-body {
+	padding: 5px 16px 0 30px;
+}
+.project-list {
+	flex: 0 0 45%;
+	margin-right: 5px;
+	padding: 0 0 17px;
+}
+
+.card-short {
+    width: 328px;
+    height: 247px;
+    border: 1px solid #ddd; /* 경계선 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    border-radius: 13px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    margin:5px;
+    padding-top: 17px;
+  }  
+.card-short-body > .team-invite {
+	margin: 10px 0;
+	height: 60px;
+}
+  
+.card-short-body > .member-list {
+	margin: 0 0 10px;
+	height: 60px;
+	
+} 
+  

@@ -1,6 +1,9 @@
 package com.koreaIT.demo.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,5 +54,40 @@ public class UsrDashboardController {
 		return "usr/dashboard/dashboard";
 	}
 	
+	@RequestMapping("/usr/dashboard/dashboardTest")
+	public String DashboardTest(Model model, int teamId) {
+		
+		int memberId = rq.getLoginedMemberId();
+		
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
+		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
+		String teamName = teamService.getTeamNameByTeamId(teamId);
+		Member member = memberService.getMemberById(memberId);
+		
+		
+		// 날짜와 오전인지 오후인지
+		SimpleDateFormat amPmFormat = new SimpleDateFormat("a", Locale.KOREAN);
+		SimpleDateFormat dateFormatWithDay = new SimpleDateFormat("yyyy-MM-dd E", Locale.KOREA);
+		
+	    String amOrPm = amPmFormat.format(new Date());
+	    String currentDate = dateFormatWithDay.format(new Date());
+		
+	    
+	    
+		model.addAttribute("projects", projects);
+		model.addAttribute("teamMembers", teamMembers);
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("teamMembersCnt", teamMembersCnt);
+		model.addAttribute("teamName", teamName);
+		model.addAttribute("member", member);
+		model.addAttribute("amOrPm", amOrPm);
+		model.addAttribute("currentDate", currentDate);
+		
+		
+		
+		
+		return "usr/dashboard/dashboardTest";
+	}
 	
 }
