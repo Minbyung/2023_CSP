@@ -47,7 +47,7 @@
 	margin: 0 0 10px;
 }  
 
-.card-long-header > p {
+.card-long-header > p, .card-short-header > p {
 	font-size: 17px;
 	font-weight: 700;
 }
@@ -74,6 +74,10 @@
 .card-short-body > .team-invite {
 	margin: 10px 0;
 	height: 60px;
+}
+
+.card-short-body > .team-invite:hover {
+	color: blue;
 }
   
 .card-short-body > .member-list {

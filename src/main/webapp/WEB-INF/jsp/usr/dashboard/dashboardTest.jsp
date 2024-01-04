@@ -200,14 +200,36 @@ $(document).ready(function() {
     				<p>구성원</p>
     			</div>
     			<div class="card-short-body">
-    				<div class="team-invite">초대하기</div>
+    				<div class="team-invite modal-exam cursor-pointer">초대하기</div>
+    				<div class="layer-bg"></div>
+					<div class="layer">
+						<span id="close" class="close close-btn-x">&times;</span>
+						<div>직원초대</div>
+						<div>직원들과 협업을 시작해보세요</div>
+						
+						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 직원의 이메일을 입력해주세요" required />
+					    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
+					</div>
+    				
+    				
+    				
+    				
+    				
     				<c:forEach items="${teamMembers}" var="member">
 				    	<div class="member-list">${member.name}</div>
 					</c:forEach>
     			</div>
     		</div>
-    	
-    	
+    		<div class="card-long">
+	   			<div class="card-long-header">
+	   				<p>내가 담당중인 업무</p>
+	   			</div>
+    		</div>
+    		<div class="card-short">
+    			<div class="card-short-header">
+    				<p>채팅 방</p>
+    			</div>
+    		</div>
 	</div>
 	
 	</div>
