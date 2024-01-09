@@ -72,9 +72,9 @@ public class UstChatController {
 	    String currentUserId = message.getSenderId();
 	    
 	    int senderId = Integer.parseInt(currentUserId);
-	    int recipientId = Integer.parseInt(memberId);
+	    int recipientId = Integer.parseInt(memberId); 
 	    
-	    String chatRoomId = chatService.getOrCreateChatRoomId(senderId, recipientId);
+	    String chatRoomId = chatService.getOrCreateChatRoomId(senderId, recipientId, message.getSenderName());
     
 	    chatService.saveMessage(message);
 	     
@@ -96,9 +96,10 @@ public class UstChatController {
     	
     	String recipientName = member.getName();
     
-    	String chatRoomId = chatService.getOrCreateChatRoomId(myId, memberId);
+    	String chatRoomId = chatService.getOrCreateChatRoomId(myId, memberId, recipientName);
     	
     	List<ChatMessage> messages = chatService.getMessageHistory(chatRoomId);
+    	
     	
     	
     	model.addAttribute("member", member);
@@ -146,13 +147,6 @@ public class UstChatController {
         GroupChatRoom groupChatRoom = chatService.getGroupChatRoomById(groupChatRoomProjectId);
         
         
-        
-        
-    	// 채팅방이 존재하지 않는 경우 새로 생성
-        if (groupChatRoom == null) {
-            groupChatRoom = chatService.insertGroupChatRoom(groupChatRoomProjectId, projectName, projectMemberIds);
-        }
-        
         List<Member> members = chatService.findMembersByGroupChatRoomProjectId(groupChatRoomProjectId);
         int groupChatRoomMembersCount = chatService.getgroupChatRoomMembersCount(groupChatRoomProjectId);
         Member myMember = memberService.getMemberById(rq.getLoginedMemberId());
@@ -161,10 +155,12 @@ public class UstChatController {
         
     	
     	List<GroupChatMessage> messages = chatService.getGroupMessageHistory(groupChatRoomProjectId);
-    	
-    	
-    	
-    	
+        
+    	// 채팅방이 존재하지 않는 경우 새로 생성
+        if (groupChatRoom == null) {
+            groupChatRoom = chatService.insertGroupChatRoom(groupChatRoomProjectId, projectName, projectMemberIds, myId);
+        }
+        
     	
     	model.addAttribute("myName", myName);
     	model.addAttribute("myId", myId);

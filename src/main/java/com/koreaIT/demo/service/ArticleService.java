@@ -94,4 +94,9 @@ public class ArticleService {
 		articleDao.doUpdateDate(articleId, convertStartDate, convertEndDate);
 		
 	}
+
+	public List<Article> getTaggedArticleByMemberId(int memberId) {
+		
+		return articleDao.getTaggedArticleByMemberId(memberId);
+	}
 }

@@ -33,9 +33,10 @@ public interface ChatDao {
 			INSERT INTO chatRoom
 				SET chatRoomId = #{chatRoomId},
 				senderId = #{senderId},
-				recipientId = #{recipientId}
+				recipientId = #{recipientId},
+				`name` = #{recipientName}
 			""")
-	void insertChatRoom(String chatRoomId, int senderId, int recipientId);
+	void insertChatRoom(String chatRoomId, int senderId, int recipientId, String recipientName);
 
 
 	
@@ -66,9 +67,10 @@ public interface ChatDao {
 	@Insert("""
 			INSERT INTO groupChatRoom
 				SET groupChatRoomProjectId = #{groupChatRoomProjectId},
-				`name` = #{projectName}
+				`name` = #{projectName},
+				senderId = #{myId}
 			""")
-	void insertGroupChatRoom(int groupChatRoomProjectId, String projectName);
+	void insertGroupChatRoom(int groupChatRoomProjectId, String projectName, int myId);
 
 
 	

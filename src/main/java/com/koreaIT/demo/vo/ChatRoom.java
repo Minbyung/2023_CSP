@@ -11,4 +11,5 @@ public class ChatRoom {
     private int senderId; // 참여자 1의 사용자 ID
     private int recipientId; // 참여자 2의 사용자 ID
     private String chatRoomId;
+    private String name;
 }

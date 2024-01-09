@@ -122,13 +122,15 @@ CREATE TABLE chatRoom (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     chatRoomId VARCHAR(100) NOT NULL,
     senderId INT NOT NULL,
-    recipientId INT NOT NULL
+    recipientId INT NOT NULL,
+    `name` VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE groupChatRoom (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     groupChatRoomProjectId INT NOT NULL,
-    `name` VARCHAR(100) NOT NULL
+    `name` VARCHAR(100) NOT NULL,
+    senderId INT NOT NULL
 );
 
 CREATE TABLE groupChatRoomMembers (
@@ -157,14 +159,18 @@ CREATE TABLE `tb_file` (
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
   `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
 );
-DROP TABLE `tb_file`
+DROP TABLE chatRoom
 DROP TABLE article
 DROP TABLE tag
-
 DELETE  FROM article
 SELECT * FROM tb_file
 SELECT * FROM article
 SELECT * FROM tag
+
+SELECT * FROM chatRoom
+WHERE senderId = 1
+
+
 
 SELECT * 
 				FROM tb_file
@@ -222,7 +228,15 @@ WHERE loginId = 'alszk1234@naver.com';
 -- WHERE `name` LIKE '%%'
 --  
 
+SELECT * FROM chatRoom
+SELECT * FROM groupChatRoom
 
+SELECT A.*
+FROM tag AS T
+INNER JOIN article AS A
+ON T.articleId = A.id
+WHERE T.memberId = 1
+ORDER BY regDate DESC
 
 SELECT * FROM team;
 SELECT * FROM teamInvite;
@@ -240,18 +254,18 @@ SELECT * FROM `group`;
 -- TRUNCATE TABLE favorite;
 
 
-select M.*, PM.projectId as projectId
-from `member` as M
-inner join  projectMember AS PM
-on M.id = PM.memberId
-where projectId = 1
-order by id asc;
+SELECT M.*, PM.projectId AS projectId
+FROM `member` AS M
+INNER JOIN  projectMember AS PM
+ON M.id = PM.memberId
+WHERE projectId = 1
+ORDER BY id ASC;
 
-insert into team
-set teamName = '코리아IT';
+INSERT INTO team
+SET teamName = '코리아IT';
 
-insert into teamMember
-set memberId = 1,
+INSERT INTO teamMember
+SET memberId = 1,
 teamId = 1;
 
 SELECT * FROM `group`
@@ -350,8 +364,8 @@ SELECT * FROM recommendPoint;
 SELECT * FROM reply;
 SELECT * FROM project;
 SELECT * FROM `group`;
-select * from teamMember;
-select * from projectMember;
+SELECT * FROM teamMember;
+SELECT * FROM projectMember;
 
 
 SELECT A.*, G.group_name AS group_name FROM article AS A 
@@ -374,7 +388,7 @@ ORDER BY A.id DESC;
 
 
 SELECT *
-FROM project as P
+FROM project AS P
 INNER JOIN projectMember PM ON P.id = PM.projectId
 WHERE PM.memberId = 2 AND P.teamId = 1
 

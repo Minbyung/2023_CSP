@@ -156,4 +156,15 @@ public interface ArticleDao {
 				WHERE id = #{articleId};
 			""")
 	public void doUpdateDate(int articleId, String startDate, String endDate);
+
+	
+	@Select("""
+			SELECT A.*
+				FROM tag AS T
+				INNER JOIN article AS A
+				ON T.articleId = A.id
+				WHERE T.memberId = #{memberId}
+				ORDER BY regDate DESC
+			""")
+	public List<Article> getTaggedArticleByMemberId(int memberId);
 }

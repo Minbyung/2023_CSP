@@ -27,7 +27,7 @@ public class ChatService {
 	}
 	
 	 // 채팅방 ID 생성 로직
-    public String getOrCreateChatRoomId(int senderId, int recipientId) {
+    public String getOrCreateChatRoomId(int senderId, int recipientId, String recipientName) {
         // 두 사용자 ID를 기준으로 채팅방 ID를 생성합니다.
         String chatRoomId = createChatRoomId(senderId, recipientId);
 
@@ -35,7 +35,7 @@ public class ChatService {
         ChatRoom chatRoom = chatDao.selectChatRoomById(chatRoomId);
         if (chatRoom == null) {
             // 채팅방이 존재하지 않으면 새로운 채팅방을 생성합니다.
-            chatDao.insertChatRoom(chatRoomId, senderId, recipientId);
+            chatDao.insertChatRoom(chatRoomId, senderId, recipientId, recipientName);
         }
         return chatRoomId;
     }
@@ -59,9 +59,9 @@ public class ChatService {
 		return chatDao.getMessageHistory(chatRoomId);
 	}
 
-	public GroupChatRoom insertGroupChatRoom(int groupChatRoomProjectId, String projectName, List<Integer> projectMemberIds) {
+	public GroupChatRoom insertGroupChatRoom(int groupChatRoomProjectId, String projectName, List<Integer> projectMemberIds, int myId) {
 		
-		chatDao.insertGroupChatRoom(groupChatRoomProjectId, projectName);
+		chatDao.insertGroupChatRoom(groupChatRoomProjectId, projectName, myId);
 		
 		chatDao.insertChatRoomMembers(groupChatRoomProjectId, projectMemberIds);
 		
@@ -96,6 +96,11 @@ public class ChatService {
 	public int getgroupChatRoomMembersCount(int groupChatRoomProjectId) {
 		
 		return chatDao.getgroupChatRoomMembersCount(groupChatRoomProjectId);
+	}
+
+	public List<ChatRoom> getChatRoomsByMemberId(int memberId) {
+		
+		return chatDao.getChatRoomsByMemberId();
 	}
 
 

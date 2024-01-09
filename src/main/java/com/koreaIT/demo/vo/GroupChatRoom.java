@@ -10,4 +10,5 @@ public class GroupChatRoom {
     private int id; // 채팅방 아이디
     private int groupChatRoomProjectId; // 식별 ID
     private String name; // 채팅방 이름
+    private int senderId;
 }

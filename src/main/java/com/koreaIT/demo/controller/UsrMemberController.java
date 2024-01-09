@@ -158,7 +158,7 @@ public class UsrMemberController {
 		
 		int teamId = member.getTeamId();
 		
-		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/dashboard/dashboardTest?teamId=" + teamId);
+		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/dashboard/dashboard?teamId=" + teamId);
 	}
 	
 	@RequestMapping("/usr/member/doLogout")
