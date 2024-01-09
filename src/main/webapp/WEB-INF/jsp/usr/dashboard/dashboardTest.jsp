@@ -171,11 +171,10 @@ $(document).ready(function() {
 	    </div>
 	  </div>
 	<div class="page-content">
-		
 		<div class="dashboard-container">
 	    	
 	    	<div class="flex">
-		    	<div class="dashboard-profile-name">${member.name}님 즐거운 ${amOrPm }입니다</div>
+		    	<div class="dashboard-profile-name">${member.name}님 즐거운 ${amOrPm }입니다😊 </div>
 		    	<div class="flex-grow"></div>
 		    	<div class="widget-date">${currentDate }요일</div>
 	    	</div>
@@ -199,8 +198,13 @@ $(document).ready(function() {
     			<div class="card-short-header">
     				<p>구성원</p>
     			</div>
-    			<div class="card-short-body">
-    				<div class="team-invite modal-exam cursor-pointer">초대하기</div>
+    			<div class="card-short-body overflow-y-auto">
+    				<div class="member-list flex modal-exam">
+    					<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-solid fa-user-plus"></i></span></div>
+    					<div class="member-list-detail flex flex-col justify-center">
+    						<div class="team-invite">직원 초대</div>
+    					</div>	
+    				</div>
     				<div class="layer-bg"></div>
 					<div class="layer">
 						<span id="close" class="close close-btn-x">&times;</span>
@@ -216,7 +220,13 @@ $(document).ready(function() {
     				
     				
     				<c:forEach items="${teamMembers}" var="member">
-				    	<div class="member-list">${member.name}</div>
+				    	<div class="member-list flex">
+					    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+					    	<div class="member-list-detail flex flex-col justify-center">
+						    	<div class="font-bold">${member.name}</div>
+						    	<div class="text-xs">${member.teamName}</div>
+					    	</div>
+				    	</div>
 					</c:forEach>
     			</div>
     		</div>

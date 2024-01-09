@@ -86,10 +86,12 @@ public interface MemberDao {
 
 	
 	@Select("""
-			SELECT M.*, TM.teamId AS teamId
+			SELECT M.*, TM.teamId AS teamId, T.teamName AS teamName
 				FROM `member` AS M
-				INNER JOIN teamMember AS TM
+				INNER JOIN teamMember AS TM 
 				ON M.id = TM.memberId
+				INNER JOIN team AS T
+				ON TM.teamId = t.id
 				WHERE teamId = #{teamId};
 			""")
 	public List<Member> getMembersByTeamId(int teamId);

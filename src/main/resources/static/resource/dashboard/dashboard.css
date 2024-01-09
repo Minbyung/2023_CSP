@@ -1,11 +1,9 @@
 @charset "EUC-KR";
 
 .page-content {
-	
-	
-    
 /*    background-color: #f2e1f2;*/
 	background-color: #f7e4f7;
+	overflow: auto;
 }
 
 .dashboard-container {
@@ -32,8 +30,9 @@
 
 
 .card-long {
+	background-color: #fff;
     width: 668px;
-    height: 247px;
+    height: 276px;
     border: 1px solid #ddd; /* 경계선 */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
     border-radius: 13px; /* 모서리 둥글게 */
@@ -62,8 +61,9 @@
 }
 
 .card-short {
-    width: 328px;
-    height: 247px;
+	background-color: #fff;
+    width: 330px;
+    height: 276px;
     border: 1px solid #ddd; /* 경계선 */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
     border-radius: 13px; /* 모서리 둥글게 */
@@ -71,18 +71,63 @@
     margin:5px;
     padding-top: 17px;
   }  
+  
+.card-short-body {
+	height: 226px;	
+}  
+
 .card-short-body > .team-invite {
 	margin: 10px 0;
 	height: 60px;
 }
 
-.card-short-body > .team-invite:hover {
+.card-short-body > .member-list:hover {
 	color: blue;
+	cursor: pointer;
 }
   
 .card-short-body > .member-list {
 	margin: 0 0 10px;
 	height: 60px;
-	
-} 
-  
+}
+
+.member-icon-wrap {
+	width: 56px;
+	height: 56px;
+	border-radius: 24px;
+	background-color: #d1c5db
+}
+
+.member-icon {
+	font-size: 28px; /* 글씨 크기를 박스에 맞게 조정 */
+	padding: 0; /* 내부 여백을 제거 */
+	margin: 0; /* 외부 여백을 제거 */
+	line-height: 1; /* 글씨의 높이를 박스 높이에 맞게 조정 */
+ 	height: 100%; /* 부모 요소의 높이에 맞게 조정 */
+	width: 100%; /* 부모 요소의 너비에 맞게 조정 */
+	box-sizing: border-box; /* 패딩과 테두리가 너비에 포함되도록 설정 */
+	color: white;
+}
+
+.member-list-detail {
+	margin-left: 10px;
+}  
+
+
+.card-short-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-short-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+.card-short-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.card-short-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
