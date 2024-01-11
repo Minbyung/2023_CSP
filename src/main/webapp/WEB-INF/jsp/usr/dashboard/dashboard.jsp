@@ -73,7 +73,18 @@ $(document).ready(function() {
         }
     });
 	
-	
+    $('.chat-menu-accordion-button').click(function() {
+        // 프로젝트 목록 토글
+        $('.left-menu-chat-list').slideToggle();
+
+        // 아이콘 변경
+        var icon = $(this).find('i');
+        if (icon.hasClass('fa-chevron-down')) {
+            icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        } else {
+            icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
+    });
 	
 		
 	
@@ -179,21 +190,35 @@ function detailModal(memberId) {
 		          <div class="flex justify-between">
 			          <div>프로젝트</div>
 			          <div><i class="fa-solid fa-chevron-down"></i></div>
-<!-- 		          <div><i class="fa-solid fa-chevron-up"></i></div> -->
 				  </div>	
-				  <div class="left-menu-project-list">
-			      dfgdfgfg
+				  <div class="left-menu-project-list mt-4">
+			          <c:forEach items="${projects}" var="project">
+		   					<div class="project-list">
+			    				<a href="../project/detail?projectId=${project.id}">
+									<div>${project.project_name }</div>
+								</a>
+							</div>
+						</c:forEach>
 			      </div>
-				  
 	     	  </li>
 	     	  
 	     	  
 	     	  
 	     	  
-	     	  <li class="menu-accordion-button flex justify-between">
-		          <div>채팅방</div>
-		          <div><i class="fa-solid fa-chevron-down"></i></div>
-<!-- 		          <div><i class="fa-solid fa-chevron-up"></i></div> -->
+	     	  <li class="menu-accordion-button chat-menu-accordion-button">
+		          <div class="flex justify-between">
+			          <div>채팅방</div>
+			          <div><i class="fa-solid fa-chevron-down"></i></div>
+				  </div>	
+				  <div class="left-menu-chat-list mt-4">
+			          <c:forEach items="${chatRooms}" var="chatRoom">
+					    	<div class="member-list flex chat-btn" data-member-id="${chatRoom.recipientId}">
+						    	<div class="member-list-detail flex flex-col justify-center">
+							    	<div>${chatRoom.name}</div>
+						    	</div>
+					    	</div>
+						</c:forEach>
+			      </div>
 	     	  </li>	
 	      </ul>
 	      
