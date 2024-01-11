@@ -69,10 +69,8 @@ public class UsrDashboardController {
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
 		List<Article> taggedArticles = articleService.getTaggedArticleByMemberId(memberId);
-		List<ChatRoom> ChatRooms = chatService.getChatRoomsByMemberId(memberId);
-		
-		
-		
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+			
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		String teamName = teamService.getTeamNameByTeamId(teamId);
 		Member member = memberService.getMemberById(memberId);
@@ -93,6 +91,7 @@ public class UsrDashboardController {
 		model.addAttribute("teamMembersCnt", teamMembersCnt);
 		model.addAttribute("teamName", teamName);
 		model.addAttribute("taggedArticles", taggedArticles);
+		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("member", member);
 		model.addAttribute("amOrPm", amOrPm);
 		model.addAttribute("currentDate", currentDate);

@@ -137,5 +137,12 @@ public interface ChatDao {
 				WHERE groupChatRoomProjectId = #{groupChatRoomProjectId}
 			""")
 	int getgroupChatRoomMembersCount(int groupChatRoomProjectId);
+
+
+	@Select("""
+			SELECT * FROM chatRoom
+			WHERE senderId = #{memberId}
+			""")
+	List<ChatRoom> getChatRoomsByMemberId(int memberId);
 	
 }

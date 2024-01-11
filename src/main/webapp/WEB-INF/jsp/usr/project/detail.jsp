@@ -464,8 +464,6 @@
 		   		  // 새 창(팝업)으로 채팅방 열기
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
 		    	});
-		    
-
 	});
 
 	

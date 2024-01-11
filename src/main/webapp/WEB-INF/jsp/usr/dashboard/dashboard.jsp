@@ -50,6 +50,17 @@ $(document).ready(function() {
 	  });
 	});
 	
+	// 채팅방 리스트에서 채팅방 클릭하면 
+	$('.chat-btn').click(function() {
+  	  var memberId = $(this).data('member-id');
+ 		  // 채팅방 URL에 memberId를 쿼리 파라미터로 추가
+ 		  var chatWindowUrl = '/usr/home/chat?memberId=' + encodeURIComponent(memberId);
+ 		  // 새 창(팝업)으로 채팅방 열기
+ 		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
+  	});
+	
+	
+	
 });
 
 </script>
@@ -239,6 +250,16 @@ $(document).ready(function() {
 	    		<div class="card-short">
 	    			<div class="card-short-header">
 	    				<p>채팅 방</p>
+	    			</div>
+	    			<div class="card-short-body overflow-y-auto">
+	    				<c:forEach items="${chatRooms}" var="chatRoom">
+					    	<div class="member-list flex chat-btn" data-member-id="${chatRoom.recipientId}">
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-list-detail flex flex-col justify-center">
+							    	<div class="font-bold">${chatRoom.name}</div>
+						    	</div>
+					    	</div>
+						</c:forEach>
 	    			</div>
 	    		</div>
 			</div>

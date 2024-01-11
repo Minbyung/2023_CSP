@@ -100,7 +100,7 @@ public class ChatService {
 
 	public List<ChatRoom> getChatRoomsByMemberId(int memberId) {
 		
-		return chatDao.getChatRoomsByMemberId();
+		return chatDao.getChatRoomsByMemberId(memberId);
 	}
 
 
