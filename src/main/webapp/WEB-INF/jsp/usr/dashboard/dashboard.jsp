@@ -59,9 +59,74 @@ $(document).ready(function() {
  		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
   	});
 	
+	 // 아코디언 버튼 클릭 이벤트
+    $('.project-menu-accordion-button').click(function() {
+        // 프로젝트 목록 토글
+        $('.left-menu-project-list').slideToggle();
+
+        // 아이콘 변경
+        var icon = $(this).find('i');
+        if (icon.hasClass('fa-chevron-down')) {
+            icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        } else {
+            icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
+    });
+	
+	
+	
+		
 	
 	
 });
+
+function detailModal(memberId) {
+	console.log(memberId);
+	
+	var memberName = $(this).text();
+	   var $memberDetails = $('#member-details');
+	   
+	   $('.chat-btn').data('member-id', memberId);
+	   
+	$.ajax({
+       url: '../member/getMemberDetails', 
+       type: 'GET',
+       data: { memberId: memberId }, // 요청과 함께 서버로 보낼 데이터
+       dataType: 'json', // 서버로부터 기대하는 응답의 데이터 타입
+       success: function(data) {
+         // 성공 시, 응답 데이터로 모달의 내용을 채웁니다.
+         $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+                             '<p>이메일: ' + data.email + '</p>' +
+                             '<p>전화번호: ' + data.cellphoneNum + '</p>'
+                             );
+         // 모달 창 표시.
+         $('#member-modal').fadeIn();
+       },
+       error: function(jqXHR, textStatus, errorThrown) {
+         // 오류 처리
+         console.error('AJAX 요청에 실패했습니다: ' + textStatus, errorThrown);
+       }
+     });
+	
+	 // 모달 닫기 버튼
+    $('.close').click(function() {
+      $('#member-modal').fadeOut();
+    });
+
+ 	// 모달 외부 클릭 시 모달 숨기기
+    $('.member-modal').click(function() {
+        $('.member-modal').fadeOut();
+    });
+ 	
+ 	// 모달 내부 클릭 시, 이벤트가 상위로 전파되지 않도록 중지
+    $('.member-modal .modal-memberContent').click(function(event) {
+        event.stopPropagation();
+    });
+	
+	
+	
+}
+
 
 </script>
 
@@ -70,7 +135,7 @@ $(document).ready(function() {
 
 <body>
 <div class="task-manager">
-	<div class="left-bar">
+	<div class="left-bar flex flex-col">
 	    <div class="upper-part">
 	      <div class="actions">
 	        <div class="circle"></div>
@@ -78,10 +143,12 @@ $(document).ready(function() {
 	      </div>
 	    </div>
 	    <div class="left-content">
-	      <ul class="action-list">
-	       	<a href="../project/make?teamId=${teamId }">
-	        	<button class="btn btn-warning">새 프로젝트</button>
-	        </a>
+	      <ul class="action-list flex flex-col">
+	       	<div>
+		       	<a href="../project/make?teamId=${teamId }" class="self-center block">
+		        	<button class="new-project-btn">새 프로젝트</button>
+		        </a>
+	        </div>
 	        <li class="item mt-8">
 	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
 	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
@@ -90,7 +157,8 @@ $(document).ready(function() {
 	            <path
 	              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 	          </svg>
-	          <a href="../dashboard/dashboard?teamId=${teamId }">
+	          
+	          <a href="../dashboard/dashboard?teamId=${teamId }" class="text-blue-500 font-bold">
 	         	<span>대시보드</span>
 		      </a>
 	        </li>
@@ -104,83 +172,40 @@ $(document).ready(function() {
 	          <a href="../dashboard/myProject?teamId=${teamId }">
 	          	<span>내 프로젝트</span>
 	          </a>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-calendar"
-	            viewBox="0 0 24 24">
-	            <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-	            <path d="M16 2v4M8 2v4m-5 4h18" />
-	          </svg>
-	          <span>Upcoming</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-hash">
-	            <line x1="4" y1="9" x2="20" y2="9" />
-	            <line x1="4" y1="15" x2="20" y2="15" />
-	            <line x1="10" y1="3" x2="8" y2="21" />
-	            <line x1="16" y1="3" x2="14" y2="21" /></svg>
-	          <span>Important</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-users">
-	            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-	            <circle cx="9" cy="7" r="4" />
-	            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-	            <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-	          <span>Meetings</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-trash"
-	            viewBox="0 0 24 24">
-	            <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-	          </svg>
-	          <span>Trash</span>
-	        </li>
+	        </li>        
 	      </ul>
-	      <ul class="category-list">
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-users">
-	            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-	            <circle cx="9" cy="7" r="4" />
-	            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-	            <path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-	          <span>Family</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-sun"
-	            viewBox="0 0 24 24">
-	            <circle cx="12" cy="12" r="5" />
-	            <path
-	              d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-	          </svg>
-	          <span>Vacation</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-trending-up">
-	            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-	            <polyline points="17 6 23 6 23 12" /></svg>
-	          <span>Festival</span>
-	        </li>
-	        <li class="item">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-zap">
-	            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
-	          <span>Concerts</span>
-	        </li>
+	      <ul class="menu-accordion-group">
+	          <li class="menu-accordion-button project-menu-accordion-button">
+		          <div class="flex justify-between">
+			          <div>프로젝트</div>
+			          <div><i class="fa-solid fa-chevron-down"></i></div>
+<!-- 		          <div><i class="fa-solid fa-chevron-up"></i></div> -->
+				  </div>	
+				  <div class="left-menu-project-list">
+			      dfgdfgfg
+			      </div>
+				  
+	     	  </li>
+	     	  
+	     	  
+	     	  
+	     	  
+	     	  <li class="menu-accordion-button flex justify-between">
+		          <div>채팅방</div>
+		          <div><i class="fa-solid fa-chevron-down"></i></div>
+<!-- 		          <div><i class="fa-solid fa-chevron-up"></i></div> -->
+	     	  </li>	
 	      </ul>
+	      
 	    </div>
+	    
+	    <div class="mt-auto lnb-bottom-customer">
+	    	<a href="#" class="">
+		    	<i class="fa-regular fa-circle-question self-center mr-3"></i> 
+		    	<div>고객센터</div>
+	    	</a>
+	    </div>
+	    
 	  </div>
 	<div class="page-content">
 		<div class="dashboard-container">
@@ -225,7 +250,7 @@ $(document).ready(function() {
 						    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
 						</div>
 	    				<c:forEach items="${teamMembers}" var="member">
-					    	<div class="member-list flex">
+					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
 						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="font-bold">${member.name}</div>
@@ -233,6 +258,21 @@ $(document).ready(function() {
 						    	</div>
 					    	</div>
 						</c:forEach>
+						
+						<div id="member-modal" class="member-modal">
+						 	<div class="modal-memberContent">
+						 		<span class="close">&times;</span>
+						 		<h2>멤버 세부 정보</h2>
+						 		<div id="member-details" >
+						 		<!--  멤버 정보 -->
+						 		</div>
+						 		<div class="flex justify-center">
+						 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
+						 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+						 		</div>	
+						 	</div>
+						</div>
+						
 	    			</div>
 	    		</div>
 	    		<div class="card-long">

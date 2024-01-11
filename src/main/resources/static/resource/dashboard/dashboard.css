@@ -131,3 +131,46 @@
   background: #f1f1f1;
   border-radius: 6px;
 }
+
+/* 모달 기본 스타일 */
+.member-modal {
+  display: none; /* 모달 창은 기본적으로 표시되지 않음 */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* 모달 내용 스타일 */
+.modal-memberContent {
+  background-color: #fefefe;
+  margin: 15% auto; /* 모달 내용을 페이지 중앙에 위치 */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 400px; /* 모달 너비 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 그림자를 추가합니다. */
+  border-radius: 5px; /* 모달 모서리를 둥글게 합니다. */
+  position: relative; /* close 버튼을 위한 상대적 위치 */
+}
+
+/* 닫기 버튼 스타일 */
+.close {
+  color: #aaa;
+  position: absolute; /* 모달 내용의 오른쪽 상단에 위치하도록 설정 */
+  right: 10px;
+  top: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

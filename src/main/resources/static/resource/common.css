@@ -223,3 +223,43 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
 #favoriteIcon.fas { /* 즐겨찾기 된 상태 */
     color: gold;
 }
+
+.new-project-btn {
+	width: 100%;
+	height: 40px;
+	border-radius: 4px;
+	background-color: gold;
+}
+
+.new-project-btn:hover {
+	background-color: skyblue;
+}
+
+.action-list {
+	padding: 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.lnb-bottom-customer {
+
+	display: flex;
+	
+}
+
+.lnb-bottom-customer > a {
+	display: flex;
+	width: 100%;
+	padding: 21px 0 21px 40px;
+	height: 100%;
+	font-weight: 700;
+	
+}
+
+.menu-accordion-button {
+	padding: 14px 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.left-menu-project-list {
+	display: none;
+}

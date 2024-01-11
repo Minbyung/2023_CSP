@@ -75,7 +75,7 @@ public class UsrDashboardController {
 		String teamName = teamService.getTeamNameByTeamId(teamId);
 		Member member = memberService.getMemberById(memberId);
 		
-		
+		System.out.println(projects);
 		
 		// 날짜와 오전인지 오후인지
 		SimpleDateFormat amPmFormat = new SimpleDateFormat("a", Locale.KOREAN);
