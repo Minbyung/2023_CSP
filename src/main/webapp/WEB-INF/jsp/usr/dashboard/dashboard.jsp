@@ -62,7 +62,7 @@ $(document).ready(function() {
 	 // 아코디언 버튼 클릭 이벤트
     $('.project-menu-accordion-button').click(function() {
         // 프로젝트 목록 토글
-        $('.left-menu-project-list').slideToggle();
+        $('.left-menu-project-list-box').slideToggle();
 
         // 아이콘 변경
         var icon = $(this).find('i');
@@ -75,7 +75,7 @@ $(document).ready(function() {
 	
     $('.chat-menu-accordion-button').click(function() {
         // 프로젝트 목록 토글
-        $('.left-menu-chat-list').slideToggle();
+        $('.left-menu-chat-list-box').slideToggle();
 
         // 아이콘 변경
         var icon = $(this).find('i');
@@ -191,9 +191,9 @@ function detailModal(memberId) {
 			          <div>프로젝트</div>
 			          <div><i class="fa-solid fa-chevron-down"></i></div>
 				  </div>	
-				  <div class="left-menu-project-list mt-4">
+				  <div class="left-menu-project-list-box mt-4">
 			          <c:forEach items="${projects}" var="project">
-		   					<div class="project-list">
+		   					<div class="left-menu-project-list">
 			    				<a href="../project/detail?projectId=${project.id}">
 									<div>${project.project_name }</div>
 								</a>
@@ -210,14 +210,14 @@ function detailModal(memberId) {
 			          <div>채팅방</div>
 			          <div><i class="fa-solid fa-chevron-down"></i></div>
 				  </div>	
-				  <div class="left-menu-chat-list mt-4">
+				  <div class="left-menu-chat-list-box mt-4">
 			          <c:forEach items="${chatRooms}" var="chatRoom">
-					    	<div class="member-list flex chat-btn" data-member-id="${chatRoom.recipientId}">
-						    	<div class="member-list-detail flex flex-col justify-center">
-							    	<div>${chatRoom.name}</div>
+					    	<div class="left-menu-chat-list flex">
+						    	<div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
+							    	<div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
 						    	</div>
 					    	</div>
-						</c:forEach>
+					 </c:forEach>
 			      </div>
 	     	  </li>	
 	      </ul>

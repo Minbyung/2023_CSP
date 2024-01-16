@@ -260,6 +260,18 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
 	border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 
-.left-menu-project-list, .left-menu-chat-list {
+.left-menu-project-list-box, .left-menu-chat-list-box {
 	display: none;
+}
+
+.left-menu-project-list, .left-menu-chat-list  {
+	flex: 0 0 45%;
+	margin-right: 5px;
+	padding: 0 0 17px;
+}
+
+
+
+.left-menu-chat-list > .left-menu-chat-list-detail > div {
+	cursor: pointer;
 }
