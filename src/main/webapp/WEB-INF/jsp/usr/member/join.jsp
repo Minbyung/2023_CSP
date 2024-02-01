@@ -185,7 +185,7 @@
 				<div class="pb-2 font-medium">비밀번호</div>
 				<input class="input input-bordered input-primary w-full" id="loginPw" name="loginPw" type="text" placeholder="비밀번호" />
 				<small id="passwordHelp" class="form-text text-muted hidden">비밀번호는 8~20자 영문, 숫자, 특수문자로만 설정해주세요.</small>
-				<span id="loginPw-result"></span>
+				<span class="text-sm text-red-400" id="loginPw-result"></span>
 				
 				<div class="space-box h-7"></div>
 				<input class="input input-bordered input-primary w-full" name="loginPwChk" type="text" placeholder="비밀번호 확인" />
