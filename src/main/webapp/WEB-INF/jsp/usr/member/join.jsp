@@ -9,6 +9,49 @@
 	<script>
 		let validLoginId = '';
 	
+		
+		$(document).ready(function(){
+			  var isUserTaken = false; // 중복 상태를 추적하는 변수
+
+			  // 비밀번호 유효성 검사
+			  $('#loginPw').on('input', function(){
+			    var userPw = $(this).val();
+				// 비밀번호 유효성 검사를 위한 정규 표현식
+		        var pwRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+			    
+
+		        if (!pwRegex.test(userPw)) {
+		            $('#loginPw-result').text('비밀번호는 8~20자 영문, 숫자, 특수문자로 설정해야 합니다.');
+		            $('#submit-button').prop('disabled', true);
+		            isUserTaken = true;
+		        } else {
+		            $('#loginPw-result').hide();
+		            $('#submit-button').prop('disabled', false);
+		            isUserTaken = false;
+		        }
+			    
+		        console.log(isUserTaken);
+			  });
+
+			  // 폼 제출 핸들러
+			  $('#registrationForm').on('submit', function(e){
+			    if(isUserTaken) {
+			      
+			      e.preventDefault(); // 폼 제출 막기
+			      alert('사용할 수 없는 비밀번호입니다. 다른 비밀번호를 입력해 주세요.');
+			    }
+			  });
+			  
+			  
+			  
+			});
+		
+		
+		
+		
+		
+		
+		
 		const joinForm_onSubmit = function(form) {
 			form.loginId.value = form.loginId.value.trim();
 			form.loginPw.value = form.loginPw.value.trim();
@@ -121,7 +164,7 @@
 	<section class="mt-24 text-xl">
 		<div class="join-box">
 			<h1>회원가입</h1>
-			<form action="doJoin" method="post" onsubmit="joinForm_onSubmit(this); return false;">
+			<form id="registrationForm" action="doJoin" method="post" onsubmit="joinForm_onSubmit(this); return false;">
 
 				<div class="pb-2 font-medium">이름</div>
 				<input class="input input-bordered input-primary w-full" name="name" type="text" placeholder="이름"/>
@@ -140,11 +183,13 @@
 				<div class="space-box h-7"></div>
 				
 				<div class="pb-2 font-medium">비밀번호</div>
-				<div class="text-sm">비밀번호는 8~20자 영문, 숫자, 특수문자로 입력하세요.</div>
-				<input class="input input-bordered input-primary w-full" name="loginPw" type="text" placeholder="비밀번호" />
+				<input class="input input-bordered input-primary w-full" id="loginPw" name="loginPw" type="text" placeholder="비밀번호" />
+				<small id="passwordHelp" class="form-text text-muted hidden">비밀번호는 8~20자 영문, 숫자, 특수문자로만 설정해주세요.</small>
+				<span id="loginPw-result"></span>
+				
 				<div class="space-box h-7"></div>
 				<input class="input input-bordered input-primary w-full" name="loginPwChk" type="text" placeholder="비밀번호 확인" />
-				<button>회원가입</button>
+				<button id="submit-button">회원가입</button>
 			</form>
 		</div>
 	</section>
