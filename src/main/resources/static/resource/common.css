@@ -102,19 +102,19 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     z-index: 999;
 }
 
-.menu {
-    margin-left: 0px;
-    padding: 0px 24px;
-}    
+/*.menu {*/
+/*    margin-left: 0px;*/
+/*    padding: 0px 24px;*/
+/*}    */
 
-.menu a {
-    width: auto;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-    box-sizing: border-box;
-    position: relative;
-}
+/*.menu a {*/
+/*    width: auto;*/
+/*    height: 60px;*/
+/*    line-height: 60px;*/
+/*    text-align: center;*/
+/*    box-sizing: border-box;*/
+/*    position: relative;*/
+/*}*/
 
 .log {
     display: flex;
