@@ -6,18 +6,12 @@
 	
 	<%@ include file="../common/head.jsp" %>
 	
-<!-- 	<section class="mt-8"> -->
-<!-- 		<div class="container mx-auto"> -->
-<!-- 			<div> -->
-<!-- 				안녕하세요 -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="test widget-my-prj js-filter-widget update-hr">dsfsdfsdfsfsfddfdsffdsfd -->
-<!-- 		sfdsfsdfsdfdsdsdsdsfdsfsddsfddsfddsfdf -->
-<!-- 		dfsdfsdf</div> -->
-		
-<!-- 		<button onclick="openChatWindow()">Open Chat</button> -->
-<!-- 		<a href="testHtml">htmltest</a> -->
-<!-- 	</section> -->
+	<div class="main-background-color">
+		<div class="introduce-wrap">
+			<h1>쉽고, 빠르고, 가벼운 협업툴</h1>
+			<div>간편한 협업을 원한다면</div>
+			<button><a href="/usr/member/login">협업랜드 시작하기</a></button>
+		</div>
+	</div>
 	
 	<%@ include file="../common/foot.jsp" %>

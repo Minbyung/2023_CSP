@@ -67,7 +67,7 @@
 	<div class="top-bar">
 		<div class="top-bar-container">
 			<div>
-				<a class="flex items-center h-full" href="#">협업랜드(로고)</a>
+				<a class="flex items-center h-full" href="/">협업랜드(로고)</a>
 			</div>
 			<div class="flex-grow"></div>
 			<div class="flex member-login-box">
