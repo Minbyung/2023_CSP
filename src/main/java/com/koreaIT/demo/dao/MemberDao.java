@@ -23,12 +23,6 @@ public interface MemberDao {
 			""")
 	public void joinMember(String name, String cellphoneNum, String loginId, String loginPw);
 	
-	@Select("""
-			SELECT * 
-				FROM `member`
-				WHERE id = #{id}
-			""")
-	public Member getMemberById(int id);
 
 	@Select("SELECT LAST_INSERT_ID()")
 	public int getLastInsertId();
@@ -38,10 +32,20 @@ public interface MemberDao {
 				FROM `member` AS M
 				INNER JOIN teamMember AS TM
 				ON M.id = TM.memberId
-				WHERE loginId = #{loginId};
+				WHERE loginId = #{loginId}
 			""")
 	public Member getMemberByLoginId(String loginId);
 
+	@Select("""
+			SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE M.id = #{id}
+			""")
+	public Member getMemberById(int id);
+	
+	
 	@Update("""
 			UPDATE `member`
 				SET updateDate = NOW()

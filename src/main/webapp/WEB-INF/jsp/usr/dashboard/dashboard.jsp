@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>    
-<%@ include file="../common/head2.jsp" %>
-	 
+<%@ include file="../common/head.jsp" %>
 <!DOCTYPE html>
 <html lang="en" >
 <head>
@@ -146,13 +145,8 @@ function detailModal(memberId) {
 
 <body>
 <div class="task-manager">
-	<div class="left-bar flex flex-col">
-	    <div class="upper-part">
-	      <div class="actions">
-	        <div class="circle"></div>
-	        <div class="circle-2"></div>
-	      </div>
-	    </div>
+	
+	<div class="left-bar flex flex-col mt-20">
 	    <div class="left-content">
 	      <ul class="action-list flex flex-col">
 	       	<div>
@@ -256,22 +250,22 @@ function detailModal(memberId) {
 	    		</div>
 	    		<div class="card-short">
 	    			<div class="card-short-header">
-	    				<p>구성원</p>
+	    				<p>팀원</p>
 	    			</div>
 	    			<div class="card-short-body overflow-y-auto">
 	    				<div class="member-list flex modal-exam">
 	    					<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-solid fa-user-plus"></i></span></div>
 	    					<div class="member-list-detail flex flex-col justify-center">
-	    						<div class="team-invite">직원 초대</div>
+	    						<div class="team-invite">팀원 초대</div>
 	    					</div>	
 	    				</div>
 	    				<div class="layer-bg"></div>
 						<div class="layer">
 							<span id="close" class="close close-btn-x">&times;</span>
-							<div>직원초대</div>
-							<div>직원들과 협업을 시작해보세요</div>
+							<div>팀원초대</div>
+							<div>팀원들과 협업을 시작해보세요</div>
 							
-							<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 직원의 이메일을 입력해주세요" required />
+							<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 팀원의 이메일을 입력해주세요" required />
 						    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
 						</div>
 	    				<c:forEach items="${teamMembers}" var="member">

@@ -56,9 +56,6 @@ public class MemberService {
 	    }
 		
 	}
-	public Member getMemberById(int id) {
-		return memberDao.getMemberById(id);
-	}
 
 	public int getLastInsertId() {
 		return memberDao.getLastInsertId();
@@ -67,7 +64,11 @@ public class MemberService {
 	public Member getMemberByLoginId(String loginId) {
 		return memberDao.getMemberByLoginId(loginId);
 	}
-
+	
+	public Member getMemberById(int id) {
+		return memberDao.getMemberById(id);
+	}
+	
 	public void doModify(int id, String name, String nickname, String cellphoneNum, String email) {
 		memberDao.doModify(id, name, nickname, cellphoneNum, email);
 	}

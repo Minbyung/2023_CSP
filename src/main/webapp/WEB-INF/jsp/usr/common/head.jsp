@@ -75,10 +75,10 @@
 					<div class="hover:underline"><a class="flex items-center h-full" href="/usr/member/login">로그인</a></div>
 				</c:if>
 				<c:if test="${rq.getLoginedMemberId() != 0 }">
-					<div><i class="fa-regular fa-bell flex items-center h-full"></i></div>
-					<div class="hover:underline">
+					<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full"></i></div>
+					<div class="cursor-pointer">
 						<div class="flex items-center h-full relative member-detail">
-							이름(회원정보)
+							${member.name }님
 							<ul class="member-detail-menu">
 								<li><a href="#">내 프로필</a></li>
 								<li><a href="/usr/member/doLogout">로그아웃</a></li>
