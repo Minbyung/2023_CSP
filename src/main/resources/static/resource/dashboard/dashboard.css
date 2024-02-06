@@ -174,3 +174,13 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.left-menu-project-list-box > div:hover {
+	color: blue;
+}
+
+.left-menu-chat-list-box > div:hover {
+	color: blue;
+	cursor: pointer;
+}
+

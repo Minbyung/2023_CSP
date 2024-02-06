@@ -1,4 +1,5 @@
 .myproject-container {
+	min-width: 1500px;
     padding: 60px 0 60px;
     margin: 0 auto;
 }
@@ -11,3 +12,11 @@
 	min-width: 100%;
 }
 
+.left-menu-project-list-box > div:hover {
+	color: blue;
+}
+
+.left-menu-chat-list-box > div:hover {
+	color: blue;
+	cursor: pointer;
+}

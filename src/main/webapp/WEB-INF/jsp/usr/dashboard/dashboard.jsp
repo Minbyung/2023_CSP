@@ -57,6 +57,12 @@ $(document).ready(function() {
  		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
   	});
 	
+	
+	// .left-menu-project-list-box 클릭 시 이벤트 전파 방지
+	$('.left-menu-project-list-box').click(function(event) {
+	    event.stopPropagation();
+	});
+
 	 // 아코디언 버튼 클릭 이벤트
     $('.project-menu-accordion-button').click(function() {
         // 프로젝트 목록 토글
@@ -204,9 +210,9 @@ function detailModal(memberId) {
 				  </div>	
 				  <div class="left-menu-chat-list-box mt-4">
 			          <c:forEach items="${chatRooms}" var="chatRoom">
-					    	<div class="left-menu-chat-list flex">
+					    	<div class="left-menu-chat-list flex chat-btn" data-member-id="${chatRoom.recipientId}">
 						    	<div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
-							    	<div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
+							    	<div>${chatRoom.name}</div>
 						    	</div>
 					    	</div>
 					 </c:forEach>
