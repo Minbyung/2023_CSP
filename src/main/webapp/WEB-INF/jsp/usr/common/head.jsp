@@ -81,6 +81,7 @@
 							${member.name }님
 							<ul class="member-detail-menu">
 								<li><a href="#">내 프로필</a></li>
+								<li><a href="/usr/dashboard/dashboard?teamId=${member.teamId }">내 대시보드</a></li>
 								<li><a href="/usr/member/doLogout">로그아웃</a></li>
 							</ul>
 						</div>

@@ -24,14 +24,27 @@ $('.modal-exam').click(function(){
 $('.close-btn').click(function(){
 	$('.layer-bg').hide();
 	$('.layer').hide();
+	$('.invite-layer').hide();
+	$(".invite-email-input").val('');
 })
 
 $('.close-btn-x').click(function(){
 	$('.layer-bg').hide();
 	$('.layer').hide();
+	$('.invite-layer').hide();
+	$(".invite-email-input").val('');
 })
 
 $('.layer-bg').click(function(){
 	$('.layer-bg').hide();
 	$('.layer').hide();
+	$('.invite-layer').hide();
+	$(".invite-email-input").val('');
+})
+
+
+//초대메일전송 모달
+$('.invite-modal').click(function(){
+	$('.layer-bg').show();
+	$('.invite-layer').show();
 })

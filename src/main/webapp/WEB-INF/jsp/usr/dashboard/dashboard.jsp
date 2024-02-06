@@ -31,7 +31,7 @@ $(document).ready(function() {
 	
 	$("#submitBtn").click(function(){
 		
-		// 초대 메일 전송     	    	
+	//초대 메일 전송     	    	
 	var email = $("#exampleFormControlInput1").val();
 	var teamId = '1';
 	
@@ -40,11 +40,10 @@ $(document).ready(function() {
 	    type: 'POST',
 	    data: { teamId: teamId, email: email },
 	    success: function(data) {
-	      console.log(data);
-// 	      $("#email").val("");
+		  $(".invite-email-input").val('');
 	      $('.layer-bg').hide();
-		  $('.layer').hide();
-		  
+		  $('.invite-layer').hide();
+		  alert("메일 전송이 완료되었습니다.");
 	    }
 	  });
 	});
@@ -91,7 +90,6 @@ $(document).ready(function() {
 });
 
 function detailModal(memberId) {
-	console.log(memberId);
 	
 	var memberName = $(this).text();
 	   var $memberDetails = $('#member-details');
@@ -163,8 +161,8 @@ function detailModal(memberId) {
 	              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 	          </svg>
 	          
-	          <a href="../dashboard/dashboard?teamId=${teamId }" class="text-blue-500 font-bold">
-	         	<span>대시보드</span>
+	          <a href="../dashboard/dashboard?teamId=${teamId }">
+	         	<span class="text-blue-500 font-bold">대시보드</span>
 		      </a>
 	        </li>
 	        <li class="item">
@@ -250,23 +248,25 @@ function detailModal(memberId) {
 	    		</div>
 	    		<div class="card-short">
 	    			<div class="card-short-header">
-	    				<p>팀원</p>
+	    				<p>팀원(${teamMembersCnt })</p>
 	    			</div>
 	    			<div class="card-short-body overflow-y-auto">
-	    				<div class="member-list flex modal-exam">
+	    				<div class="member-list flex invite-modal">
 	    					<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-solid fa-user-plus"></i></span></div>
 	    					<div class="member-list-detail flex flex-col justify-center">
 	    						<div class="team-invite">팀원 초대</div>
 	    					</div>	
 	    				</div>
 	    				<div class="layer-bg"></div>
-						<div class="layer">
-							<span id="close" class="close close-btn-x">&times;</span>
-							<div>팀원초대</div>
-							<div>팀원들과 협업을 시작해보세요</div>
-							
-							<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="초대하고싶은 팀원의 이메일을 입력해주세요" required />
-						    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
+						<div class="invite-layer">
+							<div class="invite-box">
+								<span id="close" class="close close-btn-x">&times;</span>
+								<div>팀원초대</div>
+								<div>팀원들과 협업을 시작해보세요</div>
+								<input type="email" class="form-control invite-email-input" id="exampleFormControlInput1" placeholder="초대하고싶은 팀원의 이메일을 입력해주세요" required />
+								<div class="flex-grow"></div>
+							    <button id="submitBtn" type="button" class="btn btn-primary">전송하기</button>
+						    </div>
 						</div>
 	    				<c:forEach items="${teamMembers}" var="member">
 					    	<div class="member-list flex" onclick="detailModal('${member.id}')">

@@ -48,16 +48,22 @@ public class UsrDashboardController {
 		
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
+		List<Article> taggedArticles = articleService.getTaggedArticleByMemberId(memberId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+			
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		String teamName = teamService.getTeamNameByTeamId(teamId);
-		
+		Member member = memberService.getMemberById(memberId);
 		
 		model.addAttribute("projects", projects);
 		model.addAttribute("teamMembers", teamMembers);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("teamMembersCnt", teamMembersCnt);
 		model.addAttribute("teamName", teamName);
-		
+		model.addAttribute("taggedArticles", taggedArticles);
+		model.addAttribute("chatRooms", chatRooms);
+		model.addAttribute("member", member);
+
 		return "usr/dashboard/myProject";
 	}
 	
@@ -75,7 +81,6 @@ public class UsrDashboardController {
 		String teamName = teamService.getTeamNameByTeamId(teamId);
 		Member member = memberService.getMemberById(memberId);
 		
-		System.out.println(projects);
 		
 		// 날짜와 오전인지 오후인지
 		SimpleDateFormat amPmFormat = new SimpleDateFormat("a", Locale.KOREAN);

@@ -186,11 +186,9 @@
 			            type: "GET",
 			            data: { term: request.term },
 			            success: function(data) {
-			            	console.log("클릭1");
 			                var taggedMembers = $('.tag').map(function() {
 			                    return $(this).clone().children().remove().end().text().trim();
 			                }).get();
-			
 			                var results = $.grep(data, function(result){
 			                    return $.inArray(result.trim(), taggedMembers) === -1;
 			                });
@@ -789,7 +787,7 @@
 						 <div class="participants-section">
 							 <div class="participants-container">
 							 	<div class="p-3">
-								 	<h1>우리 소속 멤버</h1>
+								 	<h1>팀 멤버</h1>
 									<c:forEach items="${teamMembers}" var="member">
 									    <div class="participant flex justify-between">
 										    <div id="member-${member.id}" data-member-id="${member.id}">

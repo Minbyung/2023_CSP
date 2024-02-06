@@ -68,6 +68,12 @@ public interface ArticleDao {
 			""")
 	public List<Article> getArticles(int projectId, String column, String order);
 	
+	
+	
+	
+	
+	
+	
 	@Update("""
 			UPDATE article
 				SET hitCount = hitCount + 1
