@@ -163,12 +163,12 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     cursor: pointer;
 }
 
-#favoriteIcon {
+#favoriteIcon, .favoriteIcon {
     cursor: pointer;
 }
 
 
-#favoriteIcon.fas { /* 즐겨찾기 된 상태 */
+#favoriteIcon.fas, .favoriteIcon.fas { /* 즐겨찾기 된 상태 */
     color: gold;
 }
 

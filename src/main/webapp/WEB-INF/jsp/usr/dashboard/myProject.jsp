@@ -28,11 +28,72 @@
 
 
 <script>
+
+
+
+
 $(document).ready(function() {
+	$('.favoriteIcon').each(function() {
+	    // this는 현재 순회 중인 '.favoriteIcon' 요소를리킵니다.
+	    var $icon = $(this);
+   		var projectId = $icon.data('project-id');
+	    
+	    $.ajax({
+		    url: '../favorite/getFavorite',
+		    method: 'GET',
+		    data: {
+		        "projectId": projectId
+		    },
+		    dataType: "json",
+		    // context: $icon을 통해 jQuery AJAX 요청에 this 컨텍스트를 현재 순회 중인 아이콘의 jQuery 객체로 설정
+		    // context: $icon은 'AJAX 요청에 대한 응답을 처리할 때는 이 아이콘을 기억해!'라고 jQuery에게 지시하는 거라고 생각
+		    context: $icon,
+		    success: function(data) {
+		   	 if (data) {
+		   		 	// success 콜백 내에서 this를 사용해 현재 아이콘에만 클래스를 추가하거나 제거, fas 노란별 
+		   			this.addClass('fas').removeClass('far');
+		        } 
+		   	 else {
+		   		 	// far 빈별
+		   			this.addClass('far').removeClass('fas');
+		        }
+		    }
+		});
+	});
+	
+	
+
+    $('.favoriteIcon').click(function(e) {
+     e.preventDefault(); // a 태그의 기본 이벤트를 방지합니다.	
+     
+     
+     var $icon = $(this); // 현재 클릭한 아이콘
+     var projectId = $icon.data('project-id');
+     var isFavorite = $icon.hasClass('fas');
+     
+     
+       $.ajax({
+           url: '../favorite/updateFavorite',
+           method: 'POST',
+           data: {
+               "projectId": projectId, 
+               "isFavorite": !isFavorite 
+           },
+           success: function(response) {
+           	console.log(response);
+           	$icon.toggleClass('far fas'); // 현재 클릭된 아이콘만 클래스 토글
+           }
+       });
+   });
+	
+	
+	
+	
+	
+	
 	
 	
 	$("#submitBtn").click(function(){
-		
 	//초대 메일 전송     	    	
 	var email = $("#exampleFormControlInput1").val();
 	var teamId = '1';
@@ -239,13 +300,12 @@ function detailModal(memberId) {
 									<div class="flex card-detail">
 										<div class="card-project-participantsCount">
 										<div><i class="fa-solid fa-user-group"></i>${project.participantsCount}</div>
-										<div>즐겨찾기 아이콘</div>
+										<div><i data-project-id="${project.id}" class="far fa-star favoriteIcon"></i></div>
 										</div>
 										<div class="card-project-name">${project.project_name }</div>
 										<div class="card-project-description">
 											<div>${project.project_description}</div>
 										</div>
-										
 									</div>
 								</article>
 							</a>

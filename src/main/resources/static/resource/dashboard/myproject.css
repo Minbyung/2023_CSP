@@ -40,5 +40,6 @@
 .card-detail > .card-project-participantsCount {
 	display: flex;
 	justify-content: space-between;
+	padding-bottom: 10px;
 /*	margin-top: 50px;*/
 }
