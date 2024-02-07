@@ -40,10 +40,16 @@ public interface ProjectDao {
 	
 	
 	@Select("""
-			SELECT *
+			SELECT P.*, COUNT(subPM.memberId) AS participantsCount
 				FROM project AS P
-				INNER JOIN projectMember PM ON P.id = PM.projectId
-				WHERE PM.memberId = #{memberId} AND P.teamId = #{teamId}
+				JOIN (
+				    SELECT projectId
+				    FROM projectMember
+				    WHERE memberId = #{memberId}
+				) AS subP ON P.id = subP.projectId
+				LEFT JOIN projectMember AS subPM ON P.id = subPM.projectId
+				WHERE P.teamId = #{teamId}
+				GROUP BY P.id
 			""")
 	public List<Project> getProjectsByTeamIdAndMemberId(int teamId, int memberId);
 

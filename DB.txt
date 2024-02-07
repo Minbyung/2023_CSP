@@ -167,8 +167,42 @@ SELECT * FROM tb_file
 SELECT * FROM article
 SELECT * FROM tag
 
+SELECT P.*, COUNT(subPM.memberId) AS participantsCount
+FROM project AS P
+JOIN (
+    SELECT projectId
+    FROM projectMember
+    WHERE memberId = 1
+) AS subP ON P.id = subP.projectId
+LEFT JOIN projectMember AS subPM ON P.id = subPM.projectId
+WHERE P.teamId = 1
+GROUP BY P.id;
+
+
+
+
+
 SELECT * FROM chatRoom
 WHERE senderId = 1
+SELECT * FROM `member`
+
+SELECT * FROM `member`
+SELECT * FROM teamMember
+SELECT * FROM team
+
+
+SELECT M.*, TM.teamId AS teamId
+FROM `member` AS M
+LEFT JOIN teamMember AS TM
+ON M.id = TM.memberId
+WHERE M.loginId = 'test!@test!.com'
+
+
+SELECT *
+FROM `member`
+WHERE loginId ='mbmcybery@naver.com';
+
+SELECT * FROM `member`
 
 
 

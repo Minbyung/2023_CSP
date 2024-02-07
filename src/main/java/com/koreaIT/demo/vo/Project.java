@@ -13,4 +13,7 @@ public class Project {
 	private String project_description;
 	private int teamId;
 	
+	
+	private int participantsCount;
+	
 }

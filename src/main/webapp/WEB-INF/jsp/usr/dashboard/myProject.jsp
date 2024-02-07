@@ -236,12 +236,16 @@ function detailModal(memberId) {
 		    			<c:forEach items="${projects}" var="project">
 		    				<a href="../project/detail?projectId=${project.id}">
 								<article class="information [ card ] bg-gray-50">
-									<div class="ml-4">
-										<div>${project.project_name }</div>
-										<div class="pt-6 h-12">
+									<div class="flex card-detail">
+										<div class="card-project-participantsCount">
+										<div><i class="fa-solid fa-user-group"></i>${project.participantsCount}</div>
+										<div>즐겨찾기 아이콘</div>
+										</div>
+										<div class="card-project-name">${project.project_name }</div>
+										<div class="card-project-description">
 											<div>${project.project_description}</div>
 										</div>
-										<div class="pt-10">프로젝트참여자수</div>
+										
 									</div>
 								</article>
 							</a>
