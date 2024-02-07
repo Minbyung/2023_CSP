@@ -124,7 +124,7 @@ public class UsrProjectController {
 		        groupedArticles.get(groupName).add(article);
 		    }
 		}
-
+		System.out.println(groupedArticles);
 		model.addAttribute("project", project);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
@@ -156,6 +156,8 @@ public class UsrProjectController {
 		for (Article article : articles) {
 		    String groupName = article.getGroupName();
 		    if (groupedArticles.containsKey(groupName)) { 
+		    	// groupedArticles.get(groupName) -> groupName(key)에 해당하는 List<Article> 객체(value)를 반환
+		    	// List<Article> 객체(value)에 article을 add(리스트에 요소 추가)
 		        groupedArticles.get(groupName).add(article);
 		    }
 		}

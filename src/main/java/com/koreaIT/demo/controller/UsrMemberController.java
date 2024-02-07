@@ -144,7 +144,7 @@ public class UsrMemberController {
 		
 		Member member = memberService.getMemberByLoginId(loginId);
 		
-		
+		System.out.println(member);
 		
 		if (member == null) {
 			return Util.jsHistoryBack(Util.f("%s은(는) 존재하지 않는 아이디입니다", loginId));

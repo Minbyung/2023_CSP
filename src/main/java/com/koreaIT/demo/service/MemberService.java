@@ -27,11 +27,11 @@ public class MemberService {
 		
 		memberDao.joinMember(name, cellphoneNum, loginId, loginPw);
 		
+		int memberId = memberDao.getLastInsertId();
+		
 		 if (teamName != null && !teamName.isEmpty()) {
 	            teamDao.insert(teamName);
 		 }
-		     
-        int memberId = getLastInsertId();
 		int teamId = teamDao.getLastInsertId();
 		memberDao.insert(memberId, teamId);	
 	}

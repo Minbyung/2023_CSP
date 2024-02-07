@@ -32,7 +32,7 @@ public interface MemberDao {
 				FROM `member` AS M
 				INNER JOIN teamMember AS TM
 				ON M.id = TM.memberId
-				WHERE loginId = #{loginId}
+				WHERE M.loginId = #{loginId}
 			""")
 	public Member getMemberByLoginId(String loginId);
 

@@ -58,13 +58,8 @@ $(document).ready(function() {
   	});
 	
 	
-	// .left-menu-project-list-box 클릭 시 이벤트 전파 방지
-	$('.left-menu-project-list-box').click(function(event) {
-	    event.stopPropagation();
-	});
-
 	 // 아코디언 버튼 클릭 이벤트
-    $('.project-menu-accordion-button').click(function() {
+    $('.project-menu-accordion-button > .flex').click(function() {
         // 프로젝트 목록 토글
         $('.left-menu-project-list-box').slideToggle();
 
@@ -77,7 +72,7 @@ $(document).ready(function() {
         }
     });
 	
-    $('.chat-menu-accordion-button').click(function() {
+    $('.chat-menu-accordion-button > .flex').click(function() {
         // 프로젝트 목록 토글
         $('.left-menu-chat-list-box').slideToggle();
 
@@ -188,7 +183,8 @@ function detailModal(memberId) {
 		          <div class="flex justify-between">
 			          <div>프로젝트</div>
 			          <div><i class="fa-solid fa-chevron-down"></i></div>
-				  </div>	
+				  </div>
+			   	
 				  <div class="left-menu-project-list-box mt-4">
 			          <c:forEach items="${projects}" var="project">
 		   					<div class="left-menu-project-list">
@@ -198,7 +194,7 @@ function detailModal(memberId) {
 							</div>
 						</c:forEach>
 			      </div>
-	     	  </li>
+	     	   </li> 
 	     	  
 	     	  
 	     	  

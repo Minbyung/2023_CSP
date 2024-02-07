@@ -60,7 +60,7 @@ $(document).ready(function() {
   	});
 	
 	 // 아코디언 버튼 클릭 이벤트
-    $('.project-menu-accordion-button').click(function() {
+    $('.project-menu-accordion-button > .flex').click(function() {
         // 프로젝트 목록 토글
         $('.left-menu-project-list-box').slideToggle();
 
@@ -73,7 +73,7 @@ $(document).ready(function() {
         }
     });
 	
-    $('.chat-menu-accordion-button').click(function() {
+    $('.chat-menu-accordion-button > .flex').click(function() {
         // 프로젝트 목록 토글
         $('.left-menu-chat-list-box').slideToggle();
 
@@ -237,11 +237,11 @@ function detailModal(memberId) {
 		    				<a href="../project/detail?projectId=${project.id}">
 								<article class="information [ card ] bg-gray-50">
 									<div class="ml-4">
-										<div>테스트용</div>
+										<div>${project.project_name }</div>
 										<div class="pt-6 h-12">
-											<div>${project.project_name }</div>
+											<div>${project.project_description}</div>
 										</div>
-										<div class="pt-10">프로젝트참여수</div>
+										<div class="pt-10">프로젝트참여자수</div>
 									</div>
 								</article>
 							</a>
