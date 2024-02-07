@@ -293,41 +293,27 @@ function detailModal(memberId) {
 	    		<div class="project-home-wrap">
 	    			<div class="project-group">
 	    			<div class="mb-2.5 text-xl">즐겨찾기</div>
-	    			<div class="cards">
-		    			<c:forEach items="${projects}" var="project">
-		    				<a href="../project/detail?projectId=${project.id}">
-								<article class="information [ card ] bg-gray-50">
-									<div class="flex card-detail">
-										<div class="card-project-participantsCount">
-										<div><i class="fa-solid fa-user-group"></i>${project.participantsCount}</div>
-										<div><i data-project-id="${project.id}" class="far fa-star favoriteIcon"></i></div>
-										</div>
-										<div class="card-project-name">${project.project_name }</div>
-										<div class="card-project-description">
-											<div>${project.project_description}</div>
-										</div>
-									</div>
-								</article>
-							</a>
-						</c:forEach>	
-					</div>
-					<div class="mt-8 mb-2.5">	
+	    			
+					<div class="mt-8 mb-2.5"></div>
 	    				<div class="text-xl">진행중</div>
-	    			</div>
-	    			<div class="cards">
-						<a href="bg-yellow-50 w-full h-full">
-							<article class="information [ card ] bg-gray-50">
-								<div class="ml-4">
-									<div>즐겨찾기아이콘</div>
-									<div class="pt-6 h-12">
-										<div>프로젝트이름</div>
-									</div>
-									<div class="pt-10">프로젝트참여수</div>
-								</div>
-							</article>
-						</a>
-					</div>
-	    	
+		    				<div class="cards">
+				    			<c:forEach items="${projects}" var="project">
+				    				<a href="../project/detail?projectId=${project.id}">
+										<article class="information [ card ] bg-gray-50">
+											<div class="flex card-detail">
+												<div class="card-project-participantsCount">
+												<div><i class="fa-solid fa-user-group"></i>${project.participantsCount}</div>
+												<div><i data-project-id="${project.id}" class="far fa-star favoriteIcon"></i></div>
+												</div>
+												<div class="card-project-name">${project.project_name }</div>
+												<div class="card-project-description">
+													<div>${project.project_description}</div>
+												</div>
+											</div>
+										</article>
+									</a>
+								</c:forEach>	
+							</div>
 	    			</div>
 	    		</div>
 	    	</div>

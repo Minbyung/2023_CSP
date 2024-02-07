@@ -29,12 +29,13 @@ public class UsrFavoriteController {
 
 	@RequestMapping("/usr/favorite/updateFavorite")
 	@ResponseBody
-	public Map<String, Boolean> updateFavorite(int projectId, boolean isFavorite) {
+	public Boolean updateFavorite(int projectId, boolean isFavorite) {
 		
 		 favoriteService.updateFavorite(rq.getLoginedMemberId(), projectId, isFavorite);
 
+		 
 		 Map<String, Boolean> response = new HashMap<>();
 		 response.put("success", true);
-		 return response;
+		 return isFavorite;
 	}
 }
