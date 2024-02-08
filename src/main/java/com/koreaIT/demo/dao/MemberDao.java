@@ -77,8 +77,9 @@ public interface MemberDao {
 				FROM `member` AS M
 				INNER JOIN projectMember AS PM
 				ON PM.memberId = M.id
+				WHERE PM.projectId = #{projectId}
 			""")
-	public List<String> getMembers();
+	public List<String> getMembers(int projectId);
 	
 	
 	@Insert("""

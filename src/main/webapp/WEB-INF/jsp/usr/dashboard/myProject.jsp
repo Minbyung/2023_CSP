@@ -206,7 +206,6 @@ function detailModal(memberId) {
 
 
 <body>
-<!-- partial:index.partial.html -->
 <div class="task-manager">
 	<div class="left-bar flex flex-col mt-20">
 	    <div class="left-content">

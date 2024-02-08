@@ -77,9 +77,9 @@ public class MemberService {
 		memberDao.doPasswordModify(id, loginPw);
 	}
 
-	public List<String> getMembers() {
+	public List<String> getMembers(int projectId) {
 		
-		return memberDao.getMembers();
+		return memberDao.getMembers(projectId);
 	}
 
 	public List<Member> getMembersByTeamId(int teamId) {

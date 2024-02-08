@@ -256,9 +256,16 @@ SET projectId = 1,
 memberId = 1;
 
 INSERT INTO projectMember
+SET projectId = 2,
+memberId = 2;
+
+INSERT INTO projectMember
 SET projectId = 3,
 memberId = 3;
 
+INSERT INTO projectMember
+SET projectId = 4,
+memberId = 4;
 
 INSERT INTO article
 SET regDate = NOW(),
@@ -297,10 +304,30 @@ groupId = 1,
 startDate = NOW(),
 endDate = '2024-05-12 14:50:11';
 
+INSERT INTO tag
+SET projectId = 1,
+articleId = 1,
+memberId = 1;
 
+INSERT INTO tag
+SET projectId = 1,
+articleId = 1,
+memberId = 2;
 
+INSERT INTO tag
+SET projectId = 1,
+articleId = 2,
+memberId = 2;
 
+INSERT INTO tag
+SET projectId = 3,
+articleId = 3,
+memberId = 3;
 
+INSERT INTO tag
+SET projectId = 3,
+articleId = 3,
+memberId = 4;
 
 
 

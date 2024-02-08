@@ -34,9 +34,9 @@ public class ProjectService {
 		return projectDao.getLastInsertId();
 	}
 
-	public List<String> getMembersByName(String name) {
+	public List<String> getMembersByName(String name, int projectId) {
 		
-		return projectDao.getMembersByName(name);
+		return projectDao.getMembersByName(name, projectId);
 	}
 
 	public List<Project> getProjectsByTeamIdAndMemberId(int teamId, int memberId) {

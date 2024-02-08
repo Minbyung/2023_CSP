@@ -33,9 +33,9 @@ public interface ProjectDao {
 			FROM `member` AS M
 			INNER JOIN projectMember AS PM
 			ON PM.memberId = M.id
-			WHERE `name` LIKE CONCAT('%', #{name}, '%')
+			WHERE `name` LIKE CONCAT('%', #{name}, '%') AND PM.projectId = #{projectId}
 			""")
-	public List<String> getMembersByName(@Param("name") String name);
+	public List<String> getMembersByName(@Param("name") String name, int projectId);
 	
 	
 	@Select("""

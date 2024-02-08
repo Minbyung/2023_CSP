@@ -99,6 +99,7 @@ public class UsrProjectController {
 		model.addAttribute("groups", groups);
 		model.addAttribute("teamMembers", teamMembers);
 		model.addAttribute("projectMembers", projectMembers);
+		model.addAttribute("teamId", teamId);
 		
 		return "usr/project/detail";
 	}
@@ -171,13 +172,13 @@ public class UsrProjectController {
 	
 	@RequestMapping("/usr/project/getMembers")
 	@ResponseBody
-	public List<String> getMembersByName(@RequestParam String term) {
+	public List<String> getMembersByName(@RequestParam String term, int projectId) {
 		
 		if (term.equals(" ")) {
-	        return memberService.getMembers();
+	        return memberService.getMembers(projectId);
 	    }
 		
-		return projectService.getMembersByName(term);
+		return projectService.getMembersByName(term, projectId);
 	}
 	
 	@RequestMapping("/usr/project/gantt")
