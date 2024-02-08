@@ -28,7 +28,6 @@ public interface ProjectDao {
 			""")
 	public Project getProjectByProjectId(int projectId);
 
-	
 	@Select("""
 			SELECT M.name 
 			FROM `member` AS M
@@ -50,9 +49,35 @@ public interface ProjectDao {
 				LEFT JOIN projectMember AS subPM ON P.id = subPM.projectId
 				WHERE P.teamId = #{teamId}
 				GROUP BY P.id
+				ORDER BY p.id DESC
 			""")
 	public List<Project> getProjectsByTeamIdAndMemberId(int teamId, int memberId);
 
+	
+	
+	@Select("""
+			SELECT p.*, COUNT(pm.memberId) AS participantsCount
+				FROM project AS p
+				INNER JOIN favorite AS f ON p.id = f.projectId
+				LEFT JOIN projectMember AS pm ON p.id = pm.projectId
+				WHERE f.memberId = #{memberId} AND p.teamId = #{teamId}
+				GROUP BY p.id
+				ORDER BY f.id DESC
+			""")
+	public List<Project> getFavoriteProjects(int teamId, int memberId);
+	
+	
+	
+	@Select("""
+			SELECT p.*, COUNT(pm.memberId) AS participantsCount
+				FROM project p
+				LEFT JOIN favorite f ON p.id = f.projectId AND f.memberId = #{memberId}
+				LEFT JOIN projectMember pm ON p.id = pm.projectId
+				WHERE f.memberId IS NULL AND p.teamId = #{teamId}
+				GROUP BY p.id
+				ORDER BY p.id DESC;
+			""")
+	public List<Project> getNonFavoriteProjects(int teamId, int memberId);
 	
 	@Insert("""
 			INSERT INTO projectMember

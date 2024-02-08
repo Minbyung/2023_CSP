@@ -167,21 +167,8 @@ SELECT * FROM tb_file
 SELECT * FROM article
 SELECT * FROM tag
 
-SELECT P.*, COUNT(subPM.memberId) AS participantsCount
-FROM project AS P
-JOIN (
-    SELECT projectId
-    FROM projectMember
-    WHERE memberId = 1
-) AS subP ON P.id = subP.projectId
-LEFT JOIN projectMember AS subPM ON P.id = subPM.projectId
-WHERE P.teamId = 1
-GROUP BY P.id;
 
-
-
-
-
+SELECT * FROM favorite
 SELECT * FROM chatRoom
 WHERE senderId = 1
 SELECT * FROM `member`
@@ -190,6 +177,37 @@ SELECT * FROM `member`
 SELECT * FROM teamMember
 SELECT * FROM team
 
+SELECT * FROM project;
+SELECT * FROM favorite;
+
+SELECT p.*, COUNT(pm.memberId) AS participantsCount
+				FROM project p
+				LEFT JOIN favorite f ON p.id = f.projectId AND f.memberId = 1
+				LEFT JOIN projectMember pm ON p.id = pm.projectId
+				WHERE f.memberId IS NULL AND p.teamId = 1
+				GROUP BY p.id
+				ORDER BY p.id DESC;
+
+
+SELECT *
+FROM project p
+LEFT JOIN favorite f ON p.id = f.projectId AND f.memberId = #{memberId}
+WHERE f.memberId IS NULL AND p.teamId = #{teamId};
+
+SELECT p.*, COUNT(pm.memberId) AS participantsCount
+FROM project AS p
+INNER JOIN favorite AS f ON p.id = f.projectId
+LEFT JOIN projectMember AS pm ON p.id = pm.projectId
+WHERE f.memberId = 1 AND p.teamId = 1
+GROUP BY p.id
+ORDER BY f.id DESC;
+
+SELECT *
+FROM project AS p
+INNER JOIN favorite AS f
+ON p.id = f.projectId
+WHERE f.memberId = 1 AND p.teamId = 1
+ORDER BY p.id DESC;
 
 SELECT M.*, TM.teamId AS teamId
 FROM `member` AS M
@@ -427,7 +445,16 @@ INNER JOIN projectMember PM ON P.id = PM.projectId
 WHERE PM.memberId = 2 AND P.teamId = 1
 
 
-
+SELECT P.*, COUNT(subPM.memberId) AS participantsCount
+FROM project AS P
+JOIN (
+    SELECT projectId
+    FROM projectMember
+    WHERE memberId = 1
+) AS subP ON P.id = subP.projectId
+LEFT JOIN projectMember AS subPM ON P.id = subPM.projectId
+WHERE P.teamId = 1
+GROUP BY P.id;
 /*
 insert into article
 (

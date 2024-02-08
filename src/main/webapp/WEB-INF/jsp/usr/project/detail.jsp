@@ -66,7 +66,8 @@
 	 	    $(".status-btn-write").removeClass("active");
 	 	    $(this).addClass("active");
 
-	 	    status = $(this).attr('data-status');
+	 	    status = $(this).data('status');
+	 	   console.log(status);
 	 	  });
 	     
 	     
@@ -135,7 +136,7 @@
 		        return $(this).clone().children().remove().end().text();
 		    }).get();
 		 
-		 
+		 console.log(managers);
 		    var formData = new FormData();
 		 
 		 // 기존 폼 데이터를 FormData 객체에 추가

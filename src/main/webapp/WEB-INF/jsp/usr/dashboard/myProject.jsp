@@ -82,6 +82,8 @@ $(document).ready(function() {
            success: function(response) {
            	console.log(response);
            	$icon.toggleClass('far fas'); // 현재 클릭된 아이콘만 클래스 토글
+         	// AJAX 요청 성공 후 페이지 새로고침
+            location.reload();
            }
        });
    });
@@ -293,6 +295,26 @@ function detailModal(memberId) {
 	    		<div class="project-home-wrap">
 	    			<div class="project-group">
 	    			<div class="mb-2.5 text-xl">즐겨찾기</div>
+	    				<div class="cards">
+				    			<c:forEach items="${favoriteProjects}" var="project">
+				    				<a href="../project/detail?projectId=${project.id}">
+										<article class="information [ card ] bg-gray-50">
+											<div class="flex card-detail">
+												<div class="card-project-participantsCount">
+												<div><i class="fa-solid fa-user-group"></i>${project.participantsCount}</div>
+												<div><i data-project-id="${project.id}" class="far fa-star favoriteIcon"></i></div>
+												</div>
+												<div class="card-project-name">${project.project_name }</div>
+												<div class="card-project-description">
+													<div>${project.project_description}</div>
+												</div>
+											</div>
+										</article>
+									</a>
+								</c:forEach>	
+							</div>
+	    			
+	    			
 	    			
 					<div class="mt-8 mb-2.5"></div>
 	    				<div class="text-xl">진행중</div>

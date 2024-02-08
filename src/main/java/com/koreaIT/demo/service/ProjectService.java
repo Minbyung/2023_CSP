@@ -44,6 +44,14 @@ public class ProjectService {
 		return projectDao.getProjectsByTeamIdAndMemberId(teamId, memberId);
 	}
 
+	public List<Project> getFavoriteProjects(int teamId, int memberId) {
+		return projectDao.getFavoriteProjects(teamId, memberId);
+	}
+	
+	public List<Project> getNonFavoriteProjects(int teamId, int memberId) {
+		return projectDao.getNonFavoriteProjects(teamId, memberId);
+	}
+	
 	public void addMemberToProject(int memberId, int projectId) {
 		projectDao.addMemberToProject(memberId, projectId);
 		
@@ -54,5 +62,7 @@ public class ProjectService {
 		
 		return projectDao.isMemberAlreadyInProject(memberId, projectId);
 	}
+
+	
 
 }

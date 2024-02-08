@@ -47,15 +47,21 @@ public class UsrDashboardController {
 		int memberId = rq.getLoginedMemberId();
 		
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<Project> favoriteProjects = projectService.getFavoriteProjects(teamId, memberId);
+		List<Project> nonFavoriteProjects = projectService.getNonFavoriteProjects(teamId, memberId);
+		
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
 		List<Article> taggedArticles = articleService.getTaggedArticleByMemberId(memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
-			
+
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		String teamName = teamService.getTeamNameByTeamId(teamId);
 		Member member = memberService.getMemberById(memberId);
 		
 		model.addAttribute("projects", projects);
+		model.addAttribute("favoriteProjects", favoriteProjects);
+		model.addAttribute("nonFavoriteProjects", nonFavoriteProjects);
+		
 		model.addAttribute("teamMembers", teamMembers);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("teamMembersCnt", teamMembersCnt);
