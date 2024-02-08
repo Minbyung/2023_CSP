@@ -159,6 +159,159 @@ CREATE TABLE `tb_file` (
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
   `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
 );
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'admin@admin.com',
+loginPw = 'admin!23',
+authLevel = 1,
+`name` = '관리자',
+cellphoneNum = '010-0000-0000';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test1@test1.com',
+loginPw = 'admin!23',
+authLevel = 2,
+`name` = 'test1',
+cellphoneNum = '010-1111-1111';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test2@test2.com',
+loginPw = 'admin!23',
+authLevel = 2,
+`name` = 'test2',
+cellphoneNum = '010-2222-2222';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test3@test3.com',
+loginPw = 'admin!23',
+authLevel = 2,
+`name` = 'test3',
+cellphoneNum = '010-3333-3333';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test4@test4.com',
+loginPw = 'admin!23',
+authLevel = 2,
+`name` = 'test4',
+cellphoneNum = '010-4444-4444';
+
+INSERT INTO team
+SET teamName = "코리아IT";
+
+INSERT INTO team
+SET teamName = "테스트1팀";
+
+INSERT INTO teamMember
+SET memberId = 1,
+teamId = 1;
+
+INSERT INTO teamMember
+SET memberId = 2,
+teamId = 1;
+
+INSERT INTO teamMember
+SET memberId = 5,
+teamId = 1;
+
+INSERT INTO teamMember
+SET memberId = 3,
+teamId = 2;
+
+INSERT INTO teamMember
+SET memberId = 4,
+teamId = 2;
+
+INSERT INTO project
+SET project_name = '[IT/개발] 기능 개발 프로젝트',
+project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.',
+teamId = 1;
+
+INSERT INTO project
+SET project_name = '테스트',
+project_description = '테스트',
+teamId = 1;
+
+INSERT INTO project
+SET project_name = '테스트1팀 - 1',
+project_description = '테스트1팀 - 1',
+teamId = 2;
+
+INSERT INTO project
+SET project_name = '테스트1팀 - 2',
+project_description = '테스트1팀 - 2',
+teamId = 2;
+
+INSERT INTO projectMember
+SET projectId = 1,
+memberId = 1;
+
+INSERT INTO projectMember
+SET projectId = 3,
+memberId = 3;
+
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 1,
+title = '공지1',
+content = '공지내용1',
+`status` = '요청',
+projectId = 1,
+groupId = 1,
+startDate = NOW(),
+endDate = '2024-05-31 14:50:11';
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 2,
+title = '테스트1',
+content = '테스트내용1',
+`status` = '피드백',
+projectId = 1,
+groupId = 1,
+startDate = NOW(),
+endDate = '2024-04-12 14:50:11';
+
+
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+memberId = 3,
+title = '공지2',
+content = '공지2',
+`status` = '요청',
+projectId = 3,
+groupId = 1,
+startDate = NOW(),
+endDate = '2024-05-12 14:50:11';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 DROP TABLE chatRoom
 DROP TABLE article
 DROP TABLE tag
