@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.koreaIT.demo.dao.GroupDao;
 import com.koreaIT.demo.dao.ProjectDao;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
@@ -12,9 +13,11 @@ import com.koreaIT.demo.vo.Project;
 public class ProjectService {
 	
 	private ProjectDao projectDao;
+	private GroupDao groupDao;
 	
-	public ProjectService(ProjectDao projectDao) {
+	public ProjectService(ProjectDao projectDao, GroupDao groupDao) {
 		this.projectDao = projectDao;
+		this.groupDao = groupDao;
 	}
 	
 	public void makeProject(String name, String description, int teamId, int memberId) {
@@ -22,6 +25,7 @@ public class ProjectService {
 		
 		int projectId = getLastInsertId();
 		projectDao.addMemberToProject(memberId, projectId);
+		groupDao.doMakeGroup(projectId, "그룹 미지정");
 		
 	}
 

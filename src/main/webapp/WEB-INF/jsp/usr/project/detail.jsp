@@ -655,32 +655,34 @@
 								    </div>
 										<div id="inputArea">
 										  <div id ="tag-contianer"></div>
-										  <div class="autocomplete-container flex flex-col">
+										  <div class="autocomplete-container flex flex-col mb-3">
 											  <!-- 기존의 입력 필드 -->
 											  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
 											  <!-- 자동완성 목록 -->
 											  <section id="autocomplete-results" style="width:20%;"></section>
 										  </div>
-		
-										<label for="start-date">시작일:</label>
-										<input type="date" id="start-date" name="start-date">
-		
-									    <label class ="bg-red-100" for="end-date">마감일:</label>
-									    <input type="date" id="end-date" name="end-date">		
-										  		
-										  						  
-										<select id="groupSelect" class="select w-full max-w-xs">
-										    <c:forEach var="group" items="${groups}">
-										        <c:choose>
-										            <c:when test="${group.group_name eq '그룹 미지정'}">
-										                <option value="${group.id}" selected>${group.group_name}</option>
-										            </c:when>
-										            <c:otherwise>
-										                <option value="${group.id}">${group.group_name}</option>
-										            </c:otherwise>
-										        </c:choose>
-										    </c:forEach>
-										</select> 
+										<div class="mb-3">
+											<label for="start-date">시작일:</label>
+											<input type="date" id="start-date" name="start-date">
+			
+										    <label for="end-date">마감일:</label>
+										    <input type="date" id="end-date" name="end-date">		
+											  		
+											  						  
+											<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+											    <c:forEach var="group" items="${groups}">
+											        <c:choose>
+											            <c:when test="${group.group_name eq '그룹 미지정'}">
+											                <option value="${group.id}" selected>${group.group_name}</option>
+											            </c:when>
+											            <c:otherwise>
+											                <option value="${group.id}">${group.group_name}</option>
+											            </c:otherwise>
+											        </c:choose>
+											    </c:forEach>
+											</select> 
+										</div>
+										
 										</div>
 										<div class="mb-3">
 										  <label for="exampleFormControlInput1" class="form-label">제목</label>

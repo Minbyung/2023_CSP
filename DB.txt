@@ -236,20 +236,36 @@ SET project_name = '[IT/개발] 기능 개발 프로젝트',
 project_description = 'IT 개발팀의 기능 개발 과정을 공유하고 관리하는 프로젝트 공간입니다.',
 teamId = 1;
 
+INSERT INTO `group`
+SET projectId = 1,
+group_name = '그룹 미지정';
+
 INSERT INTO project
 SET project_name = '테스트',
 project_description = '테스트',
 teamId = 1;
+
+INSERT INTO `group`
+SET projectId = 2,
+group_name = '그룹 미지정';
 
 INSERT INTO project
 SET project_name = '테스트1팀 - 1',
 project_description = '테스트1팀 - 1',
 teamId = 2;
 
+INSERT INTO `group`
+SET projectId = 3,
+group_name = '그룹 미지정';
+
 INSERT INTO project
 SET project_name = '테스트1팀 - 2',
 project_description = '테스트1팀 - 2',
 teamId = 2;
+
+INSERT INTO `group`
+SET projectId = 4,
+group_name = '그룹 미지정';
 
 INSERT INTO projectMember
 SET projectId = 1,
@@ -331,7 +347,7 @@ memberId = 4;
 
 
 
-
+SELECT * FROM project
 
 
 

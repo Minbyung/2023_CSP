@@ -393,3 +393,15 @@ ul.ui-autocomplete {
   display: none;
 }
 
+.select-group {
+	width: 300px;
+	padding: 5px;
+/*	border: 1px solid #999;*/
+	border-radius: 3px;
+/*	background: url('https://i.ibb.co/98Vbb8L/gnb-bg.gif') no-repeat 95% 50%;*/
+/*	-webkit-appearance: none;  크롬 화살표 없애기 */
+/*	-moz-appearance: none;  파이어폭스 화살표 없애기 */
+/*	appearance: none;  화살표 없애기 */
+}
+
+
