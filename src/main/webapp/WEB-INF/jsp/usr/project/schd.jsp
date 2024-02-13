@@ -84,7 +84,7 @@
 		
 		var calendarEl = $('#calendar')[0]; // 제이쿼리를 사용하여 DOM 요소를 선택
 		var calendar = new FullCalendar.Calendar(calendarEl, {
-			height: '700px', // calendar 높이 설정
+			height: '1000px', // calendar 높이 설정
 			expandRows: true, // 화면에 맞게 높이 재설정
 			// 해더에 표시할 툴바        
 			headerToolbar: {
@@ -100,6 +100,7 @@
 			eventResizableFromStart: true,
 			eventDrop: function(info) {
 				var event = info.event;
+				console.log(event.start.toISOString());
 				$.ajax({
 				      url: '/usr/article/doUpdateDate', // 이벤트 정보를 업데이트하는 서버의 엔드포인트 URL
 				      method: 'POST',
@@ -120,14 +121,18 @@
 				console.log(info.event.title + "이(가) " + info.event.start + "부터 " + info.event.end + "까지로 이동되었습니다.");
 			},
 			
-			
+// 			eventLimit: true,
 			selectable: true, // 달력 일자 드래그 설정가능
 			nowIndicator: true, // 현재 시간 마크
 			dayMaxEvents: true, // 이벤트가 오버되면 높이 제한 (+ 몇 개식으로 표현)        
 			locale: 'ko', // 한국어 설정
 			select: function(info) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
+				// 종료일이 하루가 더 추가되어서 하루 빼줌
+				var endDate = new Date(info.endStr);
+				endDate.setDate(endDate.getDate() - 1);
+				var endStrAdjusted = endDate.toISOString().slice(0, 10);
 				$('#start-date').val(info.startStr);
-			    $('#end-date').val(info.endStr);
+			    $('#end-date').val(endStrAdjusted);
 			   
 			    showModal();
 			},
@@ -143,6 +148,7 @@
 	                  // 예: start: fetchInfo.startStr, end: fetchInfo.endStr
 	                },	
 	                success: function(data) {
+	                	
 	                	let events = [];
 	                	for (let group in data) {
 	                		var articles = data[group];
@@ -151,6 +157,8 @@
 	                            
 	                            events.push({
 	                                id: article.id,
+	                                color : "#8b00ea",
+	                                textColor : "#fff",
  	                                title: article.title,
 	                                start: article.startDate,
  	                                end: article.endDate
@@ -205,6 +213,7 @@
 	 	    status = $(this).attr('data-status');
 	 	  });
 
+//		글쓰기	     	    	
     	$("#submitBtn").click(function(){
     	var selectedGroupId = parseInt($('#groupSelect').val());
     	if (!selectedGroupId) {
@@ -214,32 +223,50 @@
 	    var title = $("#exampleFormControlInput1").val();
 	    var content = $("#exampleFormControlTextarea1").val();
 	    
-	 // 시작일과 마감일을 가져오기
+	    
+	 // 시작일과 마감일을 가져옵니다.
 	    var startDate = $("#start-date").val();
 	    var endDate = $("#end-date").val();
 	    
-	    console.log(title);
-	    console.log(content);
-	    console.log(startDate);
-	    console.log(endDate);
-	    console.log(status);
-	    console.log(projectId);
-	    console.log(managers);
-	    console.log(selectedGroupId);
 	    
-	    
-	 // 태그에 있는 모든 담당자를 배열로 가져오기
+	 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 	    var managers = $('.tag').map(function() {
-	  // 'x' 버튼을 제외한 텍스트만 반환
+	  // 'x' 버튼을 제외한 텍스트만 반환합니다.
 	        return $(this).clone().children().remove().end().text();
 	    }).get();
+	 
+	    var formData = new FormData();
+	 
+	 // 기존 폼 데이터를 FormData 객체에 추가
+	    formData.append('title', title);
+	    formData.append('content', content);
+	    formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
+	    formData.append('projectId', projectId); // projectId 변수가 정의되어 있어야 합니다.
+	    formData.append('selectedGroupId', selectedGroupId);
+	    formData.append('startDate', startDate);
+	    formData.append('endDate', endDate);
+	    
+	    // 담당자 정보를 FormData 객체에 추가
+	    $.each(managers, function(i, manager) {
+	        formData.append('managers[]', manager);
+	    });
+	    
+	 // 파일 데이터 추가
+	    $('.file_input input[type="file"]').each(function(index, element) {
+	        if (element.files.length > 0) {
+	            // 'files[]'를 사용하여 서버에 배열로 전송
+	            formData.append('fileRequests[]', element.files[0]);
+	        }
+	    });
 	 	
 	    $.ajax({
 	        url: '../article/doWrite',
 	        type: 'POST',
-	        data: { title: title, content: content, status: status, projectId: projectId, managers: managers, selectedGroupId: selectedGroupId, startDate: startDate, endDate: endDate },
+	        data: formData,
+	        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
+	        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
 	        success: function(data) {
-
+	          console.log(selectedGroupId);
 	          $("#title").val("");
 	          $("#content").val("");
 	          $('.tag').remove();
@@ -252,16 +279,18 @@
       
      
 		 $("#search").autocomplete({
+			// source 는 자동완성의 대상(배열)
+			// request는 현재 입력 필드에 입력된 값(term)을 포함하고 있으며, 이 값을 사용하여 서버에 데이터를 요청할 때 필요한 매개변수로 사용
 		    source: function(request, response) {
 		        $.ajax({
 		            url: "../project/getMembers",
 		            type: "GET",
-		            data: { term: request.term },
+		            data: { term: request.term, "projectId": projectId },
 		            success: function(data) {
+		            	console.log(data);
 		                var taggedMembers = $('.tag').map(function() {
 		                    return $(this).clone().children().remove().end().text().trim();
 		                }).get();
-		
 		                var results = $.grep(data, function(result){
 		                    return $.inArray(result.trim(), taggedMembers) === -1;
 		                });
@@ -277,8 +306,8 @@
 		        var newValue = ui.item.value;
 		        $('#search').val('');
 		
-		        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove btn btn-circle"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-		        $('#inputArea').prepend(tag);
+		        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+		        $('#tag-contianer').prepend(tag);
 		
 		        $('#search').prependTo('.autocomplete-container');
 		
@@ -294,12 +323,59 @@
 			// 클라이언트 측에서 빈 문자열 대신 기본 검색어(" ")를 제공 모든 가능한 검색 결과를 반환하는 기본 검색어를 사용
 		    $(this).autocomplete("search", " "); 
 		});
-		
+
+		// 달력아이콘과 옆 년월일 눌러도 달력나오게
+		    $('#start-date, #end-date').on('click', function() {
+		        this.showPicker(); 
+		    });
 		
 		
 		
 	});
 
+	function selectFile(element) {
+        var file = $(element).prop('files')[0];
+        var filename = $(element).closest('.file_input').find('input[type="text"]');
+
+        if (!file) {
+            filename.val('');
+            return false;
+        }
+
+        var fileSize = Math.floor(file.size / 1024 / 1024);
+        if (fileSize > 10) {
+            alert('10MB 이하의 파일로 업로드해 주세요.');
+            filename.val('');
+            $(element).val('');
+            return false;
+        }
+
+        filename.val(file.name);
+    }
+    
+	function addFile() {
+		console.log("작동");
+	    var fileInputHTML =
+	        '<div class="file_input pb-3 flex items-center">' +
+	        '<div> 첨부파일 ' +
+	        '<input type="file" name="files" onchange="selectFile(this); " />' +
+	        '</div>' +
+	        '<button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>';
+
+	    $('.file_list').append(fileInputHTML);
+	}
+    
+    function removeFile(element) {
+        var fileAddBtn = $(element).next('.fn_add_btn');
+        if (fileAddBtn.length) {
+            var inputs = $(element).prev('.file_input').find('input');
+            inputs.val('');
+            return false;
+        }
+        $(element).parent().remove();
+    }
+	
+	
 </script>
 
 
@@ -450,55 +526,80 @@
   
   
 	<div class="modal-exam"><span>글 작성</span></div>
-	<div class="layer-bg"></div>
-	<div class="layer">
-		<span id="close" class="close close-btn-x">&times;</span>
-		<input type="hidden" id="projectId" value="${project.id }">
-		<div id="status">
-	      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-	      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-	      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-	      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-	      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
-	    </div>
-			<div id="inputArea">
-			  <div class="autocomplete-container flex flex-col">
-				  <!-- 기존의 입력 필드 -->
-				  <input type="text" class="form-control w-2/5" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-				  <!-- 자동완성 목록 -->
-				  <section id="autocomplete-results" style="width:20%;"></section>
-			  </div>
-	
-			<label for="start-date">시작일:</label>
-			<input type="date" id="start-date" name="start-date">
-	
-		    <label class ="bg-red-100" for="end-date">마감일:</label>
-		    <input type="date" id="end-date" name="end-date">		
-			  		
-			  						  
-			<select id="groupSelect" class="select w-full max-w-xs">
-			    <c:forEach var="group" items="${groups}">
-			        <c:choose>
-			            <c:when test="${group.group_name eq '그룹 미지정'}">
-			                <option value="${group.id}" selected>${group.group_name}</option>
-			            </c:when>
-			            <c:otherwise>
-			                <option value="${group.id}">${group.group_name}</option>
-			            </c:otherwise>
-			        </c:choose>
-			    </c:forEach>
-			</select> 
-			</div>
-			<div class="mb-3">
-			  <label for="exampleFormControlInput1" class="form-label">제목</label>
-			  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
-			</div>
-			<div class="mb-3">
-			  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-			  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-			</div>
-	    <button id="submitBtn" type="button" class="btn btn-primary">제출</button>
-	</div>
+	<!-- 모달창 -->
+						<div class="layer-bg"></div>
+						<div class="layer">
+							
+							<span id="close" class="close close-btn-x">&times;</span>
+							
+							
+							<div class="flex flex-col">
+								<div class="write-modal-body">
+									<input type="hidden" id="projectId" value="${project.id }">
+		<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+									<div id="status">
+								      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+								      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+								      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+								      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+								      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+								    </div>
+										<div id="inputArea">
+										  <div id ="tag-contianer"></div>
+										  <div class="autocomplete-container flex flex-col mb-3">
+											  <!-- 기존의 입력 필드 -->
+											  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+											  <!-- 자동완성 목록 -->
+											  <section id="autocomplete-results" style="width:20%;"></section>
+										  </div>
+										<div class="mb-3">
+											<label for="start-date">시작일:</label>
+											<input type="date" id="start-date" name="start-date">
+			
+										    <label for="end-date">마감일:</label>
+										    <input type="date" id="end-date" name="end-date">		
+											  		
+											  						  
+											<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+											    <c:forEach var="group" items="${groups}">
+											        <c:choose>
+											            <c:when test="${group.group_name eq '그룹 미지정'}">
+											                <option value="${group.id}" selected>${group.group_name}</option>
+											            </c:when>
+											            <c:otherwise>
+											                <option value="${group.id}">${group.group_name}</option>
+											            </c:otherwise>
+											        </c:choose>
+											    </c:forEach>
+											</select> 
+										</div>
+										
+										</div>
+										<div class="mb-3">
+										  <label for="exampleFormControlInput1" class="form-label">제목</label>
+										  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+										</div>
+										<div class="mb-3">
+										  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+										  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+										</div>
+										
+										<div class="file_list">
+											<div class="file_input pb-3 flex items-center">
+						                        <div> 첨부파일
+						                            <input type="file" name="files" onchange="selectFile(this);" />
+						                        </div>
+						                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+			                   					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+						                    </div>
+					                    </div>
+									</div>	
+								<div class="write-modal-footer flex justify-end">	
+							 	   <button id="submitBtn" type="button">제출</button>
+							    </div>
+						    </div>
+						    
+						</div>
   
   
   

@@ -218,8 +218,32 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
 	padding: 0 0 17px;
 }
 
-
-
 .left-menu-chat-list > .left-menu-chat-list-detail > div {
 	cursor: pointer;
+}
+
+.fc-daygrid-event {
+	margin-bottom: 3px;
+	border-radius: 100%;
+}
+
+/*input[type='date']::before {*/
+/*  content: attr(data-placeholder);*/
+/*  width: 100%;*/
+/*}*/
+
+/*input[type='date']:focus::before,*/
+/*input[type='date']:valid::before {*/
+/*  display: none;*/
+/*}*/
+
+
+input[type="date"] {
+  width:120px;
+}
+input[type="date"]::before {
+  display:none;
+}
+input[type="date"].after::-webkit-calendar-picker-indicator{
+    margin-left: 0px;
 }

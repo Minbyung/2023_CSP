@@ -95,6 +95,8 @@
 	    	    $('.file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
+	    	    $('#start-date').val('');
+	    	    $('#end-date').val('');
 	    	})
 
 	    	$('.layer-bg').click(function(){
@@ -112,6 +114,8 @@
 	    	    $('.file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
+	    	    $('#start-date').val('');
+	    	    $('#end-date').val('');
 	    	})
 	    	
 //  		글쓰기	     	    	
@@ -136,7 +140,6 @@
 		        return $(this).clone().children().remove().end().text();
 		    }).get();
 		 
-		 console.log(managers);
 		    var formData = new FormData();
 		 
 		 // 기존 폼 데이터를 FormData 객체에 추가
@@ -226,6 +229,11 @@
 			    $(this).autocomplete("search", " "); 
 			});
 
+			// 달력아이콘과 옆 년월일 눌러도 달력나오게
+			    $('#start-date, #end-date').on('click', function() {
+			        this.showPicker(); 
+			    });
+			 
 // 	     상태버튼 현재 상태 활성화 표시
 	     $('.status-btns-update').each(function() {
 	         var currentStatus = $(this).data('current-status');
@@ -466,6 +474,8 @@
 		   		  // 새 창(팝업)으로 채팅방 열기
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
 		    	});
+		    
+		    
 	});
 
 	
