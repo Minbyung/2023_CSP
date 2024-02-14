@@ -17,7 +17,7 @@
 	var groupChatRoomMembersCount = '${groupChatRoomMembersCount}'
 	
 	function connect() {
-	    var socket = new SockJS('/chat'); // 서버로 연결을 시도(문)
+	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문)
 	    stompClient = Stomp.over(socket);
 	    stompClient.connect({}, function(frame) {
 	    	

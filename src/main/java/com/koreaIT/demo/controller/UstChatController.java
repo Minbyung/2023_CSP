@@ -55,6 +55,7 @@ public class UstChatController {
 	 */
 	
 	// 클라이언트로부터 1:1메시지를 받는 메서드
+	// @MessageMapping에 지정된 경로는 configureMessageBroker() 메소드에서 설정한 setApplicationDestinationPrefixes()에 의해 정의된 애플리케이션 접두사를 이미 포함하고 있다는 것입니다.
 	@MessageMapping("/chat.private.{memberId}")
     public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
                                             @DestinationVariable String memberId) {
@@ -80,7 +81,7 @@ public class UstChatController {
 	     
         // 사용자간의 고유 대기열로 메시지 전송
         messagingTemplate.convertAndSend("/queue/chat-" + chatRoomId, message);
-
+        sendMessageToUser(message);
         return message;
     }
     
@@ -176,7 +177,10 @@ public class UstChatController {
     
     
     
-    
+    private void sendMessageToUser(ChatMessage chatMessage) {
+        // '/queue/notify'는 클라이언트가 구독할 대상 주소입니다.
+        messagingTemplate.convertAndSend("/queue/notify", chatMessage);
+    }
     
 	
 	

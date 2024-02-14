@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="/resource/project/detail.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
   <title>${project.project_name }</title>
 <!--chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
@@ -475,7 +478,7 @@
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
 		    	});
 		    
-		    
+		    connect();
 	});
 
 	
@@ -521,6 +524,29 @@
         $(element).parent().remove();
     }
 	
+    function connect() {
+		// SockJS와 STOMP 클라이언트 라이브러리를 사용하여 웹소켓 연결을 설정합니다.
+	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문) 서버 간에 동일한 URL 경로를 사용하여 서로 통신할 수 있도록 일치시켜야함
+	    stompClient = Stomp.over(socket);
+	    console.log("23423423");
+	    // 웹소켓 연결을 시도합니다.
+	    stompClient.connect({}, function(frame) {	    	
+	     // 사용자별 알림을 위한 구독
+	        // 이 부분은 서버가 특정 사용자에게만 보내는 메시지를 받기 위한 것입니다.
+	        stompClient.subscribe('/queue/notify', function(notification) {
+	            // 알림 메시지 처리 로직을 여기에 구현합니다.
+	        	const message = JSON.parse(notification.body);
+	            alert("새 메시지가 도착했습니다: " + message.content);
+	        });
+	    	
+	    	
+	    	
+	    });
+	}
+    
+    
+    
+    
 </script>
 	<div class="task-manager">
 		<div class="left-bar flex flex-col mt-20">

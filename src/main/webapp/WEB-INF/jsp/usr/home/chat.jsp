@@ -18,14 +18,21 @@
 	
 	
 	function connect() {
-	    var socket = new SockJS('/chat'); // 서버로 연결을 시도(문)
+		// SockJS와 STOMP 클라이언트 라이브러리를 사용하여 웹소켓 연결을 설정합니다.
+	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문) 서버 간에 동일한 URL 경로를 사용하여 서로 통신할 수 있도록 일치시켜야함
 	    stompClient = Stomp.over(socket);
+	    
+	    // 웹소켓 연결을 시도합니다.
 	    stompClient.connect({}, function(frame) {
-	    	
+	    	// 연결에 성공하면, 서버로부터 메시지를 받을 구독을 설정합니다. (클라이언트는 '/queue/chat-' + chatRoomId를 구독)
+	    	// 서버로부터 메시지를 받으면 이 콜백 함수가 호출됩니다.
 	        stompClient.subscribe('/queue/chat-' + chatRoomId, function(messageOutput) {
-	        	console.log(messageOutput.body);
+	        	// 메시지 처리 로직을 여기에 구현합니다.	
 	        	showMessage(messageOutput.body);
 	        });
+	   
+   	
+	    	
 	    });
 	}
 
@@ -60,7 +67,7 @@
 	            senderName: myName,
 	            chatRoomId: chatRoomId
 	        };
-	    
+	    	// 클라이언트에서 STOMP를 통해 서버에 메시지를 보냄
 	 	   stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage));
 	        
 	        $('#messageInput').val('').focus();
