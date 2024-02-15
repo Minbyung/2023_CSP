@@ -71,9 +71,11 @@ public class UstChatController {
 	    message.setRegDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 	    
 	    String currentUserId = message.getSenderId();
-	    
+	    // 보내는멤버ID
 	    int senderId = Integer.parseInt(currentUserId);
+	    // 받는멤버ID
 	    int recipientId = Integer.parseInt(memberId); 
+	   
 	    
 	    String chatRoomId = chatService.getOrCreateChatRoomId(senderId, recipientId, message.getSenderName());
     
@@ -81,7 +83,7 @@ public class UstChatController {
 	     
         // 사용자간의 고유 대기열로 메시지 전송
         messagingTemplate.convertAndSend("/queue/chat-" + chatRoomId, message);
-        sendMessageToUser(message);
+        convertAndSend(memberId, message);
         return message;
     }
     
@@ -177,9 +179,11 @@ public class UstChatController {
     
     
     
-    private void sendMessageToUser(ChatMessage chatMessage) {
+    private void convertAndSend(String recipientId, ChatMessage chatMessage) {
         // '/queue/notify'는 클라이언트가 구독할 대상 주소입니다.
-        messagingTemplate.convertAndSend("/queue/notify", chatMessage);
+        messagingTemplate.convertAndSend("/queue/notify-"+ recipientId , chatMessage);
+        
+        
     }
     
 	

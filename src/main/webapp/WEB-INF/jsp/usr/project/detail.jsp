@@ -528,17 +528,17 @@
 		// SockJS와 STOMP 클라이언트 라이브러리를 사용하여 웹소켓 연결을 설정합니다.
 	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문) 서버 간에 동일한 URL 경로를 사용하여 서로 통신할 수 있도록 일치시켜야함
 	    stompClient = Stomp.over(socket);
-	    console.log("23423423");
 	    // 웹소켓 연결을 시도합니다.
-	    stompClient.connect({}, function(frame) {	    	
+	    console.log(${rq.getLoginedMemberId()});
+	    
+	    stompClient.connect({}, function(frame) {
 	     // 사용자별 알림을 위한 구독
 	        // 이 부분은 서버가 특정 사용자에게만 보내는 메시지를 받기 위한 것입니다.
-	        stompClient.subscribe('/queue/notify', function(notification) {
+	        stompClient.subscribe('/queue/notify-' + ${rq.getLoginedMemberId()}, function(notification) {
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const message = JSON.parse(notification.body);
 	            alert("새 메시지가 도착했습니다: " + message.content);
 	        });
-	    	
 	    	
 	    	
 	    });
