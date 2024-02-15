@@ -20,6 +20,7 @@ import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.GroupChatMessage;
 import com.koreaIT.demo.vo.GroupChatRoom;
 import com.koreaIT.demo.vo.Member;
+import com.koreaIT.demo.vo.Notification;
 import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.Rq;
 
@@ -56,6 +57,8 @@ public class UstChatController {
 	
 	// 클라이언트로부터 1:1메시지를 받는 메서드
 	// @MessageMapping에 지정된 경로는 configureMessageBroker() 메소드에서 설정한 setApplicationDestinationPrefixes()에 의해 정의된 애플리케이션 접두사를 이미 포함하고 있다는 것입니다.
+	// 클라이언트에서 stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage)); 서버는 해당 사용자의 memberId(메세지 받는 사람)를 경로 변수로 인식
+	// @DestinationVariable은 경로 내의 템플릿 변수(예: {memberId})를 메서드의 파라미터로 전달하기 위한 메커니즘을 제공합니다. 이 어노테이션을 사용하면, STOMP 메시지의 목적지 경로에서 해당 변수를 추출하여 메서드 내에서 사용할 수 있습니다.
 	@MessageMapping("/chat.private.{memberId}")
     public ChatMessage handlePrivateMessage(@Payload ChatMessage message,
                                             @DestinationVariable String memberId) {
@@ -189,5 +192,35 @@ public class UstChatController {
 	
 	
 	
+    
+    @MessageMapping("/write.notification.{projectId}")
+    public Notification handleWriteNotification(@Payload Notification writeNotification,
+                                            @DestinationVariable String projectId) {
+		   
+    	
+    	List<Integer> memberIds = projectService.getProjectMemberIdsByProjectId(Integer.parseInt(projectId));
+    	int writerId = writeNotification.getWriterId();
+    	
+    	for (int memberId : memberIds) {
+    		if (memberId != writerId) {
+    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, writerId);
+    		}
+    	}
+    	
+    	System.out.println(writeNotification);
+    	
+        // 사용자간의 고유 대기열로 메시지 전송
+    	messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId, writeNotification);
+        return writeNotification;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	
 }

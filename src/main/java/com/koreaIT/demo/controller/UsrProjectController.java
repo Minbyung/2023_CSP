@@ -92,6 +92,8 @@ public class UsrProjectController {
 		int teamId = project.getTeamId();
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
 		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId);
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
+		
 		
 		model.addAttribute("project", project);
 		model.addAttribute("projectId", projectId);
@@ -100,6 +102,8 @@ public class UsrProjectController {
 		model.addAttribute("teamMembers", teamMembers);
 		model.addAttribute("projectMembers", projectMembers);
 		model.addAttribute("teamId", teamId);
+		model.addAttribute("loginedMember", loginedMember);
+		
 		
 		return "usr/project/detail";
 	}

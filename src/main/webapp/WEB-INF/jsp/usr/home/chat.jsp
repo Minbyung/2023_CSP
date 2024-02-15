@@ -68,6 +68,7 @@
 	            chatRoomId: chatRoomId
 	        };
 	    	// 클라이언트에서 STOMP를 통해 서버에 메시지를 보냄
+	    	// memberId -> 메세지 받는 사람
 	 	   stompClient.send("/app/chat.private." + memberId, {}, JSON.stringify(chatMessage));
 	        
 	        $('#messageInput').val('').focus();

@@ -68,5 +68,10 @@ public class ProjectService {
 	}
 
 	
+	public List<Integer> getProjectMemberIdsByProjectId(int projectId) {
+		return projectDao.getProjectMemberIdsByProjectId(projectId);
+	}
+	
+	
 
 }

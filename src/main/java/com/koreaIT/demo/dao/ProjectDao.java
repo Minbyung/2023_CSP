@@ -103,5 +103,15 @@ public interface ProjectDao {
 	
 	
 	
+	@Select("""
+			SELECT memberId 
+				FROM projectMember
+				WHERE projectId = #{projectId}
+			""")
+	public List<Integer> getProjectMemberIdsByProjectId(int projectId);
+
+	
+	
+	
 	
 }

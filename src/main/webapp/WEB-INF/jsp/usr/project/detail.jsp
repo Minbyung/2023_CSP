@@ -29,6 +29,8 @@
 		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
 		var projectId = ${project.id};
+		var loginedMemberId = ${rq.getLoginedMemberId()};
+		var loginedMemberName = '${loginedMember.name}'
 		
 	     $.ajax({
 	         url: '../favorite/getFavorite',
@@ -167,6 +169,13 @@
 		        }
 		    });
 		 	
+		 
+		    var writeNotification = {
+		    		writerId: loginedMemberId,
+		    		writerName: loginedMemberName
+		        };
+		 
+		 
 		    $.ajax({
 		        url: '../article/doWrite',
 		        type: 'POST',
@@ -174,7 +183,7 @@
 		        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
 		        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
 		        success: function(data) {
-		          console.log(selectedGroupId);
+		          stompClient.send("/app/write.notification." + projectId, {}, JSON.stringify(writeNotification));	
 		          $("#title").val("");
 		          $("#content").val("");
 		          $('.tag').remove();
@@ -481,6 +490,7 @@
 		    connect();
 	});
 
+	var projectId = ${project.id};
 	
 	function selectFile(element) {
         var file = $(element).prop('files')[0];
@@ -529,8 +539,6 @@
 	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문) 서버 간에 동일한 URL 경로를 사용하여 서로 통신할 수 있도록 일치시켜야함
 	    stompClient = Stomp.over(socket);
 	    // 웹소켓 연결을 시도합니다.
-	    console.log(${rq.getLoginedMemberId()});
-	    
 	    stompClient.connect({}, function(frame) {
 	     // 사용자별 알림을 위한 구독
 	        // 이 부분은 서버가 특정 사용자에게만 보내는 메시지를 받기 위한 것입니다.
@@ -539,6 +547,18 @@
 	        	const message = JSON.parse(notification.body);
 	            alert("새 메시지가 도착했습니다: " + message.content);
 	        });
+	     
+	     
+	        stompClient.subscribe('/queue/writeNotify-' + projectId + ${rq.getLoginedMemberId()}, function(writeNotification) {
+	            // 알림 메시지 처리 로직을 여기에 구현합니다.
+	            console.log(writeNotification);
+	        	const writeNotificationMessage = JSON.parse(writeNotification.body);
+	        	
+	            alert(writeNotificationMessage.writerName + "새 글이 작성됐습니다");
+	        });
+	     
+	     
+	     
 	    	
 	    	
 	    });
