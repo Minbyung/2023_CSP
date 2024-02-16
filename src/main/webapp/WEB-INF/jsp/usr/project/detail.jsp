@@ -172,7 +172,9 @@
 		 
 		    var writeNotification = {
 		    		writerId: loginedMemberId,
-		    		writerName: loginedMemberName
+		    		writerName: loginedMemberName,
+		    		title: title,
+		    		content: content
 		        };
 		 
 		 
@@ -670,15 +672,17 @@
 				<div class="list-notification">
 					<div class="notification-card">
 						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
-						<div>민병민 2024/02/16 PM 01:00</div>
-						<div>제목</div>
-						<div>내용</div>
+						<div class="notification-project-writername">민병민</div>
+						<div class="notification-project-regdate">2024/02/16 PM 01:00</div>
+						<div class="notification-project-title">제목</div>
+						<div class="notification-project-content">내용</div>
 					</div>
 					<div class="notification-card">
 						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
-						<div>민병민 2024/02/16 PM 01:00</div>
-						<div>제목</div>
-						<div>내용</div>
+						<div class="notification-project-writername">민병민</div>
+						<div class="notification-project-regdate">2024/02/16 PM 01:00</div>
+						<div class="notification-project-title">제목</div>
+						<div class="notification-project-content">내용</div>
 					</div>
 				
 				

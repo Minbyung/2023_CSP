@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ProjectService;
+import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ChatMessage;
 import com.koreaIT.demo.vo.GroupChatMessage;
 import com.koreaIT.demo.vo.GroupChatRoom;
@@ -28,14 +30,16 @@ import com.koreaIT.demo.vo.Rq;
 public class UstChatController {
 	
 	private MemberService memberService;
+	private ArticleService articleService;	
 	private ChatService chatService;
 	private ProjectService projectService;
 	private Rq rq;
 	private SimpMessagingTemplate messagingTemplate;
 	
-	UstChatController(Rq rq, MemberService memberService, ChatService chatService, ProjectService projectService, SimpMessagingTemplate messagingTemplate) {
+	UstChatController(Rq rq, MemberService memberService, ArticleService articleService, ChatService chatService, ProjectService projectService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;		
+		this.articleService = articleService;		
 		this.chatService = chatService;		
 		this.projectService = projectService;		
 		this.messagingTemplate = messagingTemplate;		
@@ -200,6 +204,14 @@ public class UstChatController {
     	
     	List<Integer> memberIds = projectService.getProjectMemberIdsByProjectId(Integer.parseInt(projectId));
     	int writerId = writeNotification.getWriterId();
+    	Article article = articleService.getRecentlyAddArticle();
+    	
+    	
+    	
+    	System.out.println(writeNotification);
+    	
+    	
+    	
     	
     	for (int memberId : memberIds) {
     		if (memberId != writerId) {
