@@ -1,5 +1,6 @@
 @charset "UTF-8";
 .detail-header {
+	max-height: 80px;
 	padding: 15px 30px;
 }
 
@@ -22,11 +23,22 @@
 }
 
 .project-detail-container {
-	padding-left: 200px;
-	padding-right: 150px;
+	min-width: 1041px;
+	overflow-y: auto;
+	max-height: 764.2px;
+/*	padding-left: 200px;*/
+/*	padding-right: 150px;*/
 }
 
+.project-detail-container::-webkit-scrollbar-track {
+  background: rgba(254, 226, 226, var(--tw-bg-opacity));
+  border-radius: 6px;
+}
+
+
+
 .postTimeline {
+	margin: 0 auto;
 	min-width: 674px;
 	max-width: 674px;
 }
@@ -404,4 +416,57 @@ ul.ui-autocomplete {
 /*	appearance: none;  화살표 없애기 */
 }
 
+#postList {
+	
+}
 
+
+
+.rpanel {
+/*	display: none;*/
+	min-width: 389px;
+	width: 441px;
+	position: absolute;
+	top: 80px;
+	right: 0;
+	bottom: 0;
+	background-color: white;
+	z-index: 300;
+	border: 1px solid #ddd; /* 테두리 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 4px; /* 테두리 둥글게 */
+}
+
+.rpanel .rpanel-list > .list-header {
+	height: 52px;
+	padding: 10px;
+}
+
+.notification-card {
+	padding: 16px 16px 18px;
+	border-bottom: 1px solid #ddd; /* 테두리 */
+}
+
+.notification-card > .notification-project-name {
+	color: #550e78;
+}
+
+
+.notification-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}

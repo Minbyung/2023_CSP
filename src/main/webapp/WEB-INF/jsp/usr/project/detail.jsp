@@ -487,6 +487,17 @@
 		   		  window.open(chatWindowUrl, '_blank', 'width=500,height=700');
 		    	});
 		    
+		    
+		    $('.notification').click(function() {
+		    	$('.rpanel').toggle();
+		    	$('.notification-badge').hide();
+		    });
+		    
+		    
+		    
+		    
+		    
+		    
 		    connect();
 	});
 
@@ -554,7 +565,7 @@
 	            console.log(writeNotification);
 	        	const writeNotificationMessage = JSON.parse(writeNotification.body);
 	        	
-	            alert(writeNotificationMessage.writerName + "새 글이 작성됐습니다");
+	            alert(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
 	        });
 	     
 	     
@@ -650,7 +661,33 @@
 	  </div>
 	  
 	  
-		<div class="page-content bg-red-100 p-0 overflow-auto relative flex flex-col">
+	  
+	    <div class="rpanel">
+			<div class="rpanel-list">
+				<div class="list-header">
+					<div class="text-lg font-bold">알림 센터</div>
+				</div>
+				<div class="list-notification">
+					<div class="notification-card">
+						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
+						<div>민병민 2024/02/16 PM 01:00</div>
+						<div>제목</div>
+						<div>내용</div>
+					</div>
+					<div class="notification-card">
+						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
+						<div>민병민 2024/02/16 PM 01:00</div>
+						<div>제목</div>
+						<div>내용</div>
+					</div>
+				
+				
+				
+				</div>
+			</div>
+		</div>
+	  
+		<div class="page-content bg-red-100 overflow-auto relative flex flex-col">
   		  <div class="bg-gray-100 detail-header">
        	  	<div class="h-full flex justify-between items-center">
           	<div class="flex items-center">
@@ -660,8 +697,15 @@
                     <div class="mt-1">${project.project_description }</div>
                 </div>
             </div>
-            <div>
-                <div>초대하기</div>
+            <div class="flex">
+<!--             	<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
+                <div class="notification-icon">
+				  <i class="fas fa-bell notification"></i>
+				  <div class="notification-badge"></div>
+				</div>
+                
+                
+                <div class="ml-4">초대하기</div>
             </div>
       		  </div>
     		</div>
@@ -676,13 +720,13 @@
     			</ul>
     		</nav>
     		<div class="project-detail-content pt-5 flex">
-    		<section class="project-detail-container overflow-y-auto overflow-x-hidden">
+    		<section class="project-detail-container">
 				<div class="detail-wrap mx-auto flex">
     				<div class="postTimeline">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
     					<div class="flex">
-							<div style="width: 250px;">
+							<div style="width: 200px;">
 								<!--차트가 그려질 부분-->
 								<canvas id="donutChart"></canvas>
 							</div>
@@ -814,7 +858,7 @@
 					 </div>
 				</div>	
 			</section>
-			<div class="right-detail-content flex flex-col">
+			<div class="right-detail-content flex flex-col ml-20">
 						 <div class="participants-section">
 							 <div class="participants-container">
 							 	<div class="p-3">

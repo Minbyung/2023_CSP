@@ -203,14 +203,12 @@ public class UstChatController {
     	
     	for (int memberId : memberIds) {
     		if (memberId != writerId) {
-    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, writerId);
+    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, writeNotification);
     		}
     	}
     	
-    	System.out.println(writeNotification);
     	
         // 사용자간의 고유 대기열로 메시지 전송
-    	messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId, writeNotification);
         return writeNotification;
     }
     
