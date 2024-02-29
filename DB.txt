@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS SB_CS;
 CREATE DATABASE SB_CS;
 USE SB_CS;
 
-CREATE TABLE article(
+CREATE TABLE article (
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME NOT NULL,
     updateDate DATETIME NOT NULL,
@@ -159,6 +159,18 @@ CREATE TABLE `tb_file` (
   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
   `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
 );
+
+CREATE TABLE notification (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    writerId INT UNSIGNED NOT NULL,
+    writerName VARCHAR(100) NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    projectName VARCHAR(100) NOT NULL
+);
+
+
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -347,13 +359,30 @@ memberId = 4;
 
 
 
-SELECT * FROM project
+SELECT * FROM notification
+
+SELECT * FROM notification
+WHERE writerId != 1;
 
 
+SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE M.id = 1
 
 
-
-
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name AS projectName
+				FROM article AS A
+				INNER JOIN `member` AS M ON A.memberId = M.id
+				LEFT JOIN tag AS T ON A.id = T.articleId
+				LEFT JOIN `member` AS TA ON T.memberId = TA.id
+				LEFT JOIN `group` AS G ON A.groupId = G.id
+				LEFT JOIN project AS P ON A.projectId = P.id
+				WHERE A.projectId = 1
+				GROUP BY A.id
+				ORDER BY A.id DESC
+				LIMIT 1;
 
 DROP TABLE chatRoom
 DROP TABLE article

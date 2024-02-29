@@ -80,6 +80,8 @@ public class UsrProjectController {
 		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
+		Article lastPostedArticle = articleService.getRecentlyAddArticle(projectId);
+		
 		
 		for (Article article : articles) {
 	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
@@ -98,6 +100,7 @@ public class UsrProjectController {
 		model.addAttribute("project", project);
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("articles", articles);
+		model.addAttribute("lastPostedArticle", lastPostedArticle);
 		model.addAttribute("groups", groups);
 		model.addAttribute("teamMembers", teamMembers);
 		model.addAttribute("projectMembers", projectMembers);

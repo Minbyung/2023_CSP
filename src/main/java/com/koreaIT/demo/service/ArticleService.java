@@ -99,4 +99,9 @@ public class ArticleService {
 		
 		return articleDao.getTaggedArticleByMemberId(memberId);
 	}
+
+	public Article getRecentlyAddArticle(int projectId) {
+		
+		return articleDao.getRecentlyAddArticle(projectId);
+	}
 }

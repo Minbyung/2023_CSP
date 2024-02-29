@@ -30,7 +30,7 @@
 		
 		var projectId = ${project.id};
 		var loginedMemberId = ${rq.getLoginedMemberId()};
-		var loginedMemberName = '${loginedMember.name}'
+		var loginedMemberName = '${loginedMember.name}';
 		
 	     $.ajax({
 	         url: '../favorite/getFavorite',
@@ -174,7 +174,9 @@
 		    		writerId: loginedMemberId,
 		    		writerName: loginedMemberName,
 		    		title: title,
-		    		content: content
+		    		content: content,
+		    		regDate: '${lastPostedArticle.regDate}',
+		    		projectName: '${lastPostedArticle.projectName}'
 		        };
 		 
 		 
@@ -495,6 +497,38 @@
 		    	$('.notification-badge').hide();
 		    });
 		    
+		 // 서버로부터 사용자별 알림 목록을 가져옵니다.
+		    $.ajax({
+		        url: '../project/getWriteNotifications',
+		        type: 'GET',
+		        data: { loginedMemberId: ${rq.getLoginedMemberId()} },
+		        success: function(notifications) {
+		            // 가져온 알림 목록을 페이지에 추가합니다.
+		            notifications.forEach(function(notification) {
+		            console.log(notification.projectName);
+		            	var userName = "아무개";
+		            	// 새 알림 카드 HTML 구조 생성
+			            const newNotificationCardHtml = `
+					    <div class="notification-card">
+			            	<div class="notification-project-name">${userName}</div>
+					        <div class="notification-project-writername">${notification.writerName}</div>
+					        <div class="notification-project-regdate">${notification.regDate}</div>
+					        <div class="notification-project-title">제목 : ${notification.title}</div>
+					        <div class="notification-project-content">내용 : ${notification.content}</div>
+					    </div>`;
+					    
+// 		                $('.list-notification').prepend(newNotificationCardHtml);
+		                document.querySelector('.list-notification').innerHTML += newNotificationCardHtml;
+		            });
+		        },
+		        error: function() {
+		            $('.list-notification').text('Failed to load notifications.');
+		        }
+		    });
+		    
+		    
+		    
+		    
 		    
 		    
 		    
@@ -562,12 +596,12 @@
 	        });
 	     
 	     
-	        stompClient.subscribe('/queue/writeNotify-' + projectId + ${rq.getLoginedMemberId()}, function(writeNotification) {
+	        stompClient.subscribe('/queue/writeNotify-' + projectId + ${rq.getLoginedMemberId()}, function(lastPostedArticle) {
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
-	            console.log(writeNotification);
-	        	const writeNotificationMessage = JSON.parse(writeNotification.body);
-	        	
+	        	const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
+
 	            alert(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
+
 	        });
 	     
 	     
@@ -677,16 +711,6 @@
 						<div class="notification-project-title">제목</div>
 						<div class="notification-project-content">내용</div>
 					</div>
-					<div class="notification-card">
-						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
-						<div class="notification-project-writername">민병민</div>
-						<div class="notification-project-regdate">2024/02/16 PM 01:00</div>
-						<div class="notification-project-title">제목</div>
-						<div class="notification-project-content">내용</div>
-					</div>
-				
-				
-				
 				</div>
 			</div>
 		</div>

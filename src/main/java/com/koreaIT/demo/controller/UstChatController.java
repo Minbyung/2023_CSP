@@ -11,11 +11,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.MemberService;
+import com.koreaIT.demo.service.NotificationService;
 import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ChatMessage;
@@ -33,15 +37,17 @@ public class UstChatController {
 	private ArticleService articleService;	
 	private ChatService chatService;
 	private ProjectService projectService;
+	private NotificationService notificationService;
 	private Rq rq;
 	private SimpMessagingTemplate messagingTemplate;
 	
-	UstChatController(Rq rq, MemberService memberService, ArticleService articleService, ChatService chatService, ProjectService projectService, SimpMessagingTemplate messagingTemplate) {
+	UstChatController(Rq rq, MemberService memberService, ArticleService articleService, ChatService chatService, ProjectService projectService, NotificationService notificationService, SimpMessagingTemplate messagingTemplate) {
 		this.rq = rq;
 		this.memberService = memberService;		
 		this.articleService = articleService;		
 		this.chatService = chatService;		
 		this.projectService = projectService;		
+		this.notificationService = notificationService;		
 		this.messagingTemplate = messagingTemplate;		
 	}
 	
@@ -203,8 +209,10 @@ public class UstChatController {
 		   
     	
     	List<Integer> memberIds = projectService.getProjectMemberIdsByProjectId(Integer.parseInt(projectId));
+    	
+    	notificationService.insertNotification(writeNotification);
     	int writerId = writeNotification.getWriterId();
-    	Article article = articleService.getRecentlyAddArticle();
+    	Article lastPostedArticle = articleService.getRecentlyAddArticle(Integer.parseInt(projectId));
     	
     	
     	
@@ -215,7 +223,8 @@ public class UstChatController {
     	
     	for (int memberId : memberIds) {
     		if (memberId != writerId) {
-    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, writeNotification);
+    			// 구독 주소와 같게
+    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, lastPostedArticle);
     		}
     	}
     	
@@ -224,13 +233,10 @@ public class UstChatController {
         return writeNotification;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+    @RequestMapping("/usr/project/getWriteNotifications")
+	@ResponseBody
+    public List<Notification> getWriteNotifications(String loginedMemberId) {
+    	return notificationService.getWriteNotifications(Integer.parseInt(loginedMemberId));
+    }
 	
 }
