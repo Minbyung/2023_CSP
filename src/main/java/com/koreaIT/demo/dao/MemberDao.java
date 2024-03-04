@@ -97,9 +97,12 @@ public interface MemberDao {
 				ON M.id = TM.memberId
 				INNER JOIN team AS T
 				ON TM.teamId = t.id
-				WHERE teamId = #{teamId};
+				WHERE teamId = #{teamId}
+				ORDER BY
+		            CASE WHEN M.id = #{loginedMemberId} THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬
+		            M.id ASC -- 그 외 멤버는 ID 순으로 정렬
 			""")
-	public List<Member> getMembersByTeamId(int teamId);
+	public List<Member> getMembersByTeamId(int teamId, int loginedMemberId);
 
 	
 	
@@ -112,15 +115,19 @@ public interface MemberDao {
 
 	
 	@Select("""
-			SELECT M.*, PM.projectId AS projectId
-				FROM `member` AS M
-				INNER JOIN  projectMember AS PM
-				ON M.id = PM.memberId
-				WHERE projectId = #{projectId}
-				ORDER BY id ASC
-			""")
-	public List<Member> getprojectMembersByprojectId(int projectId);
+	        SELECT M.*, PM.projectId AS projectId
+	        FROM `member` AS M
+	        INNER JOIN projectMember AS PM ON M.id = PM.memberId
+	        WHERE PM.projectId = #{projectId}
+	        ORDER BY
+	            CASE WHEN M.id = #{loginedMemberId} THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬
+	            M.id ASC -- 그 외 멤버는 ID 순으로 정렬
+	        """)
+	public List<Member> getprojectMembersByprojectId(int projectId, int loginedMemberId);
 
+	
+	
+	
 	
 	@Select("""
 			SELECT M.id
@@ -130,4 +137,11 @@ public interface MemberDao {
 				WHERE projectId = #{groupChatRoomId}
 			""")
 	public List<Integer> getprojectMembersIdByprojectId(int groupChatRoomId);
+
+	@Select("""
+			SELECT COUNT(*)
+				FROM projectMember
+				WHERE projectId = #{projectId}
+			""")
+	public int getProjectMembersCnt(int projectId);
 }

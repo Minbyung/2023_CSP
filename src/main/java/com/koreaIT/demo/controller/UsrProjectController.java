@@ -90,11 +90,18 @@ public class UsrProjectController {
 	    }
 		
 		
+		
+		
+		
 		List<Group> groups = groupService.getGroups(projectId);
 		int teamId = project.getTeamId();
-		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
-		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId);
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
+		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId, rq.getLoginedMemberId());
 		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
+		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
+		int projectMembersCnt = memberService.getProjectMembersCnt(projectId);
+		
+		
 		
 		
 		model.addAttribute("project", project);
@@ -106,6 +113,8 @@ public class UsrProjectController {
 		model.addAttribute("projectMembers", projectMembers);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("loginedMember", loginedMember);
+		model.addAttribute("teamMembersCnt", teamMembersCnt);
+		model.addAttribute("projectMembersCnt", projectMembersCnt);
 		
 		
 		return "usr/project/detail";

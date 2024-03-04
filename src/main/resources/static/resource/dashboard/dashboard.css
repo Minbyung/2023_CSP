@@ -9,7 +9,7 @@
 .dashboard-container {
 	min-width: 1020px;
     max-width: 1020px;
-    padding: 80px 0 60px;
+    padding: 160px 0 60px;
     margin: 0 auto;
 }
 
@@ -36,7 +36,7 @@
     border: 1px solid #ddd; /* 경계선 */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
     border-radius: 13px; /* 모서리 둥글게 */
-    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    overflow: auto;
     margin:5px;
     padding: 17px 0 10px;
   }

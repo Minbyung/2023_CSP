@@ -214,13 +214,6 @@ public class UstChatController {
     	int writerId = writeNotification.getWriterId();
     	Article lastPostedArticle = articleService.getRecentlyAddArticle(Integer.parseInt(projectId));
     	
-    	
-    	
-    	System.out.println(writeNotification);
-    	
-    	
-    	
-    	
     	for (int memberId : memberIds) {
     		if (memberId != writerId) {
     			// 구독 주소와 같게

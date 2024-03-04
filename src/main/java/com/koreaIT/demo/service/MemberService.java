@@ -82,9 +82,9 @@ public class MemberService {
 		return memberDao.getMembers(projectId);
 	}
 
-	public List<Member> getMembersByTeamId(int teamId) {
+	public List<Member> getMembersByTeamId(int teamId, int loginedMemberId) {
 		
-		return memberDao.getMembersByTeamId(teamId);
+		return memberDao.getMembersByTeamId(teamId, loginedMemberId);
 	}
 
 	public int getTeamMembersCnt(int teamId) {
@@ -92,13 +92,17 @@ public class MemberService {
 		return memberDao.getTeamMembersCnt(teamId);
 	}
 
-	public List<Member> getprojectMembersByprojectId(int projectId) {
+	public List<Member> getprojectMembersByprojectId(int projectId, int loginedMemberId) {
 		
-		return memberDao.getprojectMembersByprojectId(projectId);
+		return memberDao.getprojectMembersByprojectId(projectId, loginedMemberId);
 	}
 
 	public List<Integer> getprojectMembersIdByprojectId(int groupChatRoomId) {
 		
 		return memberDao.getprojectMembersIdByprojectId(groupChatRoomId);
+	}
+
+	public int getProjectMembersCnt(int projectId) {
+		return memberDao.getProjectMembersCnt(projectId);
 	}
 }

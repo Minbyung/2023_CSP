@@ -86,6 +86,7 @@
 	z-index: 9999;
 	color: black;
 	border-radius: 10px;
+	min-width: 1000px;
 	max-width: 1000px;
 /*    max-height: 100%;*/
     height: 85%;
@@ -423,7 +424,7 @@ ul.ui-autocomplete {
 
 
 .rpanel {
-/*	display: none;*/
+	display: none;
 	min-width: 389px;
 	width: 441px;
 	position: absolute;
@@ -455,6 +456,7 @@ ul.ui-autocomplete {
 .notification-icon {
   position: relative;
   display: inline-block;
+  font-size: 2rem;
 }
 
 .notification-badge {
@@ -470,3 +472,89 @@ ul.ui-autocomplete {
   justify-content: center;
   align-items: center;
 }
+
+
+/* 프로젝트 멤버 초대 모달창 */
+.project-invite-modal {
+  background-color: #fefefe;
+	display: none;
+	padding: 30px;
+	border: 1px solid #888;
+	width: 50%;
+	z-index: 9999;
+	color: black;
+	border-radius: 10px;
+	min-width: 1000px;
+	max-width: 1000px;
+/*    max-height: 100%;*/
+    height: 85%;
+    /* 고정 위치 스타일링 */
+    position: fixed;
+    top: 50%; /* 브라우저 창의 중앙 정렬을 위해 margin:0 auto하면 글쓰기창이 못따라옴 */
+    left: 50%; /* 중앙 정렬 */
+    transform: translate(-50%, -50%); /* 정확히 중앙에 위치하도록 조정 */
+    overflow-y: auto;
+}
+
+/* 모달창 내용 */
+.project-invite-modal .modal-content {
+  padding: 15px 0;
+  height: 100%;
+}
+
+
+/* 멤버 리스트 스타일 */
+.project-invite-modal .member-list {
+  list-style: none;
+  padding: 0;
+}
+
+.project-invite-modal .member-list li {
+  margin-bottom: 10px;
+}
+
+.project-invite-modal .member-list input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
+/* 숨김 체크박스 */
+.member-list input[type="checkbox"] {
+  display: none;
+}
+
+/* 커스텀 체크박스 디자인 */
+.member-list label {
+  position: relative;
+  padding-left: 30px; /* 체크박스 디자인과 텍스트 사이의 간격 */
+  cursor: pointer;
+  display: inline-block;
+}
+
+.member-list label:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #4f46e5;
+  border-radius: 4px;
+  background-color: white;
+}
+
+/* 체크 표시가 나타나도록 수정 */
+.member-list input[type="checkbox"]:checked + label:after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 12px;
+  border: solid #4f46e5;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+
+

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
   <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
+  <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
   
@@ -81,14 +82,16 @@
 	    		$('.layer').show();
 	    	})
 
-	    	$('.close-btn').click(function(){
-	    		$('.layer-bg').hide();
-	    		$('.layer').hide();
-	    	})
+// 	    	$('.close-btn').click(function(){
+// 	    		$('.layer-bg').hide();
+// 	    		$('.layer').hide();
+// 	    	})
 
 	    	$('.close-btn-x').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		$('.project-invite-modal').hide();
+	    		$('.rpanel').hide();
 	    		// x버튼으로 끄면 안에 내용 빈칸으로 초기화
 	    		$('.tag').remove();
 	    		$('#exampleFormControlInput1').val('');
@@ -107,6 +110,7 @@
 	    	$('.layer-bg').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		$('.project-invite-modal').hide();
 	    		$('.layer-memeber-detail').hide();
 	    		// 회색바탕 눌러서 끄면 안에 내용 빈칸으로 초기화
 	    		$('.tag').remove();
@@ -365,7 +369,9 @@
 // 		    }
 
 			// invite-btn 클래스를 가진 버튼에 대해 클릭 이벤트 리스너를 바인딩
-		    $('.invite-btn').on('click', function() {
+		    $('.invite-btn').on('click', function(event) {
+		    	event.stopPropagation(); // 이벤트 전파 중단
+
 		        var memberId = $(this).data('member-id');
 		        var projectId = ${projectId}; // 현재 페이지의 프로젝트 ID
 		        // AJAX 요청을 통해 서버에 memberId와 projectId를 전송합니다.
@@ -505,35 +511,35 @@
 		        success: function(notifications) {
 		            // 가져온 알림 목록을 페이지에 추가합니다.
 		            notifications.forEach(function(notification) {
-		            console.log(notification.projectName);
-		            	var userName = "아무개";
 		            	// 새 알림 카드 HTML 구조 생성
 			            const newNotificationCardHtml = `
 					    <div class="notification-card">
-			            	<div class="notification-project-name">${userName}</div>
-					        <div class="notification-project-writername">${notification.writerName}</div>
-					        <div class="notification-project-regdate">${notification.regDate}</div>
-					        <div class="notification-project-title">제목 : ${notification.title}</div>
-					        <div class="notification-project-content">내용 : ${notification.content}</div>
+			            	<div class="notification-project-name">\${notification.projectName}\</div>
+					        <div class="notification-project-writername">글쓴이 : \${notification.writerName}\</div>
+					        <div class="notification-project-regdate">작성날짜 : \${notification.regDate}\</div>
+					        <div class="notification-project-title">제목 : \${notification.title}\</div>
+					        <div class="notification-project-content">내용 : \${notification.content}\</div>
 					    </div>`;
-					    
-// 		                $('.list-notification').prepend(newNotificationCardHtml);
-		                document.querySelector('.list-notification').innerHTML += newNotificationCardHtml;
+
+		                $('.list-notification').prepend(newNotificationCardHtml);
 		            });
+		            
+		            
 		        },
 		        error: function() {
 		            $('.list-notification').text('Failed to load notifications.');
 		        }
 		    });
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
+
+		 	$('#project-invite').click(function() {
+		 		$('.layer-bg').show();
+		 		$('#project-invite-modal').show();
+		 	    
+		 	});
+		 	
+		 
+		 
+		 
 		    connect();
 	});
 
@@ -601,20 +607,64 @@
 	        	const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
 
 	            alert(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
-
+	            $('.notification-badge').show();
 	        });
-	     
-	     
-	     
-	    	
-	    	
 	    });
 	}
     
+    function detailModal(memberId) {
+    	
+    	var memberName = $(this).text();
+    	   var $memberDetails = $('#member-details');
+    	   
+    	   $('.chat-btn').data('member-id', memberId);
+    	   
+    	$.ajax({
+           url: '../member/getMemberDetails', 
+           type: 'GET',
+           data: { memberId: memberId }, // 요청과 함께 서버로 보낼 데이터
+           dataType: 'json', // 서버로부터 기대하는 응답의 데이터 타입
+           success: function(data) {
+             // 성공 시, 응답 데이터로 모달의 내용을 채웁니다.
+             $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+                                 '<p>이메일: ' + data.email + '</p>' +
+                                 '<p>전화번호: ' + data.cellphoneNum + '</p>'
+                                 );
+             // 모달 창 표시.
+             $('#member-modal').fadeIn();
+           },
+           error: function(jqXHR, textStatus, errorThrown) {
+             // 오류 처리
+             console.error('AJAX 요청에 실패했습니다: ' + textStatus, errorThrown);
+           }
+         });
+    	
+    	 // 모달 닫기 버튼
+        $('.close').click(function() {
+          $('#member-modal').fadeOut();
+        });
+
+     	// 모달 외부 클릭 시 모달 숨기기
+        $('.member-modal').click(function() {
+            $('.member-modal').fadeOut();
+        });
+     	
+     	// 모달 내부 클릭 시, 이벤트가 상위로 전파되지 않도록 중지
+        $('.member-modal .modal-memberContent').click(function(event) {
+            event.stopPropagation();
+        });
+    	
+    	
+    	
+    }
     
     
     
 </script>
+
+	
+
+
 	<div class="task-manager">
 		<div class="left-bar flex flex-col mt-20">
 	    <div class="left-content">
@@ -702,15 +752,9 @@
 			<div class="rpanel-list">
 				<div class="list-header">
 					<div class="text-lg font-bold">알림 센터</div>
+					<span id="close" class="close close-btn-x">&times;</span>
 				</div>
 				<div class="list-notification">
-					<div class="notification-card">
-						<div class="notification-project-name">[IT/개발] 기능 개발 프로젝트</div>
-						<div class="notification-project-writername">민병민</div>
-						<div class="notification-project-regdate">2024/02/16 PM 01:00</div>
-						<div class="notification-project-title">제목</div>
-						<div class="notification-project-content">내용</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -731,9 +775,6 @@
 				  <i class="fas fa-bell notification"></i>
 				  <div class="notification-badge"></div>
 				</div>
-                
-                
-                <div class="ml-4">초대하기</div>
             </div>
       		  </div>
     		</div>
@@ -886,63 +927,73 @@
 					 </div>
 				</div>	
 			</section>
-			<div class="right-detail-content flex flex-col ml-20">
-						 <div class="participants-section">
-							 <div class="participants-container">
-							 	<div class="p-3">
-								 	<h1>팀 멤버</h1>
-									<c:forEach items="${teamMembers}" var="member">
-									    <div class="participant flex justify-between">
-										    <div id="member-${member.id}" data-member-id="${member.id}">
-										        ${member.name}
-										    </div>
-										    <div>   
-										        <!-- 버튼에 클래스와 data- 속성 추가 -->
-										        <button class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}" >초대하기</button>
-										        <button class="chat-btn" data-member-id="${member.id}" data-member-name="${member.name}" >채팅하기</button>
-										    </div>
-									    </div>
-									</c:forEach>
-									 
-									<h1>현재 참여중인 프로젝트 멤버</h1>
-									<c:forEach items="${projectMembers}" var="projectMember">
-									    <div>
-									  		${projectMember.name}
-									    </div>
-									</c:forEach>
-								</div>
-								<div class="flex">
-									<button class="group-chat-btn p-4 flex-grow text-center w-1/2 border border-red-300" data-group-chat-room-project-id="${projectId}">그룹 채팅</button>
-							 		<button class="p-4 flex-grow text-center w-1/2 border border-red-300">화상 회의</button>
-						 		</div>
-						 		
-							 	</div>
-						 </div>
-						 <div id="member-modal" class="member-modal">
-						 	<div class="modal-memberContent">
-						 		<span class="close">&times;</span>
-						 		<h2>멤버 세부 정보</h2>
-						 		<div id="member-details" >
-						 		<!--  멤버 정보 -->
-						 		</div>
-						 		<div class="flex justify-center">
-						 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
-						 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
-						 		</div>	
-						 	</div>
-						 </div>
-					</div>
+			
+			<div class="ml-8">
+				<div class="card-short">
+    				<div class="card-short-header">
+	    				<p>프로젝트 팀원(${projectMembersCnt})</p>
+	    			</div>
+	    			<div class="card-short-body overflow-y-auto">
+	    				<c:forEach items="${projectMembers}" var="member">
+					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-list-detail flex flex-col justify-center">
+							    	<div class="font-bold">
+							    		${member.name}
+							    		<c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
+							    	</div>
+							    	<div class="text-xs">${member.teamName}</div>
+						    	</div>
+					    	</div>
+						</c:forEach>
+	    			</div>
+	    		</div>
+				<div class="card-short">
+    				<div class="card-short-header">
+	    				<p>팀원(${teamMembersCnt})</p>
+	    			</div>
+	    			<div class="card-short-body overflow-y-auto">
+	    				<c:forEach items="${teamMembers}" var="member">
+					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-list-detail flex flex-col justify-center">
+							    	<div class="flex justify-between w-48">
+							    		<div class="font-bold">
+							    			${member.name}
+							    			<c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
+							    		</div>
+							    		<c:if test="${member.id != rq.getLoginedMemberId()}">
+							    			<div class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}">초대하기</div>
+							    		</c:if>
+							    	</div>
+							    	<div class="text-xs">${member.teamName}</div>
+						    	</div>
+					    	</div>
+						</c:forEach>
+	    			</div>
+	    		</div>
+			
+			</div>
 			</div>
     	</div>
     	<div class="write-pen modal-exam"><i class="fa-solid fa-pen"></i></div>
-    	
-    	
-    	
 	</div>
     		
+	<div id="member-modal" class="member-modal">
+	 	<div class="modal-memberContent">
+	 		<span class="close">&times;</span>
+	 		<h2>멤버 세부 정보</h2>
+	 		<div id="member-details" >
+	 		<!--  멤버 정보 -->
+	 		</div>
+	 		<div class="flex justify-center">
+	 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
+	 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+	 		</div>	
+	 	</div>
+	</div>
 
-
-
+		
 
 
 

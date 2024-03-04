@@ -50,7 +50,7 @@ public class UsrDashboardController {
 		List<Project> favoriteProjects = projectService.getFavoriteProjects(teamId, memberId);
 		List<Project> nonFavoriteProjects = projectService.getNonFavoriteProjects(teamId, memberId);
 		
-		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
 		List<Article> taggedArticles = articleService.getTaggedArticleByMemberId(memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 
@@ -79,7 +79,7 @@ public class UsrDashboardController {
 		int memberId = rq.getLoginedMemberId();
 		
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
-		List<Member> teamMembers = memberService.getMembersByTeamId(teamId);
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
 		List<Article> taggedArticles = articleService.getTaggedArticleByMemberId(memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 			
