@@ -43,6 +43,21 @@
 			  });
 			  
 			  
+			  $('#profilePhotoInput').change(function(event) {
+			        var reader = new FileReader();
+			        
+			        reader.onload = function(e) {
+			            $('#profilePhotoPreview').attr('src', e.target.result);
+			        };
+			        
+			        reader.readAsDataURL(event.target.files[0]);
+			    });
+			    
+			    $('.profile-photo-label').click(function() {
+			        $('#profilePhotoInput').click();
+			    });
+			  
+			  
 			  
 			});
 		
@@ -165,6 +180,17 @@
 		<div class="join-box">
 			<h1>회원가입</h1>
 			<form id="registrationForm" action="doJoin" method="post" onsubmit="joinForm_onSubmit(this); return false;">
+				
+				<label for="profilePhotoInput" class="profile-photo-label">
+			        <div class="profile-photo-container">
+					    <img src="defaultProfilePhoto.png" id="profilePhotoPreview" alt="" />
+					    <div class="profile-photo-text">프로필 사진</div>
+					</div>
+			        <input type="file" id="profilePhotoInput" name="profilePhoto" accept="image/*" style="display: none;">
+			    </label>
+
+				
+
 
 				<div class="pb-2 font-medium">이름</div>
 				<input class="input input-bordered input-primary w-full" name="name" type="text" placeholder="이름"/>
