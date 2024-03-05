@@ -20,8 +20,9 @@ public interface MemberDao {
 					, loginPw = #{loginPw}
 					, name = #{name}
 					, cellphoneNum = #{cellphoneNum}
+					, profilePhotoPath = #{profilePhotoPath}
 			""")
-	public void joinMember(String name, String cellphoneNum, String loginId, String loginPw);
+	public void joinMember(String name, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath);
 	
 
 	@Select("SELECT LAST_INSERT_ID()")

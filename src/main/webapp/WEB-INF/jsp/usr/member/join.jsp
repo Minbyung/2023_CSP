@@ -42,12 +42,14 @@
 			    }
 			  });
 			  
-			  
+			  //#profilePhotoInput 아이디를 가진 HTML 요소에 대한 변경 사건(change event)을 감지 
+			  //이는 사용자가 파일 입력 필드에 파일을 선택할 때 발생. 사용자가 파일을 선택하면, 이 코드 블록 안의 함수가 실행.
 			  $('#profilePhotoInput').change(function(event) {
 			        var reader = new FileReader();
-			        
+			        // 파일 읽기 작업이 성공적으로 완료되면 이 함수가 호출
 			        reader.onload = function(e) {
 			            $('#profilePhotoPreview').attr('src', e.target.result);
+			            console.log(event.target.files[0]);
 			        };
 			        
 			        reader.readAsDataURL(event.target.files[0]);
@@ -179,18 +181,15 @@
 	<section class="mt-24 text-xl">
 		<div class="join-box">
 			<h1>회원가입</h1>
-			<form id="registrationForm" action="doJoin" method="post" onsubmit="joinForm_onSubmit(this); return false;">
+			<form id="registrationForm" action="doJoin" method="post" enctype="multipart/form-data" onsubmit="joinForm_onSubmit(this); return false;">
 				
 				<label for="profilePhotoInput" class="profile-photo-label">
 			        <div class="profile-photo-container">
-					    <img src="defaultProfilePhoto.png" id="profilePhotoPreview" alt="" />
+					    <img src="https://i.namu.wiki/i/JY_fQfNyNBg4YeiWvstXPThRcS2dXl3wx_TwMbgT54u6AEDgoVOxFNP-zV9midwZvQn6fUAW1nz-_L9NmV9HRee3AWSjQE1kspjLzyxMc4ZASNZr81IOkVNtm3OZR71-2i9pQWsZGN8DS7oFeY0nHA.webp" id="profilePhotoPreview" alt="" />
 					    <div class="profile-photo-text">프로필 사진</div>
 					</div>
 			        <input type="file" id="profilePhotoInput" name="profilePhoto" accept="image/*" style="display: none;">
 			    </label>
-
-				
-
 
 				<div class="pb-2 font-medium">이름</div>
 				<input class="input input-bordered input-primary w-full" name="name" type="text" placeholder="이름"/>

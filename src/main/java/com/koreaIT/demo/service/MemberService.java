@@ -23,9 +23,9 @@ public class MemberService {
 		this.teamDao = teamDao;
 	}
 
-	public void joinMember(String name, String teamName, String cellphoneNum, String loginId, String loginPw) {
+	public void joinMember(String name, String teamName, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath) {
 		
-		memberDao.joinMember(name, cellphoneNum, loginId, loginPw);
+		memberDao.joinMember(name, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		int memberId = memberDao.getLastInsertId();
 		
@@ -36,9 +36,9 @@ public class MemberService {
 		memberDao.insert(memberId, teamId);	
 	}
 	
-	public void joinMemberWithInvite(String name, String cellphoneNum, String loginId, String loginPw, String inviteCode) {
+	public void joinMemberWithInvite(String name, String cellphoneNum, String loginId, String loginPw, String inviteCode, String profilePhotoPath) {
 	
-		memberDao.joinMember(name, cellphoneNum, loginId, loginPw);
+		memberDao.joinMember(name, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		 
 		// 초대 코드가 있는 경우에만 해당 팀에 추가합니다.

@@ -24,12 +24,14 @@ CREATE TABLE `member`(
     updateDate DATETIME NOT NULL,
     loginId VARCHAR(50) NOT NULL,
     loginPw VARCHAR(100) NOT NULL,
+    profilePhotoPath TEXT,
     authLevel SMALLINT UNSIGNED NOT NULL DEFAULT 2 COMMENT '권한 레벨 (일반 = 2, 관리자 = 1)',
     `name` VARCHAR(20) NOT NULL,
     cellphoneNum VARCHAR(20),
     delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (탈퇴 전 = 0, 탈퇴 후 = 1)',
     delDate DATETIME COMMENT '탈퇴 날짜'
 );
+
 
 CREATE TABLE board(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -170,7 +172,7 @@ CREATE TABLE notification (
     projectName VARCHAR(100) NOT NULL
 );
 
-
+SELECT * FROM `member`;
 
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -358,11 +360,14 @@ articleId = 3,
 memberId = 4;
 
 
+SELECT count(*)
+				FROM projectMember
+				WHERE projectId = #{projectId}
+
+
 
 SELECT * FROM notification
-
-SELECT * FROM notification
-WHERE writerId != 1;
+where writerId != 1;
 
 
 SELECT M.*, TM.teamId AS teamId
@@ -372,17 +377,17 @@ SELECT M.*, TM.teamId AS teamId
 				WHERE M.id = 1
 
 
-SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name AS projectName
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name as projectName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
 				LEFT JOIN tag AS T ON A.id = T.articleId
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				LEFT JOIN `group` AS G ON A.groupId = G.id
-				LEFT JOIN project AS P ON A.projectId = P.id
+				left join project as P on A.projectId = P.id
 				WHERE A.projectId = 1
 				GROUP BY A.id
-				ORDER BY A.id DESC
-				LIMIT 1;
+				ORDER BY A.id desc
+				limit 1;
 
 DROP TABLE chatRoom
 DROP TABLE article

@@ -20,6 +20,7 @@ public class Member {
 	private String email;
 	private int delStatus;
 	private String delDate;
+	private String profilePhotoPath;
 	
 	private int teamId;
 	private int projectId;
