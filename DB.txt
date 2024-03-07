@@ -209,6 +209,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test3@test3.com',
 loginPw = 'admin!23',
+profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
 `name` = 'test3',
 cellphoneNum = '010-3333-3333';
@@ -218,6 +219,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test4@test4.com',
 loginPw = 'admin!23',
+profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
 `name` = 'test4',
 cellphoneNum = '010-4444-4444';
@@ -362,18 +364,20 @@ SET projectId = 3,
 articleId = 3,
 memberId = 4;
 
-SELECT profilePhotoPath 
-FROM `member`
-WHERE id = 1
 
-SELECT * FROM `member`
+SELECT M.*, PM.projectId AS projectId, P.project_name AS project_name
+	        FROM `member` AS M
+	        INNER JOIN projectMember AS PM ON M.id = PM.memberId
+	        INNER JOIN project AS P ON PM.projectId = P.id
+	        WHERE PM.projectId = 1
+	        ORDER BY
+	            CASE WHEN M.id = 1 THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬
+	            M.id ASC -- 그 외 멤버는 ID 순으로 정렬
 
-SELECT COUNT(*)
-				FROM projectMember
-				WHERE projectId = #{projectId}
 
 
 
+SELECT * FROM `projectMember`
 SELECT * FROM notification
 WHERE writerId != 1;
 

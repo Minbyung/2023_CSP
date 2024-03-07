@@ -116,9 +116,10 @@ public interface MemberDao {
 
 	
 	@Select("""
-	        SELECT M.*, PM.projectId AS projectId
+	        SELECT M.*, PM.projectId AS projectId, P.project_name AS project_name
 	        FROM `member` AS M
 	        INNER JOIN projectMember AS PM ON M.id = PM.memberId
+	        INNER JOIN project AS P ON PM.projectId = P.id
 	        WHERE PM.projectId = #{projectId}
 	        ORDER BY
 	            CASE WHEN M.id = #{loginedMemberId} THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬

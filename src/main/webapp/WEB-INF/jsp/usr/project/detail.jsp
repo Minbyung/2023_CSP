@@ -537,6 +537,36 @@
 		 	    
 		 	});
 		 	
+		 // 아코디언 버튼 클릭 이벤트
+		    $('.project-menu-accordion-button > .flex').click(function() {
+		        // 프로젝트 목록 토글
+		        $('.left-menu-project-list-box').slideToggle();
+
+		        // 아이콘 변경
+		        var icon = $(this).find('i');
+		        if (icon.hasClass('fa-chevron-down')) {
+		            icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+		        } else {
+		            icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+		        }
+		    });
+			
+		    $('.chat-menu-accordion-button > .flex').click(function() {
+		        // 프로젝트 목록 토글
+		        $('.left-menu-chat-list-box').slideToggle();
+
+		        // 아이콘 변경
+		        var icon = $(this).find('i');
+		        if (icon.hasClass('fa-chevron-down')) {
+		            icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+		        } else {
+		            icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+		        }
+		    });
+		 	
+		 	
+		 	
+		 	
 		 
 		 
 		 
@@ -666,7 +696,8 @@
 
 
 	<div class="task-manager">
-		<div class="left-bar flex flex-col mt-20">
+		<div class="left-bar flex flex-col mt-0">
+		<div class="logo h-20 mx-auto">로고</div>
 	    <div class="left-content">
 	      <ul class="action-list flex flex-col">
 	       	<div>
@@ -696,7 +727,7 @@
 	          <a href="../dashboard/myProject?teamId=${teamId }">
 	          	<span class="text-blue-500 font-bold">내 프로젝트</span>
 	          </a>
-	        </li>        
+	        </li>
 	      </ul>
 	      <ul class="menu-accordion-group">
 	          <li class="menu-accordion-button project-menu-accordion-button">
@@ -936,13 +967,13 @@
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${projectMembers}" var="member">
 					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><img src="/profile-photo/${member.id}" alt="Profile Photo"></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="font-bold">
 							    		${member.name}
 							    		<c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
 							    	</div>
-							    	<div class="text-xs">${member.teamName}</div>
+							    	<div class="text-xs">${member.project_name}</div>
 						    	</div>
 					    	</div>
 						</c:forEach>
@@ -955,7 +986,7 @@
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${teamMembers}" var="member">
 					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><img src="/profile-photo/${member.id}" alt="Profile Photo"></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="flex justify-between w-48">
 							    		<div class="font-bold">

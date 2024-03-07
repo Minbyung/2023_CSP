@@ -24,4 +24,5 @@ public class Member {
 	
 	private int teamId;
 	private int projectId;
+	private String project_name;
 }

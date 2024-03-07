@@ -91,11 +91,16 @@
 	height: 60px;
 }
 
-.member-icon-wrap {
+.member-invite-icon-wrap {
 	width: 56px;
 	height: 56px;
 	border-radius: 24px;
 	background-color: #d1c5db
+}
+
+.member-icon-wrap {
+	width: 56px;
+	height: 56px;
 }
 
 .member-icon {
@@ -107,6 +112,11 @@
 	width: 100%; /* 부모 요소의 너비에 맞게 조정 */
 	box-sizing: border-box; /* 패딩과 테두리가 너비에 포함되도록 설정 */
 	color: white;
+}
+
+.member-icon > img {
+	border-radius: 50%;
+    object-fit: cover;
 }
 
 .member-list-detail {

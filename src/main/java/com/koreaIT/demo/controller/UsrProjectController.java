@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
+import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MemberService;
@@ -21,6 +22,7 @@ import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
+import com.koreaIT.demo.vo.ChatRoom;
 import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
@@ -36,19 +38,17 @@ public class UsrProjectController {
 	private ArticleService articleService;
 	private GroupService groupService;
 	private FileService fileService;
-	private BoardService boardService;
-	private ReplyService replyService;
 	private MemberService memberService;
+	private ChatService chatService;
 	private Rq rq;
 	
-	UsrProjectController(ProjectService projectService, BoardService boardService, ReplyService replyService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, Rq rq) {
+	UsrProjectController(ProjectService projectService, ChatService chatService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, Rq rq) {
 		this.projectService = projectService;
 		this.articleService = articleService;
 		this.groupService = groupService;
 		this.fileService = fileService;
-		this.boardService = boardService;
-		this.replyService = replyService;
 		this.memberService = memberService;
+		this.chatService = chatService;
 		this.rq = rq;
 	}
 	
@@ -78,6 +78,10 @@ public class UsrProjectController {
 	@RequestMapping("/usr/project/detail")
 	public String detail(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
+		int memberId = rq.getLoginedMemberId();
+		
+		
+		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		Article lastPostedArticle = articleService.getRecentlyAddArticle(projectId);
@@ -96,15 +100,18 @@ public class UsrProjectController {
 		List<Group> groups = groupService.getGroups(projectId);
 		int teamId = project.getTeamId();
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		
 		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId, rq.getLoginedMemberId());
 		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		int projectMembersCnt = memberService.getProjectMembersCnt(projectId);
-		
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
 		
 		
 		model.addAttribute("project", project);
+		model.addAttribute("projects", projects);
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("articles", articles);
 		model.addAttribute("lastPostedArticle", lastPostedArticle);
@@ -115,6 +122,7 @@ public class UsrProjectController {
 		model.addAttribute("loginedMember", loginedMember);
 		model.addAttribute("teamMembersCnt", teamMembersCnt);
 		model.addAttribute("projectMembersCnt", projectMembersCnt);
+		model.addAttribute("chatRooms", chatRooms);
 		
 		
 		return "usr/project/detail";

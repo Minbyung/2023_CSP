@@ -293,4 +293,5 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    margin-right: 10px;
 }
