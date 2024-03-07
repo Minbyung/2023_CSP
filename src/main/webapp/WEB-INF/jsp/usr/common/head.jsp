@@ -78,6 +78,7 @@
 					<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full"></i></div>
 					<div class="cursor-pointer">
 						<div class="flex items-center h-full relative member-detail">
+							<img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
 							${member.name }님
 							<ul class="member-detail-menu">
 								<li><a href="#">내 프로필</a></li>

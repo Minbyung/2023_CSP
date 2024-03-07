@@ -145,4 +145,11 @@ public interface MemberDao {
 				WHERE projectId = #{projectId}
 			""")
 	public int getProjectMembersCnt(int projectId);
+
+	@Select("""
+			SELECT profilePhotoPath 
+				FROM `member`
+				WHERE id = #{memberId}
+			""")
+	public String getProfilePhotoPathByMemberId(Long memberId);
 }

@@ -14,7 +14,6 @@
 				<button><a href="/usr/member/login">협업랜드 시작하기</a></button>
 			</c:if>
 			<c:if test="${rq.getLoginedMemberId() != 0 }">
-				<img src="${member.profilePhotoPath}" alt="" />
 				<button><a href="/usr/dashboard/dashboard?teamId=${member.teamId }">나의 대시보드 바로가기</a></button>
 			</c:if>
 		</div>

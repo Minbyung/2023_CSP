@@ -1,16 +1,18 @@
 package com.koreaIT.demo.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,13 +25,15 @@ import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 
-import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class UsrMemberController {
 	
 	private MemberService memberService;
 	private Rq rq;
+	private static final String DEFAULT_PROFILE_IMAGE_PATH = "images/default-profile.jpg";
+	
 	
 	UsrMemberController(MemberService memberService, Rq rq) {
 		this.memberService = memberService;
@@ -68,6 +72,8 @@ public class UsrMemberController {
 	@ResponseBody
 	public String doJoin(String name, String teamName, String cellphoneNum, String loginId, String loginPw, MultipartFile profilePhoto) throws IOException {
 		
+		String profilePhotoPath;
+		
 		if (rq.getLoginedMemberId() != 0) {
 			return Util.jsHistoryBack("로그아웃 후 이용해주세요");
 		}
@@ -95,77 +101,102 @@ public class UsrMemberController {
 			return Util.jsHistoryBack(Util.f("이미 사용중인 아이디(%s) 입니다", loginId));
 		}
 		
+		if (profilePhoto == null || profilePhoto.isEmpty()) {
+            // 프로필 사진을 업로드하지 않았다면 디폴트 이미지 경로 사용
+            profilePhotoPath = DEFAULT_PROFILE_IMAGE_PATH;
+		} 
+		else {
+			// 파일명 가져오기
+			String fileName = profilePhoto.getOriginalFilename();
+			// 파일 저장 경로 설정
+			String uploadDir = "C:/develop/upload-files/" + name;
 		
+			// 파일 저장 경로를 저장할 변수 선언 (try 블록 바깥에서 선언)
+			
+			// Path 객체를 사용하여 파일 저장 경로를 생성
+			Path uploadPath = Paths.get(uploadDir);
+			
+			// 경로에 폴더가 없으면 생성
+			if (!Files.exists(uploadPath)) {
+			    try {
+			        Files.createDirectories(uploadPath);
+			    } catch (IOException e) {
+			        throw new RuntimeException("Could not create upload directory", e);
+			    }
+			}
 		
-		// 파일명 가져오기
-		String fileName = profilePhoto.getOriginalFilename();
-		// 파일 저장 경로 설정
-		String uploadDir = "C:/develop/upload-files/" + name;
-
-		// 파일 저장 경로를 저장할 변수 선언 (try 블록 바깥에서 선언)
-		String profilePhotoPath = null;
-		
-		// Path 객체를 사용하여 파일 저장 경로를 생성
-		Path uploadPath = Paths.get(uploadDir);
-		
-		// 경로에 폴더가 없으면 생성
-		if (!Files.exists(uploadPath)) {
-		    try {
-		        Files.createDirectories(uploadPath);
-		    } catch (IOException e) {
-		        throw new RuntimeException("Could not create upload directory", e);
-		    }
+			try {
+				// 파일 저장
+			    Path filePath = uploadPath.resolve(fileName);
+			    Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+			    
+			    // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
+			    Path basePath = Paths.get("C:/develop/upload-files"); // basePath를 Path 타입으로 변경
+			    Path relativePath = basePath.relativize(filePath.toAbsolutePath()); // 상대 경로 계산
+			    profilePhotoPath = relativePath.toString();
+			    
+			    // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환해주는 처리가 필요
+			    profilePhotoPath = profilePhotoPath.replace('\\', '/');
+			    
+			    
+			} catch (IOException e) {
+			    throw new RuntimeException("Failed to store file", e);
+			}
 		}
-
-		try {
-//		    // 파일 저장
-//		    // Files.copy를 사용하여 InputStream에서 직접 Path로 파일을 복사하고, REPLACE_EXISTING 옵션으로 기존 파일을 덮어씁니다.
-//		    Path filePath = uploadPath.resolve(fileName);
-//		    Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//		    
-//		    // 파일 저장 경로를 profilePhotoPath 변수에 저장
-//		    profilePhotoPath = filePath.toString();
-		    
-		    
-			// 파일 저장
-		    Path filePath = uploadPath.resolve(fileName);
-		    Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-		    
-		    // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
-		    Path basePath = Paths.get("C:/develop/upload-files"); // basePath를 Path 타입으로 변경
-		    Path relativePath = basePath.relativize(filePath.toAbsolutePath()); // 상대 경로 계산
-		    profilePhotoPath = relativePath.toString();
-		    
-		    // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환해주는 처리가 필요
-		    profilePhotoPath = profilePhotoPath.replace('\\', '/');
-		    
-		    
-		} catch (IOException e) {
-		    throw new RuntimeException("Failed to store file", e);
-		}
-		
 
 		memberService.joinMember(name, teamName, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
 	
-	@RequestMapping("/images/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-	    Path filePath = Paths.get("C:/develop/upload-files").resolve(filename);
+	@GetMapping("/profile-photo/{memberId}")
+	public ResponseEntity<Resource> getProfilePhotoByMemberId(@PathVariable Long memberId, HttpServletRequest request) {
 	    try {
-	        Resource file = new Resource(filePath.toUri());
-	        if (file.exists() || file.isReadable()) {
-	            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-	                    "inline; filename=\"" + file.getFilename() + "\"").body(file);
+	        // memberId를 이용해 프로필 사진의 경로를 데이터베이스에서 조회
+	        String photoPath = memberService.getProfilePhotoPathByMemberId(memberId);
+
+	        // 전체 파일 경로 구성
+	        String filePath = "C:/develop/upload-files/" + photoPath;
+	        Path path = Paths.get(filePath);
+	        Resource resource = new UrlResource(path.toUri());
+
+	        if (resource.exists() || resource.isReadable()) {
+	            String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+	            if(contentType == null) {
+	                contentType = "application/octet-stream";
+	            }
+	            return ResponseEntity.ok()
+	                    .contentType(MediaType.parseMediaType(contentType))
+	                    .body(resource);
 	        } else {
-	            throw new RuntimeException("Could not read file: " + filename);
+	            throw new RuntimeException("Could not read the file!");
 	        }
-	    } catch (MalformedURLException e) {
-	        throw new RuntimeException("Could not read file: " + filename, e);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().build();
 	    }
 	}
+	
+	
+	
+	
+	
+	
+//	@RequestMapping("/images/{filename:.+}")
+//	@ResponseBody
+//	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+//	    Path filePath = Paths.get("C:/develop/upload-files").resolve(filename);
+//	    try {
+//	        Resource file = new Resource(filePath.toUri());
+//	        if (file.exists() || file.isReadable()) {
+//	            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+//	                    "inline; filename=\"" + file.getFilename() + "\"").body(file);
+//	        } else {
+//	            throw new RuntimeException("Could not read file: " + filename);
+//	        }
+//	    } catch (MalformedURLException e) {
+//	        throw new RuntimeException("Could not read file: " + filename, e);
+//	    }
+//	}
 	
 	
 	

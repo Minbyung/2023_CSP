@@ -105,4 +105,9 @@ public class MemberService {
 	public int getProjectMembersCnt(int projectId) {
 		return memberDao.getProjectMembersCnt(projectId);
 	}
+
+	public String getProfilePhotoPathByMemberId(Long memberId) {
+		
+		return memberDao.getProfilePhotoPathByMemberId(memberId);
+	}
 }
