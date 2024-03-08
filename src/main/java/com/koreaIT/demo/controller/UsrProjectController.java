@@ -135,6 +135,12 @@ public class UsrProjectController {
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
 		
+		int memberId = rq.getLoginedMemberId();
+		int teamId = project.getTeamId();
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+		
+		
 		
 		// groupId 별로 article을 그룹화
 		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
@@ -149,17 +155,16 @@ public class UsrProjectController {
 		        groupedArticles.get(groupName).add(article);
 		    }
 		}
-		System.out.println(groupedArticles);
+		
 		model.addAttribute("project", project);
+		model.addAttribute("projects", projects);
+		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
 		model.addAttribute("groupedArticles", groupedArticles);
 
 		return "usr/project/task";
 	}
-//	../project/task?projectId=1"
-	
-	
 	
 	@RequestMapping("/usr/project/getGroupedArticles")
 	@ResponseBody
@@ -255,11 +260,19 @@ public class UsrProjectController {
 	
 	@RequestMapping("/usr/project/schd")
 	public String gantt(Model model, int projectId) {
+		int memberId = rq.getLoginedMemberId();
+		
 		List<Group> groups = groupService.getGroups(projectId);
 		Project project = projectService.getProjectByProjectId(projectId);
 		
+		int teamId = project.getTeamId();
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
 		model.addAttribute("projectId", projectId);
+		model.addAttribute("projects", projects);
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("project", project);
 		model.addAttribute("groups", groups);
 		return "usr/project/schd"; 

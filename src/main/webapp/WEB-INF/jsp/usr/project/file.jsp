@@ -14,12 +14,12 @@
   <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
-  
+
+<!--   웹소켓 -->
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
+  
   <title>${project.project_name }</title>
-<!--chart.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 </head>
 <!-- partial:index.partial.html -->
@@ -90,6 +90,13 @@
 		    	$('.notification-badge').hide();
 		    });
 		    
+		    $('.close-btn-x').click(function(){
+		    	$('.layer-bg').hide();
+		    	$('.rpanel').hide();
+		    });
+		    
+		    
+		    
 	    // 서버로부터 사용자별 알림 목록을 가져옵니다.
 	    $.ajax({
 	        url: '../project/getWriteNotifications',
@@ -150,7 +157,7 @@
 
 	var projectId = ${project.id};
 
-    function connect() {
+	function connect() {
 		// SockJS와 STOMP 클라이언트 라이브러리를 사용하여 웹소켓 연결을 설정합니다.
 	    var socket = new SockJS('/ws_endpoint'); // 서버로 연결을 시도(문) 서버 간에 동일한 URL 경로를 사용하여 서로 통신할 수 있도록 일치시켜야함
 	    stompClient = Stomp.over(socket);
@@ -161,7 +168,7 @@
 	        stompClient.subscribe('/queue/notify-' + ${rq.getLoginedMemberId()}, function(notification) {
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const message = JSON.parse(notification.body);
-	            alert("새 메시지가 도착했습니다: " + message.content);
+	        	showMessage(message.senderName + "님이 새 채팅을 보냈습니다");
 	        });
 	     
 	     
@@ -169,13 +176,21 @@
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
 
-	            alert(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
+	            showMessage(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
 	            $('.notification-badge').show();
 	        });
 	    });
 	}
     	
-    
+	// 메시지 보기 함수
+    function showMessage(message) {
+        $("#messageBox").text(message).fadeIn(); // 메시지 박스를 서서히 나타나게 합니다.
+
+        setTimeout(function() {
+            $("#messageBox").fadeOut(); // 3초 후 메시지 박스를 서서히 사라지게 합니다.
+        }, 3000); // 3000ms = 3초
+    }
+
     
     
 </script>
@@ -252,17 +267,6 @@
 	    	</a>
 	    </div>
 	  </div>
-	    <div class="rpanel">
-			<div class="rpanel-list">
-				<div class="list-header">
-					<div class="text-lg font-bold">알림 센터</div>
-					<span id="close" class="close close-btn-x">&times;</span>
-				</div>
-				<div class="list-notification">
-				</div>
-			</div>
-		</div>
-	  
 		<div class="page-content bg-red-100 overflow-auto relative flex flex-col">
 			<div class="bg-gray-100 detail-header">
 				<div class="h-full flex justify-between items-center">
@@ -320,6 +324,20 @@
   			</div>
     	</div>
 	</div>
+	
+	<div class="rpanel">
+		<div class="rpanel-list">
+			<div class="list-header">
+				<div class="text-lg font-bold">알림 센터</div>
+				<span id="close" class="close close-btn-x">&times;</span>
+			</div>
+			<div class="list-notification">
+			</div>
+		</div>
+	</div>
+	
+	<div id="messageBox" class="message-box" style="display: none;"></div>
+	
 </body>	
 
 </html>

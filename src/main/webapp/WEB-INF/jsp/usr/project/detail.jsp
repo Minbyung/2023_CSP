@@ -649,8 +649,8 @@
         $("#messageBox").text(message).fadeIn(); // 메시지 박스를 서서히 나타나게 합니다.
 
         setTimeout(function() {
-            $("#messageBox").fadeOut(); // 2초 후 메시지 박스를 서서히 사라지게 합니다.
-        }, 2000); // 3000ms = 3초
+            $("#messageBox").fadeOut(); // 3초 후 메시지 박스를 서서히 사라지게 합니다.
+        }, 3000); // 3000ms = 3초
     }
 
     // 예제를 위해 페이지 로드 시 자동으로 메시지를 보여줍니다.
@@ -1044,7 +1044,7 @@
 	</div>
 
 		
-	<div id="messageBox" class="message-box" style="display: none;"><div id="messageBoxText"></div></div>
+	<div id="messageBox" class="message-box" style="display: none;"></div>
 
 
 
