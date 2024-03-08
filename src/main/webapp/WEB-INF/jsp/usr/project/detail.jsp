@@ -566,6 +566,8 @@
 		 	
 		 	
 		 	
+		 
+		    
 		 	
 		 
 		 
@@ -628,7 +630,7 @@
 	        stompClient.subscribe('/queue/notify-' + ${rq.getLoginedMemberId()}, function(notification) {
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const message = JSON.parse(notification.body);
-	            alert("새 메시지가 도착했습니다: " + message.content);
+	        	showMessage(message.senderName + "님이 새 채팅을 보냈습니다");
 	        });
 	     
 	     
@@ -636,11 +638,25 @@
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
 
-	            alert(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
+	            showMessage(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
 	            $('.notification-badge').show();
 	        });
 	    });
 	}
+    
+ // 메시지 보기 함수
+    function showMessage(message) {
+        $("#messageBox").text(message).fadeIn(); // 메시지 박스를 서서히 나타나게 합니다.
+
+        setTimeout(function() {
+            $("#messageBox").fadeOut(); // 2초 후 메시지 박스를 서서히 사라지게 합니다.
+        }, 2000); // 3000ms = 3초
+    }
+
+    // 예제를 위해 페이지 로드 시 자동으로 메시지를 보여줍니다.
+    
+    
+    
     
     function detailModal(memberId) {
     	
@@ -800,11 +816,14 @@
                     <div class="mt-1">${project.project_description }</div>
                 </div>
             </div>
-            <div class="flex">
+            <div class="flex items-center text-xl">
 <!--             	<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
-                <div class="notification-icon">
+                <div class="notification-icon text-2xl">
 				  <i class="fas fa-bell notification"></i>
 				  <div class="notification-badge"></div>
+				</div>
+				<div class="ml-4">
+					<a href="/usr/member/doLogout">로그아웃</a>
 				</div>
             </div>
       		  </div>
@@ -1025,7 +1044,7 @@
 	</div>
 
 		
-
+	<div id="messageBox" class="message-box" style="display: none;"><div id="messageBoxText"></div></div>
 
 
 

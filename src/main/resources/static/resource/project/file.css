@@ -2,5 +2,18 @@
 
 
 .file-list-container {
-	padding: 12px 30px;
+	padding: 40px 30px 0 30px;
+	width: 1541px;
+	max-width: 1541px;
+	margin: 0 auto;
+}
+
+.file-list-container > div > div:nth-child(1) {
+	font-size: 24px;
+	font-weight: 700;
+	margin-bottom: 20px;
+}
+
+.download-btn {
+	font-size: 22px;
 }

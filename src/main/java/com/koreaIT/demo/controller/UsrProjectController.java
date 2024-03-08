@@ -267,11 +267,19 @@ public class UsrProjectController {
 	
 	@RequestMapping("/usr/project/file")
 	public String file(Model model, int projectId) {
+		int memberId = rq.getLoginedMemberId();
+		
 		Project project = projectService.getProjectByProjectId(projectId);
+		int teamId = project.getTeamId();
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		List<FileResponse> projectFiles = fileService.findAllFileByProjectId(projectId);
 		
 		
 		model.addAttribute("project", project);
+		model.addAttribute("projects", projects);
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("projectFiles", projectFiles);
 		
 		return "usr/project/file"; 

@@ -82,6 +82,8 @@ button {
   color: var(--main-color);
   margin-bottom: 14px;
   font-weight: 500;
+  height: 21px;
+  line-height: 21px;
 }
 .item svg {
   width: 14px;
