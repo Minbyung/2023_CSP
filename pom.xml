@@ -118,6 +118,21 @@
 		    <artifactId>gson</artifactId>
 		    <version>2.9.0</version>
 		</dependency>
+		
+		<!-- OkHttpClient -->
+	    <dependency>
+	        <groupId>com.squareup.okhttp3</groupId>
+	        <artifactId>okhttp</artifactId>
+	        <version>4.9.0</version> <!-- 사용 가능한 최신 버전으로 변경하세요 -->
+	    </dependency>
+	    
+	    <!-- Jackson ObjectMapper -->
+	    <dependency>
+	        <groupId>com.fasterxml.jackson.core</groupId>
+	        <artifactId>jackson-databind</artifactId>
+	        <version>2.11.3</version> <!-- 사용 가능한 최신 버전으로 변경하세요 -->
+	    </dependency>
+	    
 	</dependencies>
 	
 	<build>
