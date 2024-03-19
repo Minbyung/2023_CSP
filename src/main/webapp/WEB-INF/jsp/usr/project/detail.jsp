@@ -1022,7 +1022,7 @@
 						</c:forEach>
 	    			</div>
 	    		</div>
-			
+				<a href="https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi">화상회의 생성</a>
 			</div>
 			</div>
     	</div>

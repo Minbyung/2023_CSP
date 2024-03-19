@@ -11,11 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.koreaIT.demo.service.MeetingService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Rq;
 import com.koreaIT.demo.vo.ZoomMeetingRequest;
@@ -33,15 +35,18 @@ import okhttp3.Response;
 public class UsrMeetingController {
 	
 	private Rq rq;
+	private MeetingService  meetingService;
 	
-	UsrMeetingController(Rq rq) {
+	UsrMeetingController(Rq rq, MeetingService  meetingService) {
 		this.rq = rq;
+		this.meetingService = meetingService;
 	}
 	
+
 	@RequestMapping(value="/usr/meeting/zoomApi" , method = {RequestMethod.GET, RequestMethod.POST})
     public String createZoomMeeting(HttpServletRequest req, Model model, @RequestParam String code) throws NoSuchAlgorithmException, IOException  {
 		//https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&scope=meeting:write%20meeting:read%20meeting:write:admin%20meeting:read:admin  -> code를 받아올수있다
-		
+		// https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi
 		//Access token 을 받는 zoom api 호출 url
 		String zoomUrl = "https://zoom.us/oauth/token";
 		String clientId = "hS7eo62IQn4P7NhEDhmtA"; // Zoom에서 제공받은 Client ID
@@ -96,8 +101,14 @@ public class UsrMeetingController {
         // 회의 생성 응답 처리
         ZoomMeetingResponse meetingInfo = mapper.readValue(meetingResponseBody, ZoomMeetingResponse.class);
         // 회의 정보를 모델에 추가하여 뷰에서 사용할 수 있도록 합니다.
-        System.out.println(meetingInfo);
+        System.out.println("meetingInfo : " + meetingInfo.getTopic());
         model.addAttribute("meetingInfo", meetingInfo);
+        
+        
+        
+        
+        
+        
           // 회의 리스트
 //        String listMeetingsUrl = "https://api.zoom.us/v2/users/me/meetings";
 //        Request listMeetingsRequest = new Request.Builder()
