@@ -564,6 +564,27 @@
 		        }
 		    });
 		 	
+		    
+		    $('#createMeetingBtn').click(function() {
+                var projectId = ${project.id}; // 프로젝트 ID는 예시 값입니다. 실제 값으로 대체 필요
+                var topic = $('#meetingTopic').val(); // 사용자가 입력한 토픽 제목
+                var duration = $('#meetingDuration').val(); // 사용자가 입력한 회의 길이
+                var startTime = $('#meetingStartTime').val(); // 사용자가 입력한 회의 시작시간
+                
+                console.log(startTime);
+                // state 파라미터에 프로젝트 ID와 토픽 제목을 포함
+                var state = encodeURIComponent(projectId + ',' + topic + ',' + duration + ',' + startTime);
+                console.log(state);
+                // Zoom OAuth 인증 URL 구성
+                var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=\${state}`;
+//                 var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=1,\${topic}`;
+                
+                // 사용자를 Zoom 인증 페이지로 리디렉션
+                window.location.href = authUrl;
+            });
+		    
+		    
+		    
 		 	
 		 	
 		 
@@ -1022,7 +1043,17 @@
 						</c:forEach>
 	    			</div>
 	    		</div>
-				<a href="https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi">화상회의 생성</a>
+<%-- 				<a href="https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=${project.id}">화상회의 생성</a> --%>
+					<label for="meetingTopic">회의 토픽 제목:</label>
+				    <input type="text" id="meetingTopic" name="meetingTopic">
+				    <br />
+				    <label for="meetingDuration">회의 시간:</label>
+				    <input type="number" id="meetingDuration" name="meetingDuration"/>
+				    <br />
+				    <label for="meetingStartTime">회의 시작 시간:</label>
+        			<input type="datetime-local" id="meetingStartTime" name="meetingStartTime">
+				    <br />
+				    <button id="createMeetingBtn">Zoom 인증 및 회의 생성</button>
 			</div>
 			</div>
     	</div>

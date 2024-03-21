@@ -151,15 +151,15 @@ CREATE TABLE groupChatMessage (
 );
 
 CREATE TABLE `tb_file` (
-  `id` BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '파일 번호 (PK)',
-  `article_id` INT UNSIGNED NOT NULL COMMENT '게시글 번호 (FK)',
-  `project_id` INT UNSIGNED NOT NULL COMMENT '프로젝트 번호 (FK)',
-  `original_name` VARCHAR(255) NOT NULL COMMENT '원본 파일명',
-  `save_name` VARCHAR(40) NOT NULL COMMENT '저장 파일명',
-  `size` INT(11) NOT NULL COMMENT '파일 크기',
-  `delete_yn` TINYINT(1) NOT NULL COMMENT '삭제 여부',
-  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
-  `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
+   `id` BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '파일 번호 (PK)',
+   `article_id` INT UNSIGNED NOT NULL COMMENT '게시글 번호 (FK)',
+   `project_id` INT UNSIGNED NOT NULL COMMENT '프로젝트 번호 (FK)',
+   `original_name` VARCHAR(255) NOT NULL COMMENT '원본 파일명',
+   `save_name` VARCHAR(40) NOT NULL COMMENT '저장 파일명',
+   `size` INT(11) NOT NULL COMMENT '파일 크기',
+   `delete_yn` TINYINT(1) NOT NULL COMMENT '삭제 여부',
+   `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '생성일시',
+   `deleted_date` DATETIME DEFAULT NULL COMMENT '삭제일시'
 );
 
 CREATE TABLE notification (
@@ -171,6 +171,21 @@ CREATE TABLE notification (
     content TEXT NOT NULL,
     projectName VARCHAR(100) NOT NULL
 );
+
+CREATE TABLE zoomMeeting (
+    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `uuid` TEXT NOT NULL,
+    hostId INT UNSIGNED NOT NULL,
+    projectId INT UNSIGNED NOT NULL,
+    topic TEXT NOT NULL COMMENT '회의 이름',
+    startTime DATETIME NOT NULL COMMENT '회의 시작시간',
+    duration INT UNSIGNED NOT NULL COMMENT '회의의 예상 지속 시간(분 단위)',
+    createdAt DATETIME NOT NULL COMMENT '회의 생성시간',
+    startUrl TEXT NOT NULL COMMENT '호스트가 회의를 시작하기 위해 접속할 URL',
+    joinUrl TEXT NOT NULL COMMENT '참가자가 회의에 참여하기 위해 사용하는 URL',
+    `password` TEXT NOT NULL
+);
+
 
 SELECT * FROM `member`;
 
@@ -365,10 +380,10 @@ articleId = 3,
 memberId = 4;
 
 
-SELECT M.*, PM.projectId AS projectId, P.project_name AS project_name
+SELECT M.*, PM.projectId AS projectId, P.project_name as project_name
 	        FROM `member` AS M
 	        INNER JOIN projectMember AS PM ON M.id = PM.memberId
-	        INNER JOIN project AS P ON PM.projectId = P.id
+	        inner join project as P on PM.projectId = P.id
 	        WHERE PM.projectId = 1
 	        ORDER BY
 	            CASE WHEN M.id = 1 THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬
@@ -377,9 +392,9 @@ SELECT M.*, PM.projectId AS projectId, P.project_name AS project_name
 
 
 
-SELECT * FROM `projectMember`
+select * from `projectMember`
 SELECT * FROM notification
-WHERE writerId != 1;
+where writerId != 1;
 
 
 SELECT M.*, TM.teamId AS teamId
@@ -389,17 +404,17 @@ SELECT M.*, TM.teamId AS teamId
 				WHERE M.id = 1
 
 
-SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name AS projectName
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name as projectName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
 				LEFT JOIN tag AS T ON A.id = T.articleId
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				LEFT JOIN `group` AS G ON A.groupId = G.id
-				LEFT JOIN project AS P ON A.projectId = P.id
+				left join project as P on A.projectId = P.id
 				WHERE A.projectId = 1
 				GROUP BY A.id
-				ORDER BY A.id DESC
-				LIMIT 1;
+				ORDER BY A.id desc
+				limit 1;
 
 DROP TABLE chatRoom
 DROP TABLE article

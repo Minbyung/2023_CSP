@@ -3,6 +3,9 @@ package com.koreaIT.demo.controller;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
 
@@ -44,7 +47,7 @@ public class UsrMeetingController {
 	
 
 	@RequestMapping(value="/usr/meeting/zoomApi" , method = {RequestMethod.GET, RequestMethod.POST})
-    public String createZoomMeeting(HttpServletRequest req, Model model, @RequestParam String code) throws NoSuchAlgorithmException, IOException  {
+    public String createZoomMeeting(HttpServletRequest req, Model model, @RequestParam String code, @RequestParam(required = false) String state) throws NoSuchAlgorithmException, IOException  {
 		//https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&scope=meeting:write%20meeting:read%20meeting:write:admin%20meeting:read:admin  -> code를 받아올수있다
 		// https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi
 		//Access token 을 받는 zoom api 호출 url
@@ -53,6 +56,23 @@ public class UsrMeetingController {
 		String clientSecret = "ZJQQFFCKPpnn9L4NqdBZLCbIA6o8Kw3F"; // Zoom에서 제공받은 Client Secret
 		String authValue = clientId + ":" + clientSecret;
 		String encodedAuthValue = Base64.getEncoder().encodeToString(authValue.getBytes(StandardCharsets.UTF_8));
+		
+		String[] parts = state.split(",");
+		String projectIdStr = parts[0]; 
+		int projectId = Integer.parseInt(projectIdStr); 
+		String topic = parts[1]; 
+		String durationStr = parts[2]; 
+		int duration = Integer.parseInt(durationStr);
+		String startTime = parts[3]; 
+		System.out.println(startTime);
+		
+		// LocalDateTime 인스턴스 생성
+		LocalDateTime meetingStartTime = LocalDateTime.of(2024, 4, 1, 15, 32);
+
+		// LocalDateTime을 ISO 8601 문자열로 변환
+		String formattedStartTime = meetingStartTime.atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT);
+		
+		
 		
 		// 통신을 위한 okhttp 사용 maven 추가 필요
 		// OkHttpClient 요청을 보내고 받기 위해 널리 사용되는 외부 라이브러리
@@ -86,7 +106,7 @@ public class UsrMeetingController {
 		
         // 회의 생성 요청
         String meetingUrl = "https://api.zoom.us/v2/users/me/meetings";
-        String meetingRequestBody = mapper.writeValueAsString(new ZoomMeetingRequest("Test Meeting", 2, "2023-12-30T15:00:00Z", 30, "Asia/Seoul", "12345"));
+        String meetingRequestBody = mapper.writeValueAsString(new ZoomMeetingRequest(topic, formattedStartTime, duration, "Asia/Seoul", "12345"));
         
         Request meetingRequest = new Request.Builder()
                 .url(meetingUrl)
@@ -97,11 +117,10 @@ public class UsrMeetingController {
         
         Response meetingResponse = client.newCall(meetingRequest).execute();
         String meetingResponseBody = meetingResponse.body().string();
-        System.out.println(meetingResponseBody);
         // 회의 생성 응답 처리
         ZoomMeetingResponse meetingInfo = mapper.readValue(meetingResponseBody, ZoomMeetingResponse.class);
         // 회의 정보를 모델에 추가하여 뷰에서 사용할 수 있도록 합니다.
-        System.out.println("meetingInfo : " + meetingInfo.getTopic());
+//        System.out.println("meetingInfo : " + meetingInfo.getTopic());
         model.addAttribute("meetingInfo", meetingInfo);
         
         
