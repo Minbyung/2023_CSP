@@ -14,4 +14,7 @@ public class ZoomMeetingResponse {
     private String topic;
     private String start_url;
     private String join_url;
+    private int duration;
+    private String created_at;
+    private String start_time;
 }

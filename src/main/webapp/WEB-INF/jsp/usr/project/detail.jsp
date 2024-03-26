@@ -570,10 +570,10 @@
                 var topic = $('#meetingTopic').val(); // 사용자가 입력한 토픽 제목
                 var duration = $('#meetingDuration').val(); // 사용자가 입력한 회의 길이
                 var startTime = $('#meetingStartTime').val(); // 사용자가 입력한 회의 시작시간
+                var password = $('#meetingPassword').val(); 
                 
-                console.log(startTime);
                 // state 파라미터에 프로젝트 ID와 토픽 제목을 포함
-                var state = encodeURIComponent(projectId + ',' + topic + ',' + duration + ',' + startTime);
+                var state = encodeURIComponent(projectId + ',' + topic + ',' + duration + ',' + startTime + ',' + password);
                 console.log(state);
                 // Zoom OAuth 인증 URL 구성
                 var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=\${state}`;
@@ -583,7 +583,23 @@
                 window.location.href = authUrl;
             });
 		    
-		    
+		    $(".tab-btn").click(function() {
+		        // 모든 탭 내용을 숨깁니다.
+		        $(".tab-content").hide();
+
+		        // 모든 탭 버튼에서 'active' 클래스를 제거합니다.
+		        $(".tab-btn").removeClass('active active-tab');
+
+		        // 선택된 탭에 'active' 클래스를 추가합니다.
+		        $(this).addClass('active active-tab');
+
+		        // data-for-tab 속성 값을 사용하여 해당 탭의 내용을 보여줍니다.
+		        var tabId = $(this).data('for-tab');
+		        $("#tab-" + tabId).show();
+		    });
+
+		    // 기본적으로 첫 번째 탭을 활성화합니다.
+		    $(".tab-btn:first").click();
 		    
 		 	
 		 	
@@ -875,80 +891,7 @@
 
 
     					</div>
-						<!-- 모달창 -->
-						<div class="layer-bg"></div>
-						<div class="layer">
-							
-							<span id="close" class="close close-btn-x">&times;</span>
-							
-							
-							<div class="flex flex-col">
-								<div class="write-modal-body">
-									<input type="hidden" id="projectId" value="${project.id }">
-		<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
-									<div id="status">
-								      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-								      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-								      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-								      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-								      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
-								    </div>
-										<div id="inputArea">
-										  <div id ="tag-contianer"></div>
-										  <div class="autocomplete-container flex flex-col mb-3">
-											  <!-- 기존의 입력 필드 -->
-											  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-											  <!-- 자동완성 목록 -->
-											  <section id="autocomplete-results" style="width:20%;"></section>
-										  </div>
-										<div class="mb-3">
-											<label for="start-date">시작일:</label>
-											<input type="date" id="start-date" name="start-date">
-			
-										    <label for="end-date">마감일:</label>
-										    <input type="date" id="end-date" name="end-date">		
-											  		
-											  						  
-											<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
-											    <c:forEach var="group" items="${groups}">
-											        <c:choose>
-											            <c:when test="${group.group_name eq '그룹 미지정'}">
-											                <option value="${group.id}" selected>${group.group_name}</option>
-											            </c:when>
-											            <c:otherwise>
-											                <option value="${group.id}">${group.group_name}</option>
-											            </c:otherwise>
-											        </c:choose>
-											    </c:forEach>
-											</select> 
-										</div>
-										
-										</div>
-										<div class="mb-3">
-										  <label for="exampleFormControlInput1" class="form-label">제목</label>
-										  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
-										</div>
-										<div class="mb-3">
-										  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-										  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-										</div>
-										
-										<div class="file_list">
-											<div class="file_input pb-3 flex items-center">
-						                        <div> 첨부파일
-						                            <input type="file" name="files" onchange="selectFile(this);" />
-						                        </div>
-						                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
-			                   					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
-						                    </div>
-					                    </div>
-									</div>	
-								<div class="write-modal-footer flex justify-end">	
-							 	   <button id="submitBtn" type="button">제출</button>
-							    </div>
-						    </div>
-						    
-						</div>
+						
 						
 						<div id="postList">
 							<c:forEach var="article" items="${articles }">
@@ -1043,22 +986,109 @@
 						</c:forEach>
 	    			</div>
 	    		</div>
-<%-- 				<a href="https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=${project.id}">화상회의 생성</a> --%>
-					<label for="meetingTopic">회의 토픽 제목:</label>
-				    <input type="text" id="meetingTopic" name="meetingTopic">
-				    <br />
-				    <label for="meetingDuration">회의 시간:</label>
-				    <input type="number" id="meetingDuration" name="meetingDuration"/>
-				    <br />
-				    <label for="meetingStartTime">회의 시작 시간:</label>
-        			<input type="datetime-local" id="meetingStartTime" name="meetingStartTime">
-				    <br />
-				    <button id="createMeetingBtn">Zoom 인증 및 회의 생성</button>
+
 			</div>
 			</div>
     	</div>
     	<div class="write-pen modal-exam"><i class="fa-solid fa-pen"></i></div>
 	</div>
+    		
+    <!-- 모달창 -->
+	<div class="layer-bg"></div>
+	<div class="layer">
+		<div class="tabs flex">
+	        <button class="tab-btn tab-write" data-for-tab="1">글 작성</button>
+	        <button class="tab-btn tab-meeting" data-for-tab="2">화상 회의</button>
+	    </div>
+	    <!-- 탭 내용 -->
+	    <div class="tab-content" id="tab-1">
+        	<span id="close" class="close close-btn-x">&times;</span>
+			<div class="flex flex-col h-full">
+				<div class="write-modal-body">
+					<input type="hidden" id="projectId" value="${project.id }">
+	<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+					<div id="status" class="mt-4">
+				      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+				      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+				      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+				      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+				    </div>
+						<div id="inputArea">
+						  <div id ="tag-contianer"></div>
+						  <div class="autocomplete-container flex flex-col mb-3">
+							  <!-- 기존의 입력 필드 -->
+							  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+							  <!-- 자동완성 목록 -->
+							  <section id="autocomplete-results" style="width:20%;"></section>
+						  </div>
+						<div class="mb-3">
+							<label for="start-date">시작일:</label>
+							<input type="date" id="start-date" name="start-date">
+	
+						    <label for="end-date">마감일:</label>
+						    <input type="date" id="end-date" name="end-date">		
+							  		
+							  						  
+							<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+							    <c:forEach var="group" items="${groups}">
+							        <c:choose>
+							            <c:when test="${group.group_name eq '그룹 미지정'}">
+							                <option value="${group.id}" selected>${group.group_name}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${group.id}">${group.group_name}</option>
+							            </c:otherwise>
+							        </c:choose>
+							    </c:forEach>
+							</select> 
+						</div>
+						
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlInput1" class="form-label">제목</label>
+						  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+						</div>
+						
+						<div class="file_list">
+							<div class="file_input pb-3 flex items-center">
+		                        <div> 첨부파일
+		                            <input type="file" name="files" onchange="selectFile(this);" />
+		                        </div>
+		                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+	                 					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+		                    </div>
+	                    </div>
+					</div>	
+				<div class="write-modal-footer flex justify-end">	
+			 	   <button id="submitBtn" type="button">작성하기</button>
+			    </div>
+		    </div>
+    	</div>
+	    <div class="tab-content tab-meeting-content" id="tab-2" style="display: none;">
+	    	<span id="close" class="close close-btn-x">&times;</span>
+	    	<div class="flex flex-col h-full mt-4">
+	    		<div class="flex-grow">
+			    	<input type="text" id="meetingTopic" class="form-control w-72 mt-4" name="meetingTopic" placeholder="회의의 제목을 입력해주세요">
+				    <input type="number" id="meetingDuration" class="form-control w-72 mt-4" name="meetingDuration" placeholder="회의 시간(분)을 입력해주세요" />
+				    <label for="meetingStartTime">회의 시작 시간 :</label>
+		      		<input type="datetime-local" id="meetingStartTime" class="mt-4" name="meetingStartTime">
+		      		<input type="text" id="meetingPassword" class="form-control w-72 mt-4" name="meetingPassword" placeholder="회의의 비밀번호를 입력해주세요">
+		    	</div>    
+			    <div class="write-modal-footer flex justify-end">	
+					<button id="createMeetingBtn">Zoom 인증 및 회의 생성</button>
+				</div>
+	    	</div>
+    	</div>
+	</div>		
+    		
+    		
+    		
+    		
     		
 	<div id="member-modal" class="member-modal">
 	 	<div class="modal-memberContent">

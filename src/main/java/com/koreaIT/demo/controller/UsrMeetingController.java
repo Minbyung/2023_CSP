@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
@@ -47,6 +48,7 @@ public class UsrMeetingController {
 	
 
 	@RequestMapping(value="/usr/meeting/zoomApi" , method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
     public String createZoomMeeting(HttpServletRequest req, Model model, @RequestParam String code, @RequestParam(required = false) String state) throws NoSuchAlgorithmException, IOException  {
 		//https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&scope=meeting:write%20meeting:read%20meeting:write:admin%20meeting:read:admin  -> code를 받아올수있다
 		// https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi
@@ -64,13 +66,19 @@ public class UsrMeetingController {
 		String durationStr = parts[2]; 
 		int duration = Integer.parseInt(durationStr);
 		String startTime = parts[3]; 
-		System.out.println(startTime);
+		String password = parts[4];
+		// 받아온 시간 문자열을 파싱하기 위한 포매터
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        // 받아온 시간을 LocalDateTime 객체로 파싱
+        LocalDateTime localDateTime = LocalDateTime.parse(startTime, inputFormatter);
+        // 로컬 시간을 시스템 기본 시간대의 ZonedDateTime으로 변환
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        // UTC 시간대로 변환
+        ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        // UTC 시간을 ISO 8601 형식으로 포맷팅
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String formattedTime = utcTime.format(outputFormatter);
 		
-		// LocalDateTime 인스턴스 생성
-		LocalDateTime meetingStartTime = LocalDateTime.of(2024, 4, 1, 15, 32);
-
-		// LocalDateTime을 ISO 8601 문자열로 변환
-		String formattedStartTime = meetingStartTime.atZone(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_INSTANT);
 		
 		
 		
@@ -106,8 +114,8 @@ public class UsrMeetingController {
 		
         // 회의 생성 요청
         String meetingUrl = "https://api.zoom.us/v2/users/me/meetings";
-        String meetingRequestBody = mapper.writeValueAsString(new ZoomMeetingRequest(topic, formattedStartTime, duration, "Asia/Seoul", "12345"));
-        
+        String meetingRequestBody = mapper.writeValueAsString(new ZoomMeetingRequest(topic, formattedTime, duration, password));
+//        "2024-04-01T15:32:00Z"
         Request meetingRequest = new Request.Builder()
                 .url(meetingUrl)
                 .addHeader("Authorization", "Bearer " + accessToken)
@@ -120,11 +128,11 @@ public class UsrMeetingController {
         // 회의 생성 응답 처리
         ZoomMeetingResponse meetingInfo = mapper.readValue(meetingResponseBody, ZoomMeetingResponse.class);
         // 회의 정보를 모델에 추가하여 뷰에서 사용할 수 있도록 합니다.
-//        System.out.println("meetingInfo : " + meetingInfo.getTopic());
+        System.out.println("meetingInfo : " + meetingInfo);
         model.addAttribute("meetingInfo", meetingInfo);
         
         
-        
+        meetingService.createMeeting(meetingInfo);
         
         
         
@@ -151,7 +159,8 @@ public class UsrMeetingController {
 //		// 문자열 형태의 JSON 데이터를 Java 객체로 변환하기 위해 
 //		List<Object> list = mapper.readValue(zoomText, new TypeReference<List<Object>>() {});
 		
-		return "/usr/meeting/zoomApi";
+//		return Util.jsHistoryBack(Util.f("%d번 댓글은 존재하지 않습니다", projectId));
+		return Util.jsReplace("회의를 생성했습니다", Util.f("../project/detail?projectId=%d", projectId));
 	}
 	
 	
