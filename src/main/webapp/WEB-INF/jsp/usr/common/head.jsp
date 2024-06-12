@@ -63,34 +63,36 @@
 <!-- 		</div>	 -->
 <!-- 	</div>		 -->
 
-	<div class="top-bar">
-		<div class="top-bar-container">
-			<div>
-				<a class="flex items-center h-full" href="/">협업랜드(로고)</a>
-			</div>
-			<div class="flex-grow"></div>
-			<div class="flex member-login-box">
-				<c:if test="${rq.getLoginedMemberId() == 0 }">
-					<div class="hover:underline"><a class="flex items-center h-full" href="/usr/member/login">로그인</a></div>
-				</c:if>
-				<c:if test="${rq.getLoginedMemberId() != 0 }">
-					<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full"></i></div>
-					<div class="cursor-pointer">
-						<div class="flex items-center h-full relative member-detail">
-							<img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
-							${member.name }님
-							<ul class="member-detail-menu">
-								<li><a href="#">내 프로필</a></li>
-								<li><a href="/usr/dashboard/dashboard?teamId=${member.teamId }">내 대시보드</a></li>
-								<li><a href="/usr/member/doLogout">로그아웃</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="hover:underline"><a class="flex items-center h-full" href="/usr/member/doLogout">로그아웃</a></div>
-				</c:if>
-			</div>
-		</div>
-	</div>
+<!-- 	<div class="top-bar"> -->
+<!-- 		<div class="top-bar-container"> -->
+<!-- 			<div> -->
+<!-- 				<a class="flex items-center h-full" href="/">협업랜드(로고)</a> -->
+<!-- 			</div> -->
+<!-- 			<div class="flex-grow"></div> -->
+<!-- 			<div class="flex member-login-box"> -->
+<%-- 				<c:if test="${rq.getLoginedMemberId() == 0 }"> --%>
+<!-- 					<div class="hover:underline"><a class="flex items-center h-full" href="/usr/member/login">로그인</a></div> -->
+<%-- 				</c:if> --%>
+<%-- 				<c:if test="${rq.getLoginedMemberId() != 0 }"> --%>
+<!-- 					<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full"></i></div> -->
+<!-- 					<div class="cursor-pointer"> -->
+<!-- 						<div class="flex items-center h-full relative member-detail profile-photo-container"> -->
+<%-- 							<img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"> --%>
+<%-- 							${member.name }님 --%>
+<!-- 							<ul class="member-detail-menu"> -->
+<!-- 								<li><a href="#">내 프로필</a></li> -->
+<%-- 								<li><a href="/usr/dashboard/dashboard?teamId=${member.teamId }">내 대시보드</a></li> --%>
+<!-- 								<li><a href="/usr/member/doLogout">로그아웃</a></li> -->
+<!-- 							</ul> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="hover:underline"><a class="flex items-center h-full" href="/usr/member/doLogout">로그아웃</a></div> -->
+<%-- 				</c:if> --%>
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+	
+	
 
 
 

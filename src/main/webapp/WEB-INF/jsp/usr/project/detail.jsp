@@ -712,8 +712,10 @@
            data: { memberId: memberId }, // 요청과 함께 서버로 보낼 데이터
            dataType: 'json', // 서버로부터 기대하는 응답의 데이터 타입
            success: function(data) {
+        	 console.log(data.id);
              // 성공 시, 응답 데이터로 모달의 내용을 채웁니다.
-             $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+             $memberDetails.html(`<span class="member-icon flex justify-center items-center profile-photo-container"><img src="/profile-photo/\${data.id}\" alt="Profile Photo" class="profile-photo"></span>` +
+            		 			 '<p>이름: ' + data.name + '</p>' +
                                  '<p>이메일: ' + data.email + '</p>' +
                                  '<p>전화번호: ' + data.cellphoneNum + '</p>'
                                  );
@@ -745,10 +747,6 @@
 
     
 </script>
-
-	
-
-
 	<div class="task-manager">
 		<div class="detail-header">
 		    <div class="h-full flex justify-between items-center">
@@ -783,87 +781,78 @@
 		    </div>
 		</div>
 		
-	
 		<div class="left-bar flex flex-col">
-	    <div class="left-content">
-	      <ul class="action-list flex flex-col gap-4">
-	       	<div>
-		       	<a href="../project/make?teamId=${teamId }" class="self-center block">
-		        	<button class="new-project-btn">새 프로젝트</button>
+		    <div class="left-content">
+		        <div class="new-project-btn-wrap">
+		            <button class="new-project-btn">
+		                <a href="../project/make?teamId=${teamId}">새 프로젝트</a>
+		            </button>
+		        </div>
+		        <ul class="action-list">
+		            <li class="item mt-8 flex gap-2 items-center">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+		                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
+		                    viewBox="0 0 24 24">
+		                    <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+		                    <path
+		                        d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+		                </svg>
+		                <a href="../dashboard/dashboard?teamId=${teamId}">
+		                    <span>대시보드</span>
+		                </a>
+		            </li>
+		            <li class="item flex gap-2 items-center">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+		                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+		                    class="feather feather-star">
+		                    <polygon
+		                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+		                </svg>
+		                <a href="../dashboard/myProject?teamId=${teamId}">
+		                    <span class="text-blue-500 font-bold">내 프로젝트</span>
+		                </a>
+		            </li>
+		        </ul>
+		        <ul class="menu-accordion-group">
+		            <li class="menu-accordion-button project-menu-accordion-button">
+		                <div class="flex justify-between">
+		                    <div>프로젝트</div>
+		                    <div><i class="fa-solid fa-chevron-down"></i></div>
+		                </div>
+		                <div class="left-menu-project-list-box mt-4">
+		                    <c:forEach items="${projects}" var="project">
+		                        <div class="left-menu-project-list">
+		                            <a href="../project/detail?projectId=${project.id}">
+		                                <div>${project.project_name}</div>
+		                            </a>
+		                        </div>
+		                    </c:forEach>
+		                </div>
+		            </li>
+		            <li class="menu-accordion-button chat-menu-accordion-button">
+		                <div class="flex justify-between">
+		                    <div>채팅방</div>
+		                    <div><i class="fa-solid fa-chevron-down"></i></div>
+		                </div>
+		                <div class="left-menu-chat-list-box mt-4">
+		                    <c:forEach items="${chatRooms}" var="chatRoom">
+		                        <div class="left-menu-chat-list flex">
+		                            <div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
+		                                <div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
+		                            </div>
+		                        </div>
+		                    </c:forEach>
+		                </div>
+		            </li>
+		        </ul>
+		    </div>
+		    <div class="lnb-bottom-customer">
+		        <a href="#" class="">
+		            <i class="fa-regular fa-circle-question self-center mr-3"></i>
+		            <div>고객센터</div>
 		        </a>
-	        </div>
-	        <li class="item mt-8 flex gap-2 items-center">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
-	            viewBox="0 0 24 24">
-	            <path d="M22 12h-6l-2 3h-4l-2-3H2" />
-	            <path
-	              d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
-	          </svg>
-	          <a href="../dashboard/dashboard?teamId=${teamId }" >
-	         	<span>대시보드</span>
-		      </a>
-	        </li>
-	        <li class="item flex gap-2 items-center"">
-	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-	            class="feather feather-star">
-	            <polygon
-	              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-	            </svg>
-	          <a href="../dashboard/myProject?teamId=${teamId }">
-	          	<span class="text-blue-500 font-bold">내 프로젝트</span>
-	          </a>
-	        </li>
-	      </ul>
-	      <ul class="menu-accordion-group">
-	          <li class="menu-accordion-button project-menu-accordion-button">
-		          <div class="flex justify-between">
-			          <div>프로젝트</div>
-			          <div><i class="fa-solid fa-chevron-down"></i></div>
-				  </div>	
-				  <div class="left-menu-project-list-box mt-4">
-			          <c:forEach items="${projects}" var="project">
-		   					<div class="left-menu-project-list">
-			    				<a href="../project/detail?projectId=${project.id}">
-									<div>${project.project_name }</div>
-								</a>
-							</div>
-						</c:forEach>
-			      </div>
-	     	  </li>
-	     	  
-	     	  
-	     	  
-	     	  
-	     	  <li class="menu-accordion-button chat-menu-accordion-button">
-		          <div class="flex justify-between">
-			          <div>채팅방</div>
-			          <div><i class="fa-solid fa-chevron-down"></i></div>
-				  </div>	
-				  <div class="left-menu-chat-list-box mt-4">
-			          <c:forEach items="${chatRooms}" var="chatRoom">
-					    	<div class="left-menu-chat-list flex">
-						    	<div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
-							    	<div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
-						    	</div>
-					    	</div>
-					 </c:forEach>
-			      </div>
-	     	  </li>	
-	      </ul>
-	      
-	    </div>
-	    
-	    <div class="mt-auto lnb-bottom-customer">
-	    	<a href="#" class="">
-		    	<i class="fa-regular fa-circle-question self-center mr-3"></i> 
-		    	<div>고객센터</div>
-	    	</a>
-	    </div>
-	    
-	  </div>
-	  
+		    </div>
+		</div>
 	  
 	  
 	    <div class="rpanel">
@@ -877,7 +866,7 @@
 			</div>
 		</div>
 	  
-		<div class="page-content flex flex-col">
+		<div class="page-content">
     		<nav class="menu-box-1">
     			<ul>
     				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
@@ -888,9 +877,9 @@
     				<li><a class="block" href="">알림</a></li>
     			</ul>
     		</nav>
-    		<div class="project-detail-content pt-5 flex overflow-auto">
+    		<div class="project-detail-content">
     		<section class="project-detail-container">
-				<div class="detail-wrap mx-auto flex">
+				<div class="detail-wrap">
     				<div class="postTimeline">
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
@@ -963,7 +952,7 @@
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${projectMembers}" var="member">
 					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><img src="/profile-photo/${member.id}" alt="Profile Photo"></span></div>
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="font-bold">
 							    		${member.name}
@@ -981,8 +970,8 @@
 	    			</div>
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${teamMembers}" var="member">
-					    	<div class="member-list flex" onclick="detailModal('${member.id}')">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><img src="/profile-photo/${member.id}" alt="Profile Photo"></span></div>
+					    	<div class="member-list" onclick="detailModal('${member.id}')">
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="flex justify-between w-48">
 							    		<div class="font-bold">
@@ -1003,7 +992,11 @@
 			</div>
 			</div>
     	</div>
-    	<div class="write-pen modal-exam"><i class="fa-solid fa-pen"></i></div>
+    	<div class="write-pen modal-exam">
+    		<i class="fa-solid fa-pen"></i>
+    		<div class="balloon">글 작성 및 화상 회의 생성</div>
+    	
+    	</div>
 	</div>
     		
     <!-- 모달창 -->
@@ -1111,8 +1104,8 @@
 	 		<!--  멤버 정보 -->
 	 		</div>
 	 		<div class="flex justify-center">
-	 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
-	 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+	 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">1:1 채팅</button>
+	 			
 	 		</div>	
 	 	</div>
 	</div>

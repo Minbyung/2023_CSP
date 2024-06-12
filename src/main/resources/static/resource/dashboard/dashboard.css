@@ -1,8 +1,107 @@
 @charset "EUC-KR";
+
+/*wrap task-manager*/
+
+.task-manager {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	min-width: 1320px;
+	height: 100vh;
+	background: #fff;
+	position: relative;
+}
+
+/*탑바 detail-header*/
+.detail-header {
+	width: 100%;
+	padding: 15px 30px;
+	border-bottom: 1px solid #e3e7f7;
+}
+
+/*왼쪽 네비게이션 left-bar*/
+
+.left-bar {
+	 background-color: var(--bg-color);
+	 min-width: 230px;
+	 max-width: 230px;
+	 border-right: 1px solid #e3e7f7;
+}
+
+.new-project-btn-wrap {
+	padding: 40px 40px 10px 40px;
+}
+
+.new-project-btn {
+	width: 100%;
+	height: 40px;
+	border-radius: 4px;
+	background-color: gold;
+}
+
+.new-project-btn:hover {
+	background-color: skyblue;
+}
+
+.new-project-btn > a {
+	display: block;
+}
+
+.action-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem; 
+	padding: 10px 40px 40px 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.menu-accordion-button {
+	padding: 14px 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.left-menu-project-list-box, .left-menu-chat-list-box {
+	display: none;
+}
+
+.left-menu-project-list, .left-menu-chat-list  {
+	flex: 0 0 45%;
+	margin-right: 5px;
+	padding: 0 0 17px;
+}
+
+.left-menu-chat-list > .left-menu-chat-list-detail > div {
+	cursor: pointer;
+}
+
+.lnb-bottom-customer {
+	display: flex;	
+	margin-top: auto;
+}
+
+.lnb-bottom-customer > a {
+	display: flex;
+	width: 100%;
+	padding: 21px 0 21px 40px;
+	height: 100%;
+	font-weight: 700;
+}
+
+/*page-content*/
+
+.page-content {
+	display: flex;
+	flex-direction: column;
+	min-width: calc(100% - 230px);
+	width: calc(100% - 230px);
+    background-color: #F3F5F9;
+	overflow: auto;
+}
+
 .dashboard-container {
 	min-width: 1020px;
     max-width: 1020px;
-    padding: 160px 0 60px;
+    padding: 60px 0 60px;
     margin: 0 auto;
 }
 
@@ -185,5 +284,63 @@
 .left-menu-chat-list-box > div:hover {
 	color: blue;
 	cursor: pointer;
+}
+
+.invite-layer {
+	background-color: #fefefe;
+	padding: 30px;
+	border: 1px solid #888;
+	width: 600px;
+	z-index: 9999;
+	color: black;
+	border-radius: 10px;
+	max-width: 1000px;
+/*    max-height: 100%;*/
+    height: 300px;
+    /* 고정 위치 스타일링 */
+    position: fixed;
+    top: 50%; /* 브라우저 창의 중앙 정렬을 위해 margin:0 auto하면 글쓰기창이 못따라옴 */
+    left: 50%; /* 중앙 정렬 */
+    transform: translate(-50%, -50%); /* 정확히 중앙에 위치하도록 조정 */
+    overflow-y: auto;
+}
+
+.invite-layer .close-btn-x {
+	color: #aaa;
+	font-size: 30px;
+	font-weight: bold;
+	position: absolute;
+    right: 20px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.invite-layer .invite-box{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.invite-layer .invite-box > div {
+	font-size: 20px;
+	margin-bottom: 30px;
+}
+
+.invite-layer .invite-box > #exampleFormControlInput1 {
+	width: 550px;
+}
+
+.invite-layer .invite-box > #submitBtn {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+}
+
+
+.close-btn-x:hover,
+.close-btn-x:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 

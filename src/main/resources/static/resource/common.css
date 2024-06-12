@@ -192,56 +192,6 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     color: gold;
 }
 
-.new-project-btn {
-	width: 100%;
-	height: 40px;
-	border-radius: 4px;
-	background-color: gold;
-}
-
-.new-project-btn:hover {
-	background-color: skyblue;
-}
-
-.action-list {
-	padding: 40px;
-	border-bottom: 1px solid rgba(0, 0, 0, .1);
-}
-
-.lnb-bottom-customer {
-
-	display: flex;
-	
-}
-
-.lnb-bottom-customer > a {
-	display: flex;
-	width: 100%;
-	padding: 21px 0 21px 40px;
-	height: 100%;
-	font-weight: 700;
-	
-}
-
-.menu-accordion-button {
-	padding: 14px 40px;
-	border-bottom: 1px solid rgba(0, 0, 0, .1);
-}
-
-.left-menu-project-list-box, .left-menu-chat-list-box {
-	display: none;
-}
-
-.left-menu-project-list, .left-menu-chat-list  {
-	flex: 0 0 45%;
-	margin-right: 5px;
-	padding: 0 0 17px;
-}
-
-.left-menu-chat-list > .left-menu-chat-list-detail > div {
-	cursor: pointer;
-}
-
 .fc-daygrid-event {
 	margin-bottom: 3px;
 	border-radius: 100%;
@@ -317,6 +267,54 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
     font-size: 16px; /* 텍스트 크기 조정 */
 }
 
-.profile-photo {
-    
+/*알림창*/
+.rpanel {
+	display: none;
+	min-width: 389px;
+	width: 441px;
+	position: absolute;
+	top: 80px;
+	right: 0;
+	bottom: 0;
+	background-color: white;
+	z-index: 300;
+	border: 1px solid #ddd; /* 테두리 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    border-radius: 4px; /* 테두리 둥글게 */
+}
+
+.rpanel .rpanel-list > .list-header {
+	height: 52px;
+	padding: 10px;
+}
+
+.notification-card {
+	padding: 16px 16px 18px;
+	border-bottom: 1px solid #ddd; /* 테두리 */
+}
+
+.notification-card > .notification-project-name {
+	color: #550e78;
+}
+
+
+.notification-icon {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+/*  font-size: 1rem;*/
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
