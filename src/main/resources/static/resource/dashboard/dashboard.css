@@ -1,11 +1,4 @@
 @charset "EUC-KR";
-
-.page-content {
-/*    background-color: #f2e1f2;*/
-	background-color: #f7e4f7;
-	overflow: auto;
-}
-
 .dashboard-container {
 	min-width: 1020px;
     max-width: 1020px;

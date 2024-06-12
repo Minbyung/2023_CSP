@@ -6,8 +6,11 @@
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle }</title>
+<!-- 파비콘 -->
 <link rel="shortcut icon" href="/resource/images/favicon.ico" />
+<!-- 데이지UI -->
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+<!-- 테일윈드 -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- 제이쿼리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

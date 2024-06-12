@@ -1,11 +1,47 @@
 @charset "UTF-8";
+.task-manager {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  min-width: 1320px;
+  height: 100vh;
+  background: #fff;
+}
+
+
+.page-content {
+	display: flex;
+	
+	min-width: calc(100% - 230px);
+	width: calc(100% - 230px);
+/*    background-color: #f2e1f2;*/
+/*	background-color: #f7e4f7;*/
+    background-color: #F3F5F9;
+	overflow: auto;
+}
+
 .detail-header {
-	max-height: 80px;
+	width: 100%;
+/*	max-height: 80px;*/
 	padding: 15px 30px;
+/*	margin-bottom: -6px;*/
+	border-bottom: 1px solid #e3e7f7;
+}
+
+.left-bar {
+  background-color: var(--bg-color);
+  min-width: 230px;
+  max-width: 230px;
+  border-right: 1px solid #e3e7f7;
+}
+.project-detail-content{
+	
+	width: 100%;
 }
 
 .menu-box-1 {
-	background-color: gray;
+	
+	width: 100%;
 }
 
 .menu-box-1>ul {
@@ -25,7 +61,7 @@
 .project-detail-container {
 	min-width: 1041px;
 	overflow-y: auto;
-	max-height: 764.2px;
+	max-height: 750.2px;
 /*	padding-left: 200px;*/
 /*	padding-right: 150px;*/
 }
@@ -41,6 +77,7 @@
 	margin: 0 auto;
 	min-width: 674px;
 	max-width: 674px;
+	padding-bottom: 150px;
 }
 
 .reportArea {
@@ -595,4 +632,76 @@ ul.ui-autocomplete {
 
 .tab-meeting-content {
 	height: 713px;
+}
+
+.card-long {
+	background-color: #fff;
+    width: 668px;
+    height: 276px;
+    border: 1px solid #ddd; /* 경계선 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    border-radius: 13px; /* 모서리 둥글게 */
+    overflow: auto;
+    margin:5px;
+    padding: 17px 0 10px;
+  }
+  
+.card-long-header, .card-short-header {
+	padding: 0 30px;
+	margin: 0 0 10px;
+}  
+
+.card-long-header > p, .card-short-header > p {
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.card-long-body, .card-short-body {
+	padding: 5px 16px 0 30px;
+}
+
+.card-short {
+	background-color: #fff;
+    width: 330px;
+    height: 276px;
+    border: 1px solid #ddd; /* 경계선 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 그림자 효과 */
+    border-radius: 13px; /* 모서리 둥글게 */
+    overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+    margin:5px;
+    padding-top: 17px;
+  }  
+  
+.card-short-body {
+	height: 226px;	
+}  
+
+.card-short-body > .team-invite {
+	margin: 10px 0;
+	height: 60px;
+}
+
+.card-short-body > .member-list:hover {
+	color: blue;
+	cursor: pointer;
+}
+  
+.card-short-body > .member-list {
+	margin: 0 0 10px;
+	height: 60px;
+}
+
+.menu-box-1 > ul > li > a {
+    position: relative;
+}
+
+ .menu-box-1 > ul > li:first-of-type > a::after {
+    content: "";
+    background-color: black;
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: width .3s;
 }

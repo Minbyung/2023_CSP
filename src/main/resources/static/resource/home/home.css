@@ -22,7 +22,7 @@
 	font-size: 18px;
 }
 
-.top-bar .member-detail-menu {
+.member-detail-menu {
 	display: none;
 	min-width: 218px;
     padding: 14px;
@@ -37,7 +37,7 @@
     text-align: left;
     color: #555;
 }
-.top-bar .member-detail-menu > li {
+.member-detail-menu > li {
 	margin-top: 10px;
 }
 

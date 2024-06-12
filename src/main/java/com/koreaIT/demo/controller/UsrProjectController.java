@@ -108,6 +108,7 @@ public class UsrProjectController {
 		int projectMembersCnt = memberService.getProjectMembersCnt(projectId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
+		Member member = memberService.getMemberById(memberId);
 		
 		
 		model.addAttribute("project", project);
@@ -123,6 +124,7 @@ public class UsrProjectController {
 		model.addAttribute("teamMembersCnt", teamMembersCnt);
 		model.addAttribute("projectMembersCnt", projectMembersCnt);
 		model.addAttribute("chatRooms", chatRooms);
+		model.addAttribute("member", member);
 		
 		
 		return "usr/project/detail";

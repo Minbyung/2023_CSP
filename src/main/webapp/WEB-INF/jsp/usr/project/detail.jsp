@@ -7,18 +7,16 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="/resource/dist/style.css" />
   <link rel="stylesheet" href="/resource/project/detail.css" />
-  <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
+  <link rel="stylesheet" href="/resource/home/home.css" />
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
   
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
-  <title>${project.project_name }</title>
 <!--chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <title>${project.project_name }</title>
 
 </head>
 <!-- partial:index.partial.html -->
@@ -601,13 +599,19 @@
 		    // 기본적으로 첫 번째 탭을 활성화합니다.
 		    $(".tab-btn:first").click();
 		    
-		 	
-		 	
-		 
-		    
-		 	
-		 
-		 
+		    $('.member-detail').click(function(){
+				$('.member-detail-menu').toggle();
+			})
+			// .member-detail-menu 이외의 부분 클릭 시 숨김 처리
+		    $(document).click(function(event) {
+		        var $target = $(event.target);
+		        if(!$target.closest('.member-detail-menu').length && 
+		           !$target.hasClass('member-detail')) {
+		            $('.member-detail-menu').hide();
+		        }
+		    });
+
+
 		 
 		    connect();
 	});
@@ -736,12 +740,9 @@
         $('.member-modal .modal-memberContent').click(function(event) {
             event.stopPropagation();
         });
-    	
-    	
-    	
     }
-    
-    
+
+
     
 </script>
 
@@ -749,16 +750,49 @@
 
 
 	<div class="task-manager">
-		<div class="left-bar flex flex-col mt-0">
-		<div class="logo h-20 mx-auto">로고</div>
+		<div class="detail-header">
+		    <div class="h-full flex justify-between items-center">
+		        <div class="flex items-center">
+		            <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
+		            <div class="ml-4">
+		                <h1 class="text-xl font-bold">${project.project_name}</h1>
+		                <div class="mt-1">${project.project_description}</div>
+		            </div>
+		        </div>
+		        <div class="flex items-center text-xl gap-8">
+		            <!-- <div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
+		            <div class="notification-icon text-2xl">
+		                <i class="fas fa-bell fa-regular notification"></i>
+		                <div class="notification-badge"></div>
+		            </div>
+		            <div class="cursor-pointer">
+	                    <div class="flex items-center h-full relative member-detail justify-center">
+	                        <div class="profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></div>
+	                        ${member.name}님
+	                        <ul class="member-detail-menu">
+	                            <li><a href="#">내 프로필</a></li>
+	                            <li><a href="/usr/dashboard/dashboard?teamId=${member.teamId}">내 대시보드</a></li>
+	                            <li><a href="/usr/member/doLogout">로그아웃</a></li>
+	                        </ul>
+	                    </div>
+	                </div>
+		            <div>
+		                <a href="/usr/member/doLogout">로그아웃</a>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+		
+	
+		<div class="left-bar flex flex-col">
 	    <div class="left-content">
-	      <ul class="action-list flex flex-col">
+	      <ul class="action-list flex flex-col gap-4">
 	       	<div>
 		       	<a href="../project/make?teamId=${teamId }" class="self-center block">
 		        	<button class="new-project-btn">새 프로젝트</button>
 		        </a>
 	        </div>
-	        <li class="item mt-8">
+	        <li class="item mt-8 flex gap-2 items-center">
 	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
 	            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
 	            viewBox="0 0 24 24">
@@ -770,7 +804,7 @@
 	         	<span>대시보드</span>
 		      </a>
 	        </li>
-	        <li class="item">
+	        <li class="item flex gap-2 items-center"">
 	          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
 	            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
 	            class="feather feather-star">
@@ -843,28 +877,7 @@
 			</div>
 		</div>
 	  
-		<div class="page-content bg-red-100 overflow-auto relative flex flex-col">
-  		  <div class="bg-gray-100 detail-header">
-       	  	<div class="h-full flex justify-between items-center">
-          	<div class="flex items-center">
-                <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
-                <div class="ml-4">
-                    <h1 class="text-xl font-bold">${project.project_name }</h1>
-                    <div class="mt-1">${project.project_description }</div>
-                </div>
-            </div>
-            <div class="flex items-center text-xl">
-<!--             	<div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
-                <div class="notification-icon text-2xl">
-				  <i class="fas fa-bell notification"></i>
-				  <div class="notification-badge"></div>
-				</div>
-				<div class="ml-4">
-					<a href="/usr/member/doLogout">로그아웃</a>
-				</div>
-            </div>
-      		  </div>
-    		</div>
+		<div class="page-content flex flex-col">
     		<nav class="menu-box-1">
     			<ul>
     				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
@@ -875,7 +888,7 @@
     				<li><a class="block" href="">알림</a></li>
     			</ul>
     		</nav>
-    		<div class="project-detail-content pt-5 flex">
+    		<div class="project-detail-content pt-5 flex overflow-auto">
     		<section class="project-detail-container">
 				<div class="detail-wrap mx-auto flex">
     				<div class="postTimeline">
@@ -895,7 +908,7 @@
 						
 						<div id="postList">
 							<c:forEach var="article" items="${articles }">
-								<div class="card z-0">
+								<div class="card shadow-xl z-0">
 								  <div class="card-body z-0">
 								  	<div class="flex z-0">
 								  		<h6 class="card-subtitle mb-2 text-muted">${article.writerName }</h6>
@@ -942,7 +955,7 @@
 				</div>	
 			</section>
 			
-			<div class="ml-8">
+			<div class="ml-24">
 				<div class="card-short">
     				<div class="card-short-header">
 	    				<p>프로젝트 팀원(${projectMembersCnt})</p>

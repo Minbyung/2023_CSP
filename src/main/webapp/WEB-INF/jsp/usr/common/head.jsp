@@ -21,7 +21,6 @@
 <script>
 	$(document).ready(function() {
 		$('.member-detail').click(function(){
-			console.log("asd");
 			$('.member-detail-menu').toggle();
 		})
 		// .member-detail-menu 이외의 부분 클릭 시 숨김 처리

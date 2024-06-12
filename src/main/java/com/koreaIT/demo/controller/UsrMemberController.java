@@ -149,6 +149,7 @@ public class UsrMemberController {
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
 	
+	
 	@GetMapping("/profile-photo/{memberId}")
 	public ResponseEntity<Resource> getProfilePhotoByMemberId(@PathVariable Long memberId, HttpServletRequest request) {
 	    try {
