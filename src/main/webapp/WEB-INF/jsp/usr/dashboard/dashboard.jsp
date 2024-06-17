@@ -6,10 +6,10 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-<link rel="stylesheet" href="/resource/cards/dist/style.css" />
+<!-- <link rel="stylesheet" href="/resource/cards/dist/style.css" /> -->
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel="stylesheet" href="/resource/project/detail.css" />
+<!-- <link rel="stylesheet" href="/resource/project/detail.css" /> -->
 <!-- <link rel="stylesheet" href="/resource/dist/style.css" /> -->
 <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
 </head>
@@ -104,10 +104,11 @@ function detailModal(memberId) {
        dataType: 'json', // 서버로부터 기대하는 응답의 데이터 타입
        success: function(data) {
          // 성공 시, 응답 데이터로 모달의 내용을 채웁니다.
-         $memberDetails.html('<p>이름: ' + data.name + '</p>' +
-                             '<p>이메일: ' + data.email + '</p>' +
-                             '<p>전화번호: ' + data.cellphoneNum + '</p>'
-                             );
+         $memberDetails.html(`<span class="member-icon flex justify-center items-center profile-photo-container"><img src="/profile-photo/\${data.id}\" alt="Profile Photo" class="profile-photo"></span>` +
+            		 			 '<p>이름: ' + data.name + '</p>' +
+                                 '<p>이메일: ' + data.email + '</p>' +
+                                 '<p>전화번호: ' + data.cellphoneNum + '</p>'
+                                 );
          // 모달 창 표시.
          $('#member-modal').fadeIn();
        },
@@ -143,34 +144,26 @@ function detailModal(memberId) {
 
 
 <body>
-<div class="task-manager">	
-
-	<div class="detail-header">
-	    <div class="h-full flex justify-between items-center">
-	        <div class="flex items-center">
-	            <i data-project-id="${project.id}" id="favoriteIcon" class="far fa-star" style="font-size: 24px;"></i>
-	            <div class="ml-4">
-	                <h1 class="text-xl font-bold">${project.project_name}</h1>
-	                <div class="mt-1">${project.project_description}</div>
-	            </div>
-	        </div>
-	        <div class="flex items-center text-xl gap-8">
-	            <!-- <div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
+	<div class="task-manager">	
+		<div class="detail-header">
+		    <div class="h-full flex justify-end items-center">
+		        <div class="flex items-center text-xl gap-8">
+		            <!-- <div class="cursor-pointer"><i class="fa-regular fa-bell flex items-center h-full notification"></i></div> -->
 	            <div class="notification-icon text-2xl">
 	                <i class="fas fa-bell fa-regular notification"></i>
 	                <div class="notification-badge"></div>
 	            </div>
 	            <div class="cursor-pointer">
-                    <div class="flex items-center h-full relative member-detail justify-center">
-                        <div class="profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></div>
-                        ${member.name}님
-                        <ul class="member-detail-menu">
-                            <li><a href="#">내 프로필</a></li>
-                            <li><a href="/usr/dashboard/dashboard?teamId=${member.teamId}">내 대시보드</a></li>
-                            <li><a href="/usr/member/doLogout">로그아웃</a></li>
-                        </ul>
-                    </div>
-                </div>
+	                   <div class="flex items-center h-full relative member-detail justify-center">
+	                       <div class="profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></div>
+	                       ${member.name}님
+	                       <ul class="member-detail-menu">
+	                           <li><a href="#">내 프로필</a></li>
+	                           <li><a href="/usr/dashboard/dashboard?teamId=${member.teamId}">내 대시보드</a></li>
+	                           <li><a href="/usr/member/doLogout">로그아웃</a></li>
+	                       </ul>
+	                   </div>
+	               </div>
 	            <div>
 	                <a href="/usr/member/doLogout">로그아웃</a>
 	            </div>
@@ -195,7 +188,7 @@ function detailModal(memberId) {
 	                        d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
 	                </svg>
 	                <a href="../dashboard/dashboard?teamId=${teamId}">
-	                    <span>대시보드</span>
+	                    <span class="text-blue-500 font-bold">대시보드</span>
 	                </a>
 	            </li>
 	            <li class="item flex gap-2 items-center">
@@ -206,7 +199,7 @@ function detailModal(memberId) {
 	                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
 	                </svg>
 	                <a href="../dashboard/myProject?teamId=${teamId}">
-	                    <span class="text-blue-500 font-bold">내 프로젝트</span>
+	                    <span >내 프로젝트</span>
 	                </a>
 	            </li>
 	        </ul>
@@ -316,8 +309,7 @@ function detailModal(memberId) {
 						 		<!--  멤버 정보 -->
 						 		</div>
 						 		<div class="flex justify-center">
-						 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">채팅하기</button>
-						 			<a class="p-4 flex-grow text-center border border-red-300" href="#">화상회의</a>
+						 			<button class="chat-btn p-4 flex-grow text-center border">1:1 채팅</button>
 						 		</div>	
 						 	</div>
 						</div>

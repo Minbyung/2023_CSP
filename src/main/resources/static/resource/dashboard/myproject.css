@@ -1,11 +1,107 @@
+/*wrap task-manager*/
+
+.task-manager {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	min-width: 1320px;
+	height: 100vh;
+	background: #fff;
+	position: relative;
+}
+
+/*탑바 detail-header*/
+
+.detail-header {
+	width: 100%;
+	height: 93px;
+	padding: 0 30px 0 30px;
+	border-bottom: 1px solid #e3e7f7;
+}
+
+/*왼쪽 네비게이션 left-bar*/
+
+.left-bar {
+	 background-color: #fff;
+	 min-width: 230px;
+	 max-width: 230px;
+	 border-right: 1px solid #e3e7f7;
+}
+
+.new-project-btn-wrap {
+	padding: 40px 40px 10px 40px;
+}
+
+.new-project-btn {
+	width: 100%;
+	height: 40px;
+	border-radius: 4px;
+	background-color: gold;
+}
+
+.new-project-btn:hover {
+	background-color: skyblue;
+}
+
+.new-project-btn > a {
+	display: block;
+}
+
+.action-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem; 
+	padding: 10px 40px 40px 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.menu-accordion-button {
+	padding: 14px 40px;
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+.left-menu-project-list-box, .left-menu-chat-list-box {
+	display: none;
+}
+
+.left-menu-project-list, .left-menu-chat-list  {
+	flex: 0 0 45%;
+	margin-right: 5px;
+	padding: 0 0 17px;
+}
+
+.left-menu-chat-list > .left-menu-chat-list-detail > div {
+	cursor: pointer;
+}
+
+.lnb-bottom-customer {
+	display: flex;	
+	margin-top: auto;
+}
+
+.lnb-bottom-customer > a {
+	display: flex;
+	width: 100%;
+	padding: 21px 0 21px 40px;
+	height: 100%;
+	font-weight: 700;
+}
+
+
 .myproject-container {
-	min-width: 1500px;
-    padding: 60px 0 60px;
-    margin: 0 auto;
+/*	width: 1100px;*/
+    padding: 60px 100px 60px 100px;
+/*    margin: 0 auto;*/
 }
 
 .page-content {
-	background-color: #f7e4f7;
+	display: flex;
+	flex-direction: column;
+	min-width: calc(100% - 230px);
+	width: calc(100% - 230px);
+	height: 860px;
+    background-color: #F3F5F9;
+	overflow: auto;
 }
 
 .main-content {

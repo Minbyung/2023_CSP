@@ -846,12 +846,12 @@
 		            </li>
 		        </ul>
 		    </div>
-		    <div class="lnb-bottom-customer">
-		        <a href="#" class="">
-		            <i class="fa-regular fa-circle-question self-center mr-3"></i>
-		            <div>고객센터</div>
-		        </a>
-		    </div>
+<!-- 		    <div class="lnb-bottom-customer"> -->
+<!-- 		        <a href="#" class=""> -->
+<!-- 		            <i class="fa-regular fa-circle-question self-center mr-3"></i> -->
+<!-- 		            <div>고객센터</div> -->
+<!-- 		        </a> -->
+<!-- 		    </div> -->
 		</div>
 	  
 	  
@@ -1105,7 +1105,6 @@
 	 		</div>
 	 		<div class="flex justify-center">
 	 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">1:1 채팅</button>
-	 			
 	 		</div>	
 	 	</div>
 	</div>
