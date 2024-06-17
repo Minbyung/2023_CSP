@@ -133,15 +133,16 @@ public class UsrProjectController {
 	@RequestMapping("/usr/project/task")
 	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
+		int memberId = rq.getLoginedMemberId();
 		Project project = projectService.getProjectByProjectId(projectId);
+		
 		List<Article> articles = articleService.getArticles(projectId, column, order);
 		List<Group> groups = groupService.getGroups(projectId);
 		
-		int memberId = rq.getLoginedMemberId();
 		int teamId = project.getTeamId();
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
-		
+		Member member = memberService.getMemberById(memberId);
 		
 		
 		// groupId 별로 article을 그룹화
@@ -164,6 +165,8 @@ public class UsrProjectController {
 		model.addAttribute("articles", articles);
 		model.addAttribute("groups", groups);
 		model.addAttribute("groupedArticles", groupedArticles);
+		model.addAttribute("member", member);
+		model.addAttribute("teamId", teamId);
 
 		return "usr/project/task";
 	}
