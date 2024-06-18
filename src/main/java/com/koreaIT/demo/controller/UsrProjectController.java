@@ -274,12 +274,17 @@ public class UsrProjectController {
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
+		Member member = memberService.getMemberById(memberId);
+		
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("projects", projects);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("project", project);
 		model.addAttribute("groups", groups);
+		
+		model.addAttribute("member", member);
+		model.addAttribute("teamId", teamId);
 		return "usr/project/schd"; 
 	}
 	
