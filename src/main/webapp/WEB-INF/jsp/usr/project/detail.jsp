@@ -1001,7 +1001,7 @@
     		
     <!-- 모달창 -->
 	<div class="layer-bg"></div>
-	<div class="layer">
+	<div class="layer p-10">
 		<div class="tabs flex">
 	        <button class="tab-btn tab-write" data-for-tab="1">글 작성</button>
 	        <button class="tab-btn tab-meeting" data-for-tab="2">화상 회의</button>
@@ -1070,7 +1070,7 @@
 		                    </div>
 	                    </div>
 					</div>	
-				<div class="write-modal-footer flex justify-end">	
+				<div class="write-modal-footer">	
 			 	   <button id="submitBtn" type="button">작성하기</button>
 			    </div>
 		    </div>
