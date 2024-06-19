@@ -38,6 +38,11 @@ public class ArticleService {
 		return articleDao.getArticles(projectId, column, order);
 	}
 	
+	public Article getArticle(int projectId, int articleId) {
+		return articleDao.getArticle(projectId, articleId);
+	}
+	
+	
 	public Article forPrintArticle(int id) {
 		return articleDao.forPrintArticle(id);
 	}

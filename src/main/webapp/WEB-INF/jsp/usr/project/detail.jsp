@@ -74,7 +74,29 @@
 	 	   console.log(status);
 	 	  });
 	     
-	     
+// 임시
+	     $('.article-update-btn').click(function(){
+	    		$('.layer-bg').show();
+	    		$('.update-layer').show();
+	    		var articleId = $(this).data('article-id');
+	    		console.log(projectId);
+	    		console.log(articleId);
+	    		$.ajax({
+			        url: '../article/modify',
+			        type: 'GET',
+			        data: {"projectId": projectId,
+			        	"articleId": articleId 
+			        },
+			        success: function(data) {
+// 			          $("#title").val("");
+					  $(".title").val(data.content);
+ 			          $(".content").val(data.content);
+// 			          $('.tag').remove();
+			          console.log(data.content);
+			        }
+			      });
+	    	})
+		 
 	     $('.modal-exam').click(function(){
 	    		$('.layer-bg').show();
 	    		$('.layer').show();
@@ -88,6 +110,7 @@
 	    	$('.close-btn-x').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		$('.update-layer').hide();
 	    		$('.project-invite-modal').hide();
 	    		$('.rpanel').hide();
 	    		// x버튼으로 끄면 안에 내용 빈칸으로 초기화
@@ -108,6 +131,7 @@
 	    	$('.layer-bg').click(function(){
 	    		$('.layer-bg').hide();
 	    		$('.layer').hide();
+	    		$('.update-layer').hide();
 	    		$('.project-invite-modal').hide();
 	    		$('.layer-memeber-detail').hide();
 	    		// 회색바탕 눌러서 끄면 안에 내용 빈칸으로 초기화
@@ -905,7 +929,7 @@
 									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
 								  		</div>
 								  		<div class="flex">
-								  			<button class="card-subtitle">수정</button>
+								  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
 								  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
 								  		</div>
 								  	</div>
@@ -1097,6 +1121,79 @@
 	    	</div>
     	</div>
 	</div>		
+	
+	<div class="update-layer p-10">
+		<div class="tabs flex">
+	        <button class="tab-btn tab-write" data-for-tab="1">수정</button>
+	    </div>
+	    <!-- 탭 내용 -->
+       	<span id="close" class="close close-btn-x">&times;</span>
+		<div class="flex flex-col h-full">
+			<div class="write-modal-body">
+				<input type="hidden" id="projectId" value="${project.id }">
+<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+				<div id="status" class="mt-4">
+			      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+			      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+			      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+			      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+			      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+			    </div>
+					<div id="inputArea">
+					  <div id ="tag-contianer"></div>
+					  <div class="autocomplete-container flex flex-col mb-3">
+						  <!-- 기존의 입력 필드 -->
+						  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+						  <!-- 자동완성 목록 -->
+						  <section id="autocomplete-results" style="width:20%;"></section>
+					  </div>
+					<div class="mb-3">
+						<label for="start-date">시작일:</label>
+						<input type="date" id="start-date" name="start-date">
+
+					    <label for="end-date">마감일:</label>
+					    <input type="date" id="end-date" name="end-date">		
+						  		
+						  						  
+						<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+						    <c:forEach var="group" items="${groups}">
+						        <c:choose>
+						            <c:when test="${group.group_name eq '그룹 미지정'}">
+						                <option value="${group.id}" selected>${group.group_name}</option>
+						            </c:when>
+						            <c:otherwise>
+						                <option value="${group.id}">${group.group_name}</option>
+						            </c:otherwise>
+						        </c:choose>
+						    </c:forEach>
+						</select> 
+					</div>
+					
+					</div>
+					<div class="mb-3">
+					  <label for="exampleFormControlInput1" class="form-label">제목</label>
+					  <input type="email" class="form-control title" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+					</div>
+					<div class="mb-3">
+					  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
+					  <textarea class="form-control h-80 content" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+					</div>
+					
+					<div class="file_list">
+						<div class="file_input pb-3 flex items-center">
+	                        <div> 첨부파일
+	                            <input type="file" name="files" onchange="selectFile(this);" />
+	                        </div>
+	                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+                 					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+	                    </div>
+                    </div>
+				</div>	
+			<div class="write-modal-footer">	
+		 	   <button id="submitBtn" type="button">작성하기</button>
+		    </div>
+	    </div>
+	</div>
     		
     		
     		

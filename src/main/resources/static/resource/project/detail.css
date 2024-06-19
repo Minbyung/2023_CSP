@@ -217,7 +217,7 @@
 	cursor: pointer;
 }
   
-.layer, .invite-layer,.layer-bg {
+.layer, .update-layer, .invite-layer,.layer-bg {
 	display: none;
 }
 
@@ -234,7 +234,7 @@
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
-.layer {
+.layer, .update-layer {
 	background-color: #fefefe;
 	padding: 20px 30px;
 	border: 1px solid #888;

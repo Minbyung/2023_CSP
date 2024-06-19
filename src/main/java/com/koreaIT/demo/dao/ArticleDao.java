@@ -69,7 +69,17 @@ public interface ArticleDao {
 	public List<Article> getArticles(int projectId, String column, String order);
 	
 	
-	
+	@Select("""
+			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+				FROM article AS A
+				INNER JOIN `member` AS M ON A.memberId = M.id
+				LEFT JOIN tag AS T ON A.id = T.articleId
+				LEFT JOIN `member` AS TA ON T.memberId = TA.id
+				LEFT JOIN `group` AS G ON A.groupId = G.id
+				WHERE A.projectId = #{projectId} AND A.id = #{articleId}
+				GROUP BY A.id
+			""")
+	public Article getArticle(int projectId, int articleId);
 	
 	
 	

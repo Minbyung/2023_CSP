@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -124,6 +125,28 @@ public class UsrArticleController {
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 삭제했습니다", id), Util.f("../project/detail?projectId=%d", projectId));
 	}
+	
+	@RequestMapping("/usr/article/modify")
+	@ResponseBody
+	public Article modify(Model model, int projectId, int articleId) {
+		
+		Article article = articleService.getArticle(projectId, articleId);
+		
+//		if (article == null) {
+//			return rq.jsReturnOnView(Util.f("%d번 게시물은 존재하지 않습니다", articleId));
+//		}
+//		
+//		if (rq.getLoginedMemberId() != article.getMemberId()) {
+//			return rq.jsReturnOnView("해당 게시물에 대한 권한이 없습니다");
+//		}
+		
+		System.out.println(article);
+		
+		model.addAttribute("article", article);
+		
+		return article;
+	}
+	
 //	http://localhost:8082/usr/article/list
 	
 //	@RequestMapping("/usr/article/list")
@@ -204,23 +227,7 @@ public class UsrArticleController {
 //		return "usr/article/detail";
 //	}
 //	
-//	@RequestMapping("/usr/article/modify")
-//	public String modify(Model model, int id) {
-//		
-//		Article article = articleService.forPrintArticle(id);
-//		
-//		if (article == null) {
-//			return rq.jsReturnOnView(Util.f("%d번 게시물은 존재하지 않습니다", id));
-//		}
-//		
-//		if (rq.getLoginedMemberId() != article.getMemberId()) {
-//			return rq.jsReturnOnView("해당 게시물에 대한 권한이 없습니다");
-//		}
-//		
-//		model.addAttribute("article", article);
-//		
-//		return "usr/article/modify";
-//	}
+
 //	
 //	@RequestMapping("/usr/article/doModify")
 //	@ResponseBody
