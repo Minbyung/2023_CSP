@@ -22,6 +22,7 @@ import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.FileUtils;
 import com.koreaIT.demo.util.Util;
+import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.FileRequest;
 import com.koreaIT.demo.vo.Rq;
 
@@ -101,6 +102,29 @@ public class UsrArticleController {
 	public List<Map<String, Object>> getArticleCountsByStatus(int projectId) {
 		return articleService.getArticleCountsByStatus(projectId);
 	}	
+	
+	
+	@RequestMapping("/usr/article/doDelete")
+	@ResponseBody
+	public String doDelete(int id) {
+		
+		Article article = articleService.getArticleById(id);
+		
+		if (article == null) {
+			return Util.jsHistoryBack(Util.f("%d번 게시물은 존재하지 않습니다", id));
+		}
+		
+		if (rq.getLoginedMemberId() != article.getMemberId()) {
+			return Util.jsHistoryBack("해당 게시물에 대한 권한이 없습니다");
+		}
+		
+		int projectId = article.getProjectId();
+		
+		articleService.deleteArticle(id);
+		
+		return Util.jsReplace(Util.f("%d번 게시물을 삭제했습니다", id), Util.f("../project/detail?projectId=%d", projectId));
+	}
+//	http://localhost:8082/usr/article/list
 	
 //	@RequestMapping("/usr/article/list")
 //	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
@@ -217,23 +241,5 @@ public class UsrArticleController {
 //		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
 //	}
 //	
-//	@RequestMapping("/usr/article/doDelete")
-//	@ResponseBody
-//	public String doDelete(int id) {
-//		
-//		Article article = articleService.getArticleById(id);
-//		
-//		if (article == null) {
-//			return Util.jsHistoryBack(Util.f("%d번 게시물은 존재하지 않습니다", id));
-//		}
-//		
-//		if (rq.getLoginedMemberId() != article.getMemberId()) {
-//			return Util.jsHistoryBack("해당 게시물에 대한 권한이 없습니다");
-//		}
-//		
-//		articleService.deleteArticle(id);
-//		
-//		return Util.jsReplace(Util.f("%d번 게시물을 삭제했습니다", id), "list");
-//	}
-//	
+	
 }

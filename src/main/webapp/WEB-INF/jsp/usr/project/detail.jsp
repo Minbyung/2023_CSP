@@ -899,9 +899,15 @@
 							<c:forEach var="article" items="${articles }">
 								<div class="card shadow-xl z-0">
 								  <div class="card-body z-0">
-								  	<div class="flex z-0">
-								  		<h6 class="card-subtitle mb-2 text-muted">${article.writerName }</h6>
-								  		<h6 class="card-subtitle mb-2 ml-4 text-muted">${article.regDate }</h6>
+								  	<div class="flex justify-between">
+								  		<div class="flex">
+									  		<h6 class="card-subtitle text-muted">${article.writerName }</h6>
+									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
+								  		</div>
+								  		<div class="flex">
+								  			<button class="card-subtitle">수정</button>
+								  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+								  		</div>
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
 								    <p>그룹: ${article.groupName }</p> 
