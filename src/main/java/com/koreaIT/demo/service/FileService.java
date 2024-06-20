@@ -57,5 +57,19 @@ public class FileService {
 		return fileDao.findAllFileByProjectId(projectId);
 	}
 
+
+
+	public void deleteFile(int projectId, int id) {
+		fileDao.deleteFile(projectId, id);
+		
+	}
+
+
+
+	public List<FileResponse> findFileByProjectIdAndArticleId(int projectId, int articleId) {
+		return fileDao.findFileByProjectIdAndArticleId(projectId, articleId);
+		
+	}
+
 }
 

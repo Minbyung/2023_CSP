@@ -2,6 +2,7 @@ package com.koreaIT.demo.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -10,9 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.util.FileUtils;
+import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.FileResponse;
 
 @Controller
@@ -44,6 +48,14 @@ public class UsrFileController {
             throw new RuntimeException("filename encoding failed : " + file.getOriginal_name());
         }
     }
+    
+    @RequestMapping("/usr/file/findFile")
+	@ResponseBody
+	public List<FileResponse> findFileByProjectIdAndArticleId(int projectId, int articleId) {
+		List<FileResponse> fileList = fileService.findFileByProjectIdAndArticleId(projectId, articleId);
+		System.out.println("찾는것 : " + fileList);
+		return fileList;
+	}
 
 	
 	

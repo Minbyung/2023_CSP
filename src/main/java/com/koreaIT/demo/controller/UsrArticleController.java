@@ -68,8 +68,6 @@ public class UsrArticleController {
 		
 		if (fileRequests != null && !fileRequests.isEmpty()) {
 			List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
-			
-			
 	        fileService.saveFiles(id, projectId, files);
 		}
     
@@ -122,6 +120,7 @@ public class UsrArticleController {
 		int projectId = article.getProjectId();
 		
 		articleService.deleteArticle(id);
+		fileService.deleteFile(projectId, id);
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 삭제했습니다", id), Util.f("../project/detail?projectId=%d", projectId));
 	}

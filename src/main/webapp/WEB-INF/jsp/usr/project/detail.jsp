@@ -78,9 +78,8 @@
 	     $('.article-update-btn').click(function(){
 	    		$('.layer-bg').show();
 	    		$('.update-layer').show();
+	    		$('.file-list').empty();
 	    		var articleId = $(this).data('article-id');
-	    		console.log(projectId);
-	    		console.log(articleId);
 	    		$.ajax({
 			        url: '../article/modify',
 			        type: 'GET',
@@ -88,13 +87,46 @@
 			        	"articleId": articleId 
 			        },
 			        success: function(data) {
-// 			          $("#title").val("");
-					  $(".title").val(data.content);
+			          console.log(data);
+			         // startDate를 YYYY-MM-DD 형식으로 변환
+		              var startDate = data.startDate.split(' ')[0];
+		              var endDate = data.endDate.split(' ')[0];
+		              
+			          // taggedNames 필드를 콤마(,)로 분리
+					  var taggedNamesArray = data.taggedNames.split(',');
+		              // 분리된 값을 각각 요소로 추가
+		              $.each(taggedNamesArray, function(index, name) {
+		              	  var tag = $('<span class="tag">' + name + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+				          $('.update-tag-container').prepend(tag);
+				          tag.find('.tag-remove').on('click', function() {
+				          	tag.remove();
+				       	  });
+		              });
+					  $(".title").val(data.title);
  			          $(".content").val(data.content);
-// 			          $('.tag').remove();
-			          console.log(data.content);
+		              $(".start-date").val(startDate);
+ 				      $(".end-date").val(endDate);
 			        }
 			      });
+				  // 기존 파일 목록 가져오기
+			      $.ajax({
+			          url: '../file/findFile',
+			          method: 'GET',
+			          data: {"projectId": projectId,
+				        	"articleId": articleId 
+			          },
+			          success: function(data) {
+			              data.forEach(file => {
+			                  var fileItem = $('<div class="file-item" data-filename="' + file.original_name + '">' + file.original_name + '<button class="file-remove btns del_btn p-2 border border-gray-400">삭제</button></div>');
+			                  $('.file-list').prepend(fileItem);
+			              });
+			          }
+			      });
+	    		
+	    		
+	    		
+	    		
+	    		
 	    	})
 		 
 	     $('.modal-exam').click(function(){
@@ -170,14 +202,14 @@
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
 		        return $(this).clone().children().remove().end().text();
 		    }).get();
-		 
+		 	
 		    var formData = new FormData();
 		 
 		 // 기존 폼 데이터를 FormData 객체에 추가
 		    formData.append('title', title);
 		    formData.append('content', content);
 		    formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
-		    formData.append('projectId', projectId); // projectId 변수가 정의되어 있어야 합니다.
+		    formData.append('projectId', projectId); 
 		    formData.append('selectedGroupId', selectedGroupId);
 		    formData.append('startDate', startDate);
 		    formData.append('endDate', endDate);
@@ -254,7 +286,7 @@
 			        $('#search').val('');
 			
 			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-			        $('#tag-contianer').prepend(tag);
+			        $('.tag-container').prepend(tag);
 			
 			        $('#search').prependTo('.autocomplete-container');
 			
@@ -1051,7 +1083,7 @@
 				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 				    </div>
 						<div id="inputArea">
-						  <div id ="tag-contianer"></div>
+						  <div class ="tag-container"></div>
 						  <div class="autocomplete-container flex flex-col mb-3">
 							  <!-- 기존의 입력 필드 -->
 							  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
@@ -1126,7 +1158,7 @@
 		<div class="tabs flex">
 	        <button class="tab-btn tab-write" data-for-tab="1">수정</button>
 	    </div>
-	    <!-- 탭 내용 -->
+
        	<span id="close" class="close close-btn-x">&times;</span>
 		<div class="flex flex-col h-full">
 			<div class="write-modal-body">
@@ -1140,19 +1172,17 @@
 			      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 			    </div>
 					<div id="inputArea">
-					  <div id ="tag-contianer"></div>
+					  <div class ="update-tag-container"></div>
 					  <div class="autocomplete-container flex flex-col mb-3">
-						  <!-- 기존의 입력 필드 -->
 						  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-						  <!-- 자동완성 목록 -->
 						  <section id="autocomplete-results" style="width:20%;"></section>
 					  </div>
 					<div class="mb-3">
 						<label for="start-date">시작일:</label>
-						<input type="date" id="start-date" name="start-date">
+						<input type="date" id="start-date" class="start-date" name="start-date">
 
 					    <label for="end-date">마감일:</label>
-					    <input type="date" id="end-date" name="end-date">		
+					    <input type="date" id="end-date" class="end-date"  name="end-date">		
 						  		
 						  						  
 						<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
@@ -1180,6 +1210,10 @@
 					</div>
 					
 					<div class="file_list">
+						<div class="file-list flex">
+						
+						</div>
+					
 						<div class="file_input pb-3 flex items-center">
 	                        <div> 첨부파일
 	                            <input type="file" name="files" onchange="selectFile(this);" />

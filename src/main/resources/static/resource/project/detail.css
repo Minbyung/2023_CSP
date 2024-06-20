@@ -323,7 +323,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-#tag-contianer {
+.tag-container, .update-tag-container {
 	display: flex;
 	height: 29px;	
 }
@@ -678,4 +678,20 @@ ul.ui-autocomplete {
 
 .card-long-body, .card-short-body {
 	padding: 5px 16px 0 30px;
+}
+
+.file-item {
+	display: flex;
+	align-items: center;
+}
+
+.file-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.file_list {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
 }

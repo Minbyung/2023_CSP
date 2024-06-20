@@ -99,6 +99,20 @@ public interface FileDao {
 			""")
 	List<FileResponse> findAllFileByProjectId(int projectId);
 
+	@Select("""
+			SELECT * 
+				FROM tb_file
+				WHERE project_id = #{projectId}
+				AND article_id = #{articleId}
+			""")
+	List<FileResponse> findFileByProjectIdAndArticleId(int projectId, int articleId);
+	
+	@Delete("""
+			DELETE FROM tb_file
+			WHERE article_id = #{id} AND project_id = #{projectId}
+			""")
+	void deleteFile(int projectId, int id);
+
 }
 
 
