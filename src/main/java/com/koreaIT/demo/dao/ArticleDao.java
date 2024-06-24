@@ -146,7 +146,12 @@ public interface ArticleDao {
 			""")
 	public void insertTag(int articleId, Integer managerId, int projectId);
 
-	
+	@Update("""
+			UPDATE tag
+				SET memberId = #{managerId}
+				WHERE articleId = #{articleId} AND projectId = #{projectId}
+			""")
+	public void updateTag(int articleId, Integer managerId, int projectId);
 	
 	@Update("""
 			UPDATE article
@@ -199,4 +204,19 @@ public interface ArticleDao {
 				LIMIT 1;
 			""")
 	public Article getRecentlyAddArticle(int projectId);
+	
+	@Update("""
+			UPDATE article
+				SET updateDate = NOW()
+					, title = #{title}
+					, content = #{content}
+					, `status` = #{status}
+					, startDate = #{startDate}
+					, endDate = #{endDate}
+					WHERE id = #{articleId} AND projectId = #{projectId}
+			""")
+	public void updateArticle(int articleId, int memberId, String title, String content, String status, int projectId,
+			int selectedGroupId, String startDate, String endDate);
+
+	
 }

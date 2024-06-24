@@ -274,7 +274,7 @@
   color: white;
 }
 
-#submitBtn, #createMeetingBtn {
+#submitBtn, #createMeetingBtn, #updateBtn {
   position: fixed;
   right: 30px;
   bottom: 30px;

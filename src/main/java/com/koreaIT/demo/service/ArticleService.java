@@ -82,6 +82,25 @@ public class ArticleService {
 		return articleId;
 	}
 
+	
+	
+	public int updateArticle(int articleId, int memberId, String title, String content, String status, int projectId,
+			int selectedGroupId, List<String> managers, String startDate, String endDate) {
+		
+		
+		articleDao.updateArticle(articleId, memberId, title, content, status, projectId, selectedGroupId, startDate, endDate);
+		
+		for (String managerName : managers) {
+            Integer managerId = memberDao.findIdByName(managerName);
+            if (managerId != null) {
+                articleDao.updateTag(articleId, managerId, projectId);
+            }
+        }
+		
+		return 0;
+	}
+	
+	
 	public void updateStatus(int articleId, String newStatus) {
 		articleDao.updateStatus(articleId, newStatus);
 		
@@ -109,4 +128,6 @@ public class ArticleService {
 		
 		return articleDao.getRecentlyAddArticle(projectId);
 	}
+
+	
 }

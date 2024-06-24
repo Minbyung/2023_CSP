@@ -80,6 +80,7 @@
 	    		$('.update-layer').show();
 	    		$('.file-list').empty();
 	    		var articleId = $(this).data('article-id');
+	    		
 	    		$.ajax({
 			        url: '../article/modify',
 			        type: 'GET',
@@ -102,10 +103,18 @@
 				          	tag.remove();
 				       	  });
 		              });
-					  $(".title").val(data.title);
- 			          $(".content").val(data.content);
-		              $(".start-date").val(startDate);
- 				      $(".end-date").val(endDate);
+ 				      $("#updateBtn").data("article-id", data.id);
+					  $("#updateTitle").val(data.title);
+ 			          $("#updateContent").val(data.content);
+		              $("#upadte-start-date").val(startDate);
+ 				      $("#upadte-end-date").val(endDate);
+ 				      $('#update-status .status-btn-write').each(function() {
+ 		                 if ($(this).data('update-status') === data.status) {
+ 		                    $(this).addClass('active');
+ 		                    
+ 		                 }
+ 		              });
+ 				      
 			        }
 			      });
 				  // 기존 파일 목록 가져오기
@@ -122,12 +131,64 @@
 			              });
 			          }
 			      });
-	    		
-	    		
-	    		
-	    		
-	    		
 	    	})
+	    	
+	     $("#updateBtn").click(function(){
+	    	 var selectedGroupId = parseInt($('#updateGroupSelect').val());
+	    	 var title = $("#updateTitle").val();
+	    	 var content = $("#updateContent").val();
+	    	 var startDate = $("#upadte-start-date").val();
+			 var endDate = $("#upadte-end-date").val();
+			 var managers = $('.tag').map(function() {
+			 // 'x' 버튼을 제외한 텍스트만 반환합니다.
+		        return $(this).clone().children().remove().end().text();
+		     }).get();
+			 var status = $('#update-status .status-btn-write.active').data('update-status');
+			 var articleId = $(this).data('article-id');
+
+			 
+			 var formData = new FormData();
+			 // 기존 폼 데이터를 FormData 객체에 추가
+		     formData.append('title', title);
+		     formData.append('content', content);
+		     formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
+		     formData.append('projectId', projectId); 
+		     formData.append('selectedGroupId', selectedGroupId);
+		     formData.append('startDate', startDate);
+		     formData.append('endDate', endDate);
+		     formData.append('articleId', articleId);
+		    
+		     // 담당자 정보를 FormData 객체에 추가
+		     $.each(managers, function(i, manager) {
+		         formData.append('managers[]', manager);
+		     });
+		    
+		  // 파일 데이터 추가
+		     $('.file_input input[type="file"]').each(function(index, element) {
+		         if (element.files.length > 0) {
+		             // 'files[]'를 사용하여 서버에 배열로 전송
+		             formData.append('fileRequests[]', element.files[0]);
+		         }
+		     });
+		  
+		     $.ajax({
+			        url: '../article/doUpdate',
+			        type: 'POST',
+			        data: formData,
+			        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
+			        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
+			        success: function(data) {
+// 			          $("#title").val("");
+// 			          $("#content").val("");
+// 			          $('.tag').remove();
+			          $('.layer-bg').hide();
+					  $('.layer').hide();
+					  location.reload();
+			        }
+			      });
+	    	  
+	    	 
+	      });	
 		 
 	     $('.modal-exam').click(function(){
 	    		$('.layer-bg').show();
@@ -1164,12 +1225,12 @@
 			<div class="write-modal-body">
 				<input type="hidden" id="projectId" value="${project.id }">
 <!-- 							<input type="file" id="fileInput" name="files" multiple> -->
-				<div id="status" class="mt-4">
-			      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-			      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-			      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-			      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-			      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+				<div id="update-status" class="mt-4">
+			      <button class="status-btn-write btn btn-active" data-update-status="요청">요청</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="진행">진행</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="피드백">피드백</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="완료">완료</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="보류">보류</button>
 			    </div>
 					<div id="inputArea">
 					  <div class ="update-tag-container"></div>
@@ -1178,14 +1239,14 @@
 						  <section id="autocomplete-results" style="width:20%;"></section>
 					  </div>
 					<div class="mb-3">
-						<label for="start-date">시작일:</label>
-						<input type="date" id="start-date" class="start-date" name="start-date">
+						<label for="upadte-start-date">시작일:</label>
+						<input type="date" id="upadte-start-date" class="start-date" name="start-date">
 
-					    <label for="end-date">마감일:</label>
-					    <input type="date" id="end-date" class="end-date"  name="end-date">		
+					    <label for="upadte-end-date">마감일:</label>
+					    <input type="date" id="upadte-end-date" class="end-date"  name="end-date">		
 						  		
 						  						  
-						<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+						<select id="updateGroupSelect" class="select select-bordered select-xs w-full max-w-xs"">
 						    <c:forEach var="group" items="${groups}">
 						        <c:choose>
 						            <c:when test="${group.group_name eq '그룹 미지정'}">
@@ -1201,12 +1262,12 @@
 					
 					</div>
 					<div class="mb-3">
-					  <label for="exampleFormControlInput1" class="form-label">제목</label>
-					  <input type="email" class="form-control title" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+					  <label for="updateTitle" class="form-label">제목</label>
+					  <input type="email" class="form-control title" id="updateTitle" placeholder="제목을 입력해주세요" required />
 					</div>
 					<div class="mb-3">
-					  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-					  <textarea class="form-control h-80 content" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
+					  <label for="updateContent" class="form-label h-4">내용</label>
+					  <textarea class="form-control h-80 content" id="updateContent" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 					</div>
 					
 					<div class="file_list">
@@ -1224,7 +1285,7 @@
                     </div>
 				</div>	
 			<div class="write-modal-footer">	
-		 	   <button id="submitBtn" type="button">작성하기</button>
+		 	   <button id="updateBtn" type="button">수정하기</button>
 		    </div>
 	    </div>
 	</div>
