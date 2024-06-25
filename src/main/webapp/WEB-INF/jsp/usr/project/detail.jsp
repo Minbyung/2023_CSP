@@ -1035,12 +1035,7 @@
 		            </li>
 		        </ul>
 		    </div>
-<!-- 		    <div class="lnb-bottom-customer"> -->
-<!-- 		        <a href="#" class=""> -->
-<!-- 		            <i class="fa-regular fa-circle-question self-center mr-3"></i> -->
-<!-- 		            <div>고객센터</div> -->
-<!-- 		        </a> -->
-<!-- 		    </div> -->
+
 		</div>
 	  
 	  
@@ -1070,6 +1065,15 @@
     		<section class="project-detail-container">
 				<div class="detail-wrap">
     				<div class="postTimeline">
+    					<div class="search-box">
+	    					<form action="">
+	    						<input class="search-txt" type="text" name="" placeholder="검색어를 입력하세요"/>
+	    						<button class="search-btn" type="submit">
+	    							<i class="fa-solid fa-magnifying-glass"></i>
+	    						</button>
+	    					</form>
+    					</div>
+    				
     					<div class="reportArea">
     					<h1>업무 리포트</h1>
     					<div class="flex">

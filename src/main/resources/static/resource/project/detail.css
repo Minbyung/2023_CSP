@@ -163,11 +163,57 @@
 }
 
 .postTimeline {
+	position: relative;
 	margin: 0 auto;
 	min-width: 674px;
 	max-width: 674px;
 	padding-bottom: 150px;
 }
+.search-box {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 30px;
+	width: 300px;
+	background: white;
+	border-radius: 40px;
+	padding: 10px;
+	border: 1px solid #f9deec;
+	display: flex; /* Flexbox 사용 */
+	align-items: center; /* 세로 중앙 정렬 */
+	justify-content: center;
+}
+
+.search-txt {
+	border: none;
+	background: none;
+	outline: none;
+	float: left;
+	padding: 0px;
+	color: #797979;
+	font-size: 16px;
+	line-height: 30px;
+	width: 200px;
+/*	flex: 1; */
+}
+
+.search-btn {
+	color: #f9deec;
+	float: right;
+	width: 40px;
+	height: 30px;
+	border-radius: 50%;
+	background: white;
+	border: none;
+	font-size: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+/*	flex: 1;*/
+}
+
+
+
 
 .reportArea {
 	
