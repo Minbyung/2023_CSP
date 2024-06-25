@@ -125,8 +125,9 @@
 				        	"articleId": articleId 
 			          },
 			          success: function(data) {
+			        	  console.log(data)
 			              data.forEach(file => {
-			                  var fileItem = $('<div class="file-item" data-filename="' + file.original_name + '">' + file.original_name + '<button class="file-remove btns del_btn p-2 border border-gray-400">삭제</button></div>');
+			                  var fileItem = $('<div class="file-item" data-filename="' + file.original_name + '" data-articleid="' + file.article_id + '" data-projectid="' + file.project_id + '">' + file.original_name + '<button class="file-remove btns del_btn p-2 border border-gray-400">삭제</button></div>');
 			                  $('.file-list').prepend(fileItem);
 			              });
 			          }
@@ -232,6 +233,34 @@
 			}).on("focus", function() {
 			    $(this).autocomplete("search", " "); 
 			});
+	     
+	     $(document).on('click', '.file-remove', function() {
+	    	 var $fileItem = $(this).closest('.file-item');
+	    	 var fileName = $fileItem.data('filename');
+	    	 var articleId = $fileItem.data('articleid');
+	    	 var projectId = $fileItem.data('projectid');
+	    	 
+	    	 $.ajax({
+	    	        url: '../file/deleteFile',
+	    	        type: 'POST',
+	    	        data: { fileName: fileName, projectId: projectId, articleId: articleId },
+	    	        success: function(response) {
+	    	        	console.log(response);
+	    	            if (response == "S-1") {
+	    	                $fileItem.remove();
+	    	            } else {
+	    	                alert('파일 삭제에 실패했습니다.');
+	    	            }
+	    	        },
+	    	        error: function(err) {
+	    	            console.error(err);
+	    	            alert('파일 삭제 중 오류가 발생했습니다.');
+	    	        }
+	    	    });
+	    	 
+	     });
+	     
+	     
 
 		 
 	     $('.modal-exam').click(function(){
@@ -255,10 +284,10 @@
 	    		$('#exampleFormControlInput1').val('');
 	    		$('#exampleFormControlTextarea1').val('');
 	    		// 파일 입력 필드들을 제거합니다.
-	    	    $('.file_list .file_input:not(:first)').remove();
+	    	    $('#file_list .file_input:not(:first)').remove();
 	    	    // 기본 파일 입력 필드를 초기화합니다.
-	    	    $('.file_list .file_input:first input[type="file"]').val('');
-	    	    $('.file_list .file_input:first input[type="text"]').val('');
+	    	    $('#file_list .file_input:first input[type="file"]').val('');
+	    	    $('#file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
 	    	    $('#start-date').val('');
@@ -276,10 +305,10 @@
 	    		$('#exampleFormControlInput1').val('');
 	    		$('#exampleFormControlTextarea1').val('');
 	    		// 파일 입력 필드들을 제거합니다.
-	    	    $('.file_list .file_input:not(:first)').remove();
+	    	    $('#file_list .file_input:not(:first)').remove();
 	    	    // 기본 파일 입력 필드를 초기화합니다.
-	    	    $('.file_list .file_input:first input[type="file"]').val('');
-	    	    $('.file_list .file_input:first input[type="text"]').val('');
+	    	    $('#file_list .file_input:first input[type="file"]').val('');
+	    	    $('#file_list .file_input:first input[type="text"]').val('');
 	    		// select 박스의 선택 항목을 '그룹 미지정'으로 변경
 	    	    $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
 	    	    $('#start-date').val('');
@@ -1227,7 +1256,7 @@
 						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 						</div>
 						
-						<div class="file_list">
+						<div class="file_list" id="file_list">
 							<div class="file_input pb-3 flex items-center">
 		                        <div> 첨부파일
 		                            <input type="file" name="files" onchange="selectFile(this);" />
@@ -1314,7 +1343,7 @@
 					  <textarea class="form-control h-80 content" id="updateContent" rows="3" placeholder="내용을 입력해주세요" required></textarea>
 					</div>
 					
-					<div class="file_list">
+					<div class="file_list" id="update-file_list">
 						<div class="file-list flex">
 						
 						</div>

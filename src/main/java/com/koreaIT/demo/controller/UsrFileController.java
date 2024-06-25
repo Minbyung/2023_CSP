@@ -53,10 +53,15 @@ public class UsrFileController {
 	@ResponseBody
 	public List<FileResponse> findFileByProjectIdAndArticleId(int projectId, int articleId) {
 		List<FileResponse> fileList = fileService.findFileByProjectIdAndArticleId(projectId, articleId);
-		System.out.println("찾는것 : " + fileList);
 		return fileList;
 	}
-
+    
+    @RequestMapping("/usr/file/deleteFile")
+	@ResponseBody
+	public String deleteFile(String fileName, int projectId, int articleId) {
+		fileService.deleteFile(fileName, projectId, articleId);
+		return "S-1";
+	}
 	
 	
 	

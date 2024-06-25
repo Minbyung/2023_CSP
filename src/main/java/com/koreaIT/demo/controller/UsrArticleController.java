@@ -147,7 +147,7 @@ public class UsrArticleController {
 		int projectId = article.getProjectId();
 		
 		articleService.deleteArticle(id);
-		fileService.deleteFile(projectId, id);
+		fileService.deleteAllFile(projectId, id);
 		
 		return Util.jsReplace(Util.f("%d번 게시물을 삭제했습니다", id), Util.f("../project/detail?projectId=%d", projectId));
 	}

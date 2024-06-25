@@ -109,9 +109,16 @@ public interface FileDao {
 	
 	@Delete("""
 			DELETE FROM tb_file
-			WHERE article_id = #{id} AND project_id = #{projectId}
+				WHERE article_id = #{id} AND project_id = #{projectId}
 			""")
-	void deleteFile(int projectId, int id);
+	void deleteAllFile(int projectId, int id);
+	
+	
+	@Delete("""
+			DELETE FROM tb_file
+				WHERE original_name = #{fileName} AND project_id = #{projectId} AND article_id = #{articleId}
+			""")
+	void deleteFile(String fileName, int projectId, int articleId);
 
 }
 

@@ -59,8 +59,8 @@ public class FileService {
 
 
 
-	public void deleteFile(int projectId, int id) {
-		fileDao.deleteFile(projectId, id);
+	public void deleteAllFile(int projectId, int id) {
+		fileDao.deleteAllFile(projectId, id);
 		
 	}
 
@@ -68,6 +68,13 @@ public class FileService {
 
 	public List<FileResponse> findFileByProjectIdAndArticleId(int projectId, int articleId) {
 		return fileDao.findFileByProjectIdAndArticleId(projectId, articleId);
+		
+	}
+
+
+
+	public void deleteFile(String fileName, int projectId, int articleId) {
+		fileDao.deleteFile(fileName, projectId, articleId);
 		
 	}
 
