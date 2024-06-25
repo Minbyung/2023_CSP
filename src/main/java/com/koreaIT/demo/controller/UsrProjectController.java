@@ -198,7 +198,6 @@ public class UsrProjectController {
 		    }
 		}
 		
-		System.out.println(groupedArticles);
 		return groupedArticles;
 	}
 	

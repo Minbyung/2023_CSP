@@ -257,7 +257,6 @@
 	    	            alert('파일 삭제 중 오류가 발생했습니다.');
 	    	        }
 	    	    });
-	    	 
 	     });
 	     
 	     
@@ -1094,10 +1093,14 @@
 									  		<h6 class="card-subtitle text-muted">${article.writerName }</h6>
 									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
 								  		</div>
-								  		<div class="flex">
-								  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
-								  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
-								  		</div>
+								  		
+								  		<c:if test="${article.memberId == rq.getLoginedMemberId()}">
+									  		<div class="flex">
+									  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
+									  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+									  		</div>
+								  		</c:if>
+								  		
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
 								    <p>그룹: ${article.groupName }</p> 
