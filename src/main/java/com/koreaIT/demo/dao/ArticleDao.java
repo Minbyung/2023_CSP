@@ -240,4 +240,7 @@ public interface ArticleDao {
 			int selectedGroupId, String startDate, String endDate);
 
 	
+	@Select("SELECT * FROM items WHERE name LIKE CONCAT('%', #{searchTerm}, '%') OR description LIKE CONCAT('%', #{searchTerm}, '%')")
+	public List<Article> getArticleByTerm(String searchTerm);
+	
 }
