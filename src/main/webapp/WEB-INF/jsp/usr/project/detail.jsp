@@ -98,7 +98,7 @@
 		              // 분리된 값을 각각 요소로 추가
 		              $.each(taggedNamesArray, function(index, name) {
 		              	  var tag = $('<span class="tag">' + name + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-				          $('.update-tag-container').prepend(tag);
+				          $('#update-tag-container').prepend(tag);
 				          tag.find('.tag-remove').on('click', function() {
 				          	tag.remove();
 				       	  });
@@ -148,6 +148,7 @@
 
 			 
 			 var formData = new FormData();
+			 
 			 // 기존 폼 데이터를 FormData 객체에 추가
 		     formData.append('title', title);
 		     formData.append('content', content);
@@ -158,7 +159,7 @@
 		     formData.append('endDate', endDate);
 		     formData.append('articleId', articleId);
 		    
-		     // 담당자 정보를 FormData 객체에 추가
+
 		     $.each(managers, function(i, manager) {
 		         formData.append('managers[]', manager);
 		     });
@@ -166,7 +167,6 @@
 		  // 파일 데이터 추가
 		     $('.file_input input[type="file"]').each(function(index, element) {
 		         if (element.files.length > 0) {
-		             // 'files[]'를 사용하여 서버에 배열로 전송
 		             formData.append('fileRequests[]', element.files[0]);
 		         }
 		     });
@@ -175,8 +175,8 @@
 			        url: '../article/doUpdate',
 			        type: 'POST',
 			        data: formData,
-			        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
-			        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
+			        contentType: false, 
+			        processData: false, 
 			        success: function(data) {
 // 			          $("#title").val("");
 // 			          $("#content").val("");
@@ -189,6 +189,50 @@
 	    	  
 	    	 
 	      });	
+	      
+	     $("#update-search").autocomplete({
+				// source 는 자동완성의 대상(배열)
+				// request는 현재 입력 필드에 입력된 값(term)을 포함하고 있으며, 이 값을 사용하여 서버에 데이터를 요청할 때 필요한 매개변수로 사용
+			    source: function(request, response) {
+			        $.ajax({
+			            url: "../project/getMembers",
+			            type: "GET",
+			            data: { term: request.term, "projectId": projectId },
+			            success: function(data) {
+			            	console.log(data);
+			                var taggedMembers = $('#update-tag-container .tag').map(function() {
+			                    return $(this).clone().children().remove().end().text().trim();
+			                }).get();
+			                var results = $.grep(data, function(result){
+			                    return $.inArray(result.trim(), taggedMembers) === -1;
+			                });
+			
+			                response(results);
+			            },
+			            error: function(err) {
+			                console.error(err);
+			            }
+			        });
+			    },
+			    select: function(event, ui) {
+			        var newValue = ui.item.value;
+			        $('#update-search').val('');
+			
+			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+			        $('#update-tag-container').prepend(tag);
+			
+					$('#update-autocomplete-container').prepend($('#update-search'));
+					
+			        tag.find('.tag-remove').on('click', function() {
+			            tag.remove();
+			        });
+			
+			        return false;
+			    }
+			}).on("focus", function() {
+			    $(this).autocomplete("search", " "); 
+			});
+
 		 
 	     $('.modal-exam').click(function(){
 	    		$('.layer-bg').show();
@@ -328,7 +372,7 @@
 			            data: { term: request.term, "projectId": projectId },
 			            success: function(data) {
 			            	console.log(data);
-			                var taggedMembers = $('.tag').map(function() {
+			                var taggedMembers = $('#tag-container .tag').map(function() {
 			                    return $(this).clone().children().remove().end().text().trim();
 			                }).get();
 			                var results = $.grep(data, function(result){
@@ -347,9 +391,9 @@
 			        $('#search').val('');
 			
 			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-			        $('.tag-container').prepend(tag);
+			        $('#tag-container').prepend(tag);
 			
-			        $('#search').prependTo('.autocomplete-container');
+			        $('#search').prependTo('#autocomplete-container');
 			
 			        tag.find('.tag-remove').on('click', function() {
 			            tag.remove();
@@ -1144,8 +1188,8 @@
 				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
 				    </div>
 						<div id="inputArea">
-						  <div class ="tag-container"></div>
-						  <div class="autocomplete-container flex flex-col mb-3">
+						  <div class ="tag-container" id="tag-container"></div>
+						  <div class="autocomplete-container flex flex-col mb-3" id="autocomplete-container">
 							  <!-- 기존의 입력 필드 -->
 							  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
 							  <!-- 자동완성 목록 -->
@@ -1233,10 +1277,10 @@
 			      <button class="status-btn-write btn btn-active" data-update-status="보류">보류</button>
 			    </div>
 					<div id="inputArea">
-					  <div class ="update-tag-container"></div>
+					  <div class ="update-tag-container" id="update-tag-container"></div>
 					  <div class="autocomplete-container flex flex-col mb-3">
-						  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-						  <section id="autocomplete-results" style="width:20%;"></section>
+						  <input type="text" class="form-control w-72" id="update-search" autocomplete="off" placeholder="담당자를 입력해주세요">
+						  <section id="update-autocomplete-results" style="width:20%;"></section>
 					  </div>
 					<div class="mb-3">
 						<label for="upadte-start-date">시작일:</label>

@@ -152,6 +152,27 @@ public interface ArticleDao {
 				WHERE articleId = #{articleId} AND projectId = #{projectId}
 			""")
 	public void updateTag(int articleId, Integer managerId, int projectId);
+
+	@Select("""
+		    SELECT COUNT(*)
+			    FROM tag
+			    WHERE articleId = #{articleId} AND projectId = #{projectId} AND memberId = #{managerId}
+		    """)
+	public int isTagExists(int articleId, Integer managerId, int projectId);
+	
+	
+	@Select("""
+	    SELECT memberId
+		    FROM tag
+		    WHERE articleId = #{articleId} AND projectId = #{projectId}
+	    """)
+	public List<Integer> getTagMemberIds(int articleId, int projectId);
+
+	@Delete("""
+	    DELETE FROM tag
+			WHERE articleId = #{articleId} AND projectId = #{projectId} AND memberId = #{managerId}
+	    """)
+	public void deleteTag(int articleId, Integer managerId, int projectId);
 	
 	@Update("""
 			UPDATE article

@@ -1,5 +1,6 @@
 package com.koreaIT.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -90,14 +91,35 @@ public class ArticleService {
 		
 		articleDao.updateArticle(articleId, memberId, title, content, status, projectId, selectedGroupId, startDate, endDate);
 		
-		for (String managerName : managers) {
-            Integer managerId = memberDao.findIdByName(managerName);
-            if (managerId != null) {
-                articleDao.updateTag(articleId, managerId, projectId);
-            }
-        }
+		// Get existing tags
+	    List<Integer> existingTagMemberIds = articleDao.getTagMemberIds(articleId, projectId);
+
+	    // Convert new manager names to IDs
+	    List<Integer> newManagerIds = new ArrayList<>();
+	    for (String managerName : managers) {
+	        Integer managerId = memberDao.findIdByName(managerName);
+	        if (managerId != null) {
+	            newManagerIds.add(managerId);
+	        }
+	    }
+
+	    // Update tags
+	    for (Integer managerId : newManagerIds) {
+	        if (existingTagMemberIds.contains(managerId)) {
+	            // Tag already exists, no need to insert or update
+	            existingTagMemberIds.remove(managerId);
+	        } else {
+	            // Tag does not exist, insert it
+	            articleDao.insertTag(articleId, managerId, projectId);
+	        }
+	    }
+
+	    // Delete tags that are no longer associated with the article
+	    for (Integer oldManagerId : existingTagMemberIds) {
+	        articleDao.deleteTag(articleId, oldManagerId, projectId);
+	    }
 		
-		return 0;
+		return articleId;
 	}
 	
 	
