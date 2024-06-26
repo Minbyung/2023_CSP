@@ -470,72 +470,92 @@
 	    	    });
 	    	});
 
-
-
-//			상태 chart.js
 			$.ajax({
-		    url: '../article/getArticleCountsByStatus',
-		    type: 'GET',
-		    data: { 'projectId': projectId },
-		    success: function(data) {
-		        var labels = data.map(function(item) {
-		            return item.status;
-		        });
-		        var counts = data.map(function(item) {
-		            return item.count;
-		        });
+                url: '../article/getArticleCountsByStatus',
+                type: 'GET',
+                data: { 'projectId': projectId },
+                success: function(data) {
+                    // 상태와 색상 매핑
+                    var statusColors = {
+                        '요청': 'rgba(255, 99, 132, 0.2)',
+                        '진행': 'rgba(54, 162, 235, 0.2)',
+                        '피드백': 'rgba(255, 206, 86, 0.2)',
+                        '완료': 'rgba(75, 192, 192, 0.2)',
+                        '보류': 'rgba(153, 102, 255, 0.2)'
+                    };
 
-		        var ctx = document.getElementById('donutChart').getContext('2d');
-		        var chartData = {
-		            labels: labels,
-		            datasets: [{
-		                data: counts,
-		                backgroundColor: [
-		                    'rgba(255, 99, 132, 0.2)',
-		                    'rgba(54, 162, 235, 0.2)',
-		                    'rgba(255, 206, 86, 0.2)',
-		                    'rgba(75, 192, 192, 0.2)',
-		                    'rgba(153, 102, 255, 0.2)'
-		                ],
-		                borderColor: [
-		                    'rgba(255, 99, 132, 1)',
-		                    'rgba(54, 162, 235, 1)',
-		                    'rgba(255, 206, 86, 1)',
-		                    'rgba(75, 192, 192, 1)',
-		                    'rgba(153, 102, 255, 1)'
-		                ],
-		                borderWidth: 1
-		            }]
-		        };
-		
-		        var options = {
-		            responsive: true,
-		            cutout: '80%'
-		        };
-		
-		        var myChart = new Chart(ctx, {
-		            type: 'doughnut',
-		            data: chartData,
-		            options: options
-		        });
-		
-		
-				var totalCount = counts.reduce(function(acc, val) {
-					return acc + val;
-				}, 0);
-				
-				var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너 가져오기
-				$.each(data, function(i, item) {
-					var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
-					var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성
-					$infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정
-					$infoContainer.append($infoElement); // 요소를 컨테이너에 추가
-				});
-		    },
-		    error: function(jqXHR, textStatus, errorThrown) {
-		        console.log(textStatus, errorThrown);
-		    }
-		});
+                    var borderColors = {
+                        '요청': 'rgba(255, 99, 132, 1)',
+                        '진행': 'rgba(54, 162, 235, 1)',
+                        '피드백': 'rgba(255, 206, 86, 1)',
+                        '완료': 'rgba(75, 192, 192, 1)',
+                        '보류': 'rgba(153, 102, 255, 1)'
+                    };
+
+                    // 데이터를 라벨과 카운트로 분리
+                    var labels = data.map(function(item) {
+                        return item.status;
+                    });
+                    var counts = data.map(function(item) {
+                        return item.count;
+                    });
+
+                    // 상태에 맞는 색상 배열 생성
+                    var backgroundColor = labels.map(function(label) {
+                        return statusColors[label];
+                    });
+
+                    var borderColor = labels.map(function(label) {
+                        return borderColors[label];
+                    });
+
+                    // 차트 생성
+                    var ctx = document.getElementById('donutChart').getContext('2d');
+                    var chartData = {
+                        labels: labels,
+                        datasets: [{
+                            data: counts,
+                            backgroundColor: backgroundColor,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                        }]
+                    };
+
+                    var options = {
+                        responsive: true,
+                        cutout: '80%'
+                    };
+
+                    var myChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: chartData,
+                        options: options
+                    });
+
+                 // 데이터 순서 정렬
+                    var desiredOrder = ['요청', '진행', '피드백', '완료', '보류'];
+                    data.sort(function(a, b) {
+                        return desiredOrder.indexOf(a.status) - desiredOrder.indexOf(b.status);
+                    });
+
+                    // 정보 표시
+                    var totalCount = counts.reduce(function(acc, val) {
+                        return acc + val;
+                    }, 0);
+
+                    var $infoContainer = $('#infoContainer'); // 정보를 표시할 컨테이너 가져오기
+                    $infoContainer.empty(); // 기존 내용을 지움
+                    $.each(data, function(i, item) {
+                        var percentage = ((item.count / totalCount) * 100).toFixed(0); // 각 항목의 비율 계산
+                        var $infoElement = $('<p>'); // 각 항목에 대한 정보를 표시할 요소를 생성
+                        $infoElement.text(item.status + ': ' + item.count + ' (' + percentage + '%)'); // 요소의 내용을 설정
+                        $infoContainer.append($infoElement); // 요소를 컨테이너에 추가
+                    });
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error fetching data:', textStatus, errorThrown);
+                }
+            });
 		
 
 
