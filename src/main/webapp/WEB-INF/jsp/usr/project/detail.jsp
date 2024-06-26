@@ -71,7 +71,6 @@
 	 	    $(this).addClass("active");
 
 	 	    status = $(this).data('status');
-	 	   console.log(status);
 	 	  });
 	     
 // 임시
@@ -558,23 +557,6 @@
             });
 		
 
-
-// 			function inviteProjectMember(memberId) {
-// 				console.log("작동");
-// 		        var projectId = ${projectId}; // 현재 페이지의 프로젝트 ID
-// 		        $.ajax({
-// 		            url: '../project/inviteProjectMember',
-// 		            method: 'POST',
-// 		            data: { memberId: memberId, projectId: projectId },
-// 		            success: function(response) {
-// 		                alert('팀원이 초대되었습니다.');
-// 		            },
-// 		            error: function(err) {
-// 		                alert('초대에 실패했습니다.');
-// 		            }
-// 		        });
-// 		    }
-
 			// invite-btn 클래스를 가진 버튼에 대해 클릭 이벤트 리스너를 바인딩
 		    $('.invite-btn').on('click', function(event) {
 		    	event.stopPropagation(); // 이벤트 전파 중단
@@ -790,6 +772,8 @@
                 window.location.href = authUrl;
             });
 		    
+		    
+		    // 글쓰기 탭
 		    $(".tab-btn").click(function() {
 		        // 모든 탭 내용을 숨깁니다.
 		        $(".tab-content").hide();

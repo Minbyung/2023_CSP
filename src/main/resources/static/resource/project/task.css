@@ -190,27 +190,43 @@
 }
 
 .status-btn-write, .status-btn-update {
-  background-color: #f8f8f8;
-  color: black;
-  margin-right: 10px;
+	background-color: #f8f8f8;
+	color: black;
+	margin-right: 10px;
 }
 
-.status-btn-write.active, .status-btn-update.active {
-  background-color: #4CAF50;
-  color: white;
+.status-btn-write.active[data-status="요청"], .status-btn-update.active[data-status="요청"] {
+    background-color: rgba(255, 99, 132, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="진행"], .status-btn-update.active[data-status="진행"] {
+    background-color: rgba(54, 162, 235, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="피드백"], .status-btn-update.active[data-status="피드백"] {
+    background-color: rgba(255, 206, 86, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="완료"], .status-btn-update.active[data-status="완료"] {
+    background-color: rgba(75, 192, 192, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="보류"], .status-btn-update.active[data-status="보류"] {
+    background-color: rgba(153, 102, 255, 0.8);
+    color: white;
 }
 
 #submitBtn, #createMeetingBtn {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
   background-color: #4CAF50;
   color: white;
   padding: 13px 10px;
-/*  margin: 8px 0;*/
-  border: none;
   cursor: pointer;
   width: 33%;
   display: block;
-/*  margin-top: 20px;*/
-  font-size: 14px;
+  border-radius: 10px;
 }
 
 #submitBtn:hover, #createMeetingBtn:hover {
@@ -360,3 +376,31 @@ ul.ui-autocomplete {
     /* 필요한 스타일을 추가합니다. */
 }
 
+
+/*글쓰기*/
+.tab-write, .tab-meeting {
+	flex-grow: 1;
+	height: 30px;
+	border: none; /* 테두리 제거 */
+	cursor: pointer; /* 마우스 오버 시 커서 변경 */
+	border-radius: 10px;
+}
+
+.active-tab {
+	background-color: #4CAF50; /* 활성 탭의 배경 색상 */
+	color: white; /* 활성 탭의 글자 색상 */
+}
+
+/* 탭 버튼 기본 상태 */
+.tab-btn {
+	transition: background-color 0.3s ease; /* 부드러운 색상 변화 */
+}
+
+/* 탭 버튼 호버 상태 */
+.tab-btn:hover {
+	background-color: #ddd; /* 마우스 오버 시 배경 색상 */
+}
+
+.tab-meeting-content {
+	height: 713px;
+}
