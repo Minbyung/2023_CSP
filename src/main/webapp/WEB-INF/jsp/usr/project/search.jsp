@@ -1067,7 +1067,7 @@
     				<div class="postTimeline">
     					<div class="search-box">
 	    					<form action="../article/search">
-	    						<input type="hidden" name="projectId" value="1" />
+	    						<input type="hidden" name="projectId" value="${project.id }" />
 	    						<input class="search-txt" type="text" name="searchTerm" placeholder="검색어를 입력하세요"/>
 	    						<button class="search-btn" type="submit">
 	    							<i class="fa-solid fa-magnifying-glass"></i>

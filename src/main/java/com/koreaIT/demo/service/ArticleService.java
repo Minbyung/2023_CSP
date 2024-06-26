@@ -151,5 +151,10 @@ public class ArticleService {
 		return articleDao.getRecentlyAddArticle(projectId);
 	}
 
+	public List<Article> getArticlesByTerm(String searchTerm, int projectId) {
+		
+		return articleDao.getArticlesByTerm(searchTerm, projectId);
+	}
+
 	
 }

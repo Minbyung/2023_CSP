@@ -87,6 +87,8 @@ public class UsrProjectController {
 		Article lastPostedArticle = articleService.getRecentlyAddArticle(projectId);
 		
 		
+		
+		
 		for (Article article : articles) {
 	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
 	        System.out.println(infoFiles);
@@ -130,6 +132,70 @@ public class UsrProjectController {
 		
 		return "usr/project/detail";
 	}
+	
+	@RequestMapping("/usr/article/search")
+	public String search(Model model, int projectId, String searchTerm, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
+		
+		int memberId = rq.getLoginedMemberId();
+		
+		
+		
+		
+		Project project = projectService.getProjectByProjectId(projectId);
+		List<Article> articles = articleService.getArticlesByTerm(searchTerm, projectId);
+		Article lastPostedArticle = articleService.getRecentlyAddArticle(projectId);
+		
+		
+		for (Article article : articles) {
+		       System.out.println(article);
+		    }
+		
+		for (Article article : articles) {
+	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
+	        System.out.println(infoFiles);
+	        
+	        article.setInfoFiles(infoFiles); 
+	    }
+		
+		
+		
+		
+		
+		List<Group> groups = groupService.getGroups(projectId);
+		int teamId = project.getTeamId();
+		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		
+		List<Member> projectMembers = memberService.getprojectMembersByprojectId(projectId, rq.getLoginedMemberId());
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
+		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
+		int projectMembersCnt = memberService.getProjectMembersCnt(projectId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+		
+		Member member = memberService.getMemberById(memberId);
+		
+		
+		model.addAttribute("project", project);
+		model.addAttribute("projects", projects);
+		model.addAttribute("projectId", projectId);
+		model.addAttribute("articles", articles);
+		model.addAttribute("lastPostedArticle", lastPostedArticle);
+		model.addAttribute("groups", groups);
+		model.addAttribute("teamMembers", teamMembers);
+		model.addAttribute("projectMembers", projectMembers);
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("loginedMember", loginedMember);
+		model.addAttribute("teamMembersCnt", teamMembersCnt);
+		model.addAttribute("projectMembersCnt", projectMembersCnt);
+		model.addAttribute("chatRooms", chatRooms);
+		model.addAttribute("member", member);
+		
+		
+		return "usr/project/detail";
+	}
+	
+	
+	
 	
 	@RequestMapping("/usr/project/task")
 	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {

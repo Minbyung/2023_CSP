@@ -240,7 +240,17 @@ public interface ArticleDao {
 			int selectedGroupId, String startDate, String endDate);
 
 	
-	@Select("SELECT * FROM items WHERE name LIKE CONCAT('%', #{searchTerm}, '%') OR description LIKE CONCAT('%', #{searchTerm}, '%')")
-	public List<Article> getArticleByTerm(String searchTerm);
+	@Select("""
+        SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+	        FROM article AS A
+	        INNER JOIN `member` AS M ON A.memberId = M.id
+	        LEFT JOIN tag AS T ON A.id = T.articleId
+	        LEFT JOIN `member` AS TA ON T.memberId = TA.id
+	        LEFT JOIN `group` AS G ON A.groupId = G.id
+	        WHERE (A.title LIKE CONCAT('%', #{searchTerm}, '%') OR A.content LIKE CONCAT('%', #{searchTerm}, '%'))
+	        AND A.projectId = #{projectId}
+	        GROUP BY A.id
+		    """)
+	public List<Article> getArticlesByTerm(String searchTerm, int projectId);
 	
 }
