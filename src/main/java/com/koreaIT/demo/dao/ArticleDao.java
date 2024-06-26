@@ -232,6 +232,7 @@ public interface ArticleDao {
 					, title = #{title}
 					, content = #{content}
 					, `status` = #{status}
+					, groupId = #{selectedGroupId}
 					, startDate = #{startDate}
 					, endDate = #{endDate}
 					WHERE id = #{articleId} AND projectId = #{projectId}

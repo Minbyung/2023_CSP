@@ -80,7 +80,6 @@
 
 	    $('.group-chat-btn').click(function() {
 	    	  var groupChatRoomProjectId = $(this).data('groupChatRoomProjectId');
-	    	  console.log(groupChatRoomProjectId);
 	   		  // 채팅방 URL에 memberId를 쿼리 파라미터로 추가
 	   		  var chatWindowUrl = '/usr/home/groupChat?groupChatRoomProjectId=' + encodeURIComponent(groupChatRoomProjectId);
 	   		  // 새 창(팝업)으로 채팅방 열기
@@ -375,24 +374,24 @@
 		});		
 
 		//정렬 기능
-		 $('.sort-btn').click(function() {
-			    var column = $(this).data('column');
-			    var order = $(this).data('order');
+// 		 $('.sort-btn').click(function() {
+// 			    var column = $(this).data('column');
+// 			    var order = $(this).data('order');
 			    
-				// 새로고침해도 정렬값이 유지
-			    localStorage.setItem('column', column);
-			    localStorage.setItem('order', order);
-			    window.location.href = '/usr/project/task?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
+// 				// 새로고침해도 정렬값이 유지
+// 			    localStorage.setItem('column', column);
+// 			    localStorage.setItem('order', order);
+// 			    window.location.href = '/usr/project/task?column=' + encodeURIComponent(column) + '&order=' + encodeURIComponent(order);
 
-			    $.ajax({
-			        url: "../project/task",
-			        type: 'GET',
-			        data: {
-			            projectId: projectId,
-			            column: column,
-			            order: order
-			        },
-			        success: function(data) {
+// 			    $.ajax({
+// 			        url: "../project/task",
+// 			        type: 'GET',
+// 			        data: {
+// 			            projectId: projectId,
+// 			            column: column,
+// 			            order: order
+// 			        },
+// 			        success: function(data) {
 // 			        	location.reload();
 // 			        	// 테이블 생성
 // 			            var table = $('#task-table-1');
@@ -452,9 +451,74 @@
 // 			                // 생성된 tbody를 테이블에 추가
 // 			                table.append(tbody);
 // 			            });
-			         } 
-			    });
-			 });
+// 			         } 
+// 			    });
+// 			 });
+		
+		$('.sort-btn').on('click', function() {
+        var column = $(this).data('column');
+        var order = $(this).data('order');
+        var table = $('#task-table-1');
+
+        // Find the index of the column to sort
+        var columnIndex = -1;
+        table.find('th').each(function(index) {
+            var thColumn = $(this).find('.sort-btn').data('column');
+            if (thColumn === column) {
+                columnIndex = index;
+                return false; // Break the loop
+            }
+        });
+
+
+        if (columnIndex === -1) return; // Column not found
+
+        table.find('tbody').each(function() {
+            var tbody = $(this);
+            var header = tbody.find('tr:first'); // Group header row
+            var rows = tbody.find('tr').not(':first').get(); // Group rows except header
+
+
+            rows.sort(function(a, b) {
+                var A = $(a).children('td').eq(columnIndex).text().trim();
+                var B = $(b).children('td').eq(columnIndex).text().trim();
+
+                // Handle date comparison if the column is 'startDate' or 'endDate' or 'regDate'
+                if (column === 'startDate' || column === 'endDate' || column === 'regDate') {
+                    A = parseDate(A);
+                    B = parseDate(B);
+                } else if (column === 'id') { // Handle numeric comparison if the column is 'id'
+                    A = parseInt(A, 10);
+                    B = parseInt(B, 10);
+                }
+
+
+                // Use localeCompare for string comparison, handle numeric comparison for 'id', and date comparison for dates
+                return (A < B ? -1 : (A > B ? 1 : 0)) * (order === 'ASC' ? 1 : -1);
+            });
+
+
+            // Clear existing rows and re-append the sorted rows
+            tbody.empty();
+            tbody.append(header); // Re-add the group header
+            $.each(rows, function(index, row) {
+                tbody.append(row);
+            });
+        });
+
+        // Toggle order for next click
+        $(this).data('order', order === 'ASC' ? 'DESC' : 'ASC');
+    });
+
+    function parseDate(dateString) {
+        // Assume the date format is YYYY-MM-DD
+        var parts = dateString.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+		
+		
+		
+		
 		
 		 $('.member-detail').click(function(){
 				$('.member-detail-menu').toggle();
@@ -718,16 +782,16 @@
 	   							<button class="sort-btn" data-column="startDate" data-order="DESC">▼</button>
 			                </th>
 			                <th style="text-align: center;">마감일
-			                <button class="sort-btn" data-column="endDate" data-order="ASC">▲</button>
-	   						<button class="sort-btn" data-column="endDate" data-order="DESC">▼</button>
+				                <button class="sort-btn" data-column="endDate" data-order="ASC">▲</button>
+		   						<button class="sort-btn" data-column="endDate" data-order="DESC">▼</button>
 			                </th>
 			                <th style="text-align: center;">등록일
-			                <button class="sort-btn" data-column="regDate" data-order="ASC">▲</button>
-	   						<button class="sort-btn" data-column="regDate" data-order="DESC">▼</button>
+				                <button class="sort-btn" data-column="regDate" data-order="ASC">▲</button>
+		   						<button class="sort-btn" data-column="regDate" data-order="DESC">▼</button>
 			                </th>
 			                <th style="text-align: center;">업무번호
-			                <button class="sort-btn" data-column="id" data-order="ASC">▲</button>
-	   						<button class="sort-btn" data-column="id" data-order="DESC">▼</button>
+				                <button class="sort-btn" data-column="id" data-order="ASC">▲</button>
+		   						<button class="sort-btn" data-column="id" data-order="DESC">▼</button>
 			                </th>
 			            </tr>
 			        </thead>

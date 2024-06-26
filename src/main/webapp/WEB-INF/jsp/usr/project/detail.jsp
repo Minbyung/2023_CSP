@@ -147,7 +147,7 @@
 			 var status = $('#update-status .status-btn-write.active').data('update-status');
 			 var articleId = $(this).data('article-id');
 
-			 
+			 console.log(selectedGroupId);
 			 var formData = new FormData();
 			 
 			 // 기존 폼 데이터를 FormData 객체에 추가
