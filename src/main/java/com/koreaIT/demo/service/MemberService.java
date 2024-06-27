@@ -110,4 +110,28 @@ public class MemberService {
 		
 		return memberDao.getProfilePhotoPathByMemberId(memberId);
 	}
+	
+	public List<Member> getAllMembers() {
+		return memberDao.getAllMembers();
+	}
+	public List<Member> getActiveMembers() {
+		return memberDao.getActiveMembers();
+	}
+	public List<Member> getInactiveMembers() {
+		return memberDao.getInactiveMembers();
+	}
+
+	public void deleteMembers(List<Long> memberIds) {
+		for (Long id : memberIds) {
+            memberDao.deleteMember(id);
+        }
+		
+	}
+
+	public void activateMembers(List<Long> memberIds) {
+		for (Long id : memberIds) {
+            memberDao.activateMember(id);
+        }
+		
+	}
 }

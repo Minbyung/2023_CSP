@@ -153,4 +153,51 @@ public interface MemberDao {
 				WHERE id = #{memberId}
 			""")
 	public String getProfilePhotoPathByMemberId(Long memberId);
+	
+	
+	
+	
+	@Select("""
+			SELECT m.*, t.teamName
+				FROM `member` m
+				JOIN teamMember tm ON m.id = tm.memberId
+				JOIN team t ON tm.teamId = t.id
+				ORDER BY m.id DESC;
+			""")
+	public List<Member> getAllMembers();
+	
+	@Select("""
+			SELECT m.*, t.teamName
+				FROM `member` m
+				JOIN teamMember tm ON m.id = tm.memberId
+				JOIN team t ON tm.teamId = t.id
+				WHERE delStatus = 0
+				ORDER BY m.id DESC;
+			""")
+	public List<Member> getActiveMembers();
+	
+	@Select("""
+			SELECT m.*, t.teamName
+				FROM `member` m
+				JOIN teamMember tm ON m.id = tm.memberId
+				JOIN team t ON tm.teamId = t.id
+				WHERE delStatus = 1
+				ORDER BY m.id DESC;
+			""")
+	public List<Member> getInactiveMembers();
+
+	@Update("""
+			UPDATE `member`
+				SET delStatus = 1
+				WHERE id = #{id}
+			""")
+	public void deleteMember(Long id);
+
+	@Update("""
+			UPDATE `member`
+				SET delStatus = 0
+				WHERE id = #{id}
+			""")
+	public void activateMember(Long id);
+	
 }
