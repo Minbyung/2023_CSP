@@ -306,8 +306,6 @@ public class UsrMemberController {
 		
 		Member member = memberService.getMemberByLoginId(loginId);
 		
-		System.out.println(member);
-		
 		if (member == null) {
 			return Util.jsHistoryBack(Util.f("%s은(는) 존재하지 않는 아이디입니다", loginId));
 		}
@@ -315,6 +313,11 @@ public class UsrMemberController {
 		if (member.getLoginPw().equals(loginPw) == false) {
 			return Util.jsHistoryBack("비밀번호를 확인해주세요");
 		}
+		
+		if (member.getDelStatus() == 1) {
+			return Util.jsHistoryBack("비활성화된 계정입니다");
+		}
+		
 		
 		rq.login(member);
 		
