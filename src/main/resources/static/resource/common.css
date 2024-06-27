@@ -70,6 +70,28 @@ html > body .ProseMirror, html > body .toastui-editor-contents {
     z-index: 999;
 }
 
+
+
+.main-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007BFF;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 90px;
+    margin-left: 30px;
+}
+
+.main-btn:hover {
+    background-color: #0056b3;
+}
+
 /*.menu {*/
 /*    margin-left: 0px;*/
 /*    padding: 0px 24px;*/
