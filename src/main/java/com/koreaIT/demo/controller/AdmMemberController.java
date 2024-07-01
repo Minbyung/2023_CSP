@@ -27,17 +27,52 @@ public class AdmMemberController {
 	
 	
 	@RequestMapping("/adm/member/main")
-	public String main(Model model) {
+	public String main(Model model, @RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String keyword) {
 		
-		List<Member> allMembers = memberService.getAllMembers();
-		List<Member> activeMembers = memberService.getActiveMembers();
-		List<Member> inactiveMembers = memberService.getInactiveMembers();
+		if (page <= 0) {
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다");
+		}
 		
+		int itemsInAPage = 10;
+		int limitStart = (page - 1) * itemsInAPage;
+		
+		List<Member> allMembers;
+		int allMembersCnt;
+		
+		if (keyword != null && !keyword.isEmpty()) {
+	        allMembers = memberService.searchMembers(keyword, limitStart, itemsInAPage);
+	        allMembersCnt = memberService.getSearchMembersCnt(keyword);
+	        model.addAttribute("keyword", keyword);
+	    } else {
+	        allMembers = memberService.getAllMembers(limitStart, itemsInAPage);
+	        allMembersCnt = memberService.getMembersCnt();
+	    }
+		
+		
+//		int allMembersCnt = memberService.getMembersCnt();
+//		int allMembersPagesCnt = (int) Math.ceil((double) allMembersCnt / itemsInAPage);
+		int allMembersPagesCnt = (int) Math.ceil((double) allMembersCnt / itemsInAPage);
+		
+		int activeMembersCnt = memberService.getActiveMembersCnt();
+		int activeMembersPagesCnt = (int) Math.ceil((double) activeMembersCnt / itemsInAPage);
+		
+		int inactiveMembersCnt = memberService.getInactiveMembersCnt();
+		int inactiveMembersPagesCnt = (int) Math.ceil((double) inactiveMembersCnt / itemsInAPage);
+		
+//		List<Member> allMembers = memberService.getAllMembers(limitStart, itemsInAPage);
+		List<Member> activeMembers = memberService.getActiveMembers(limitStart, itemsInAPage);
+		List<Member> inactiveMembers = memberService.getInactiveMembers(limitStart, itemsInAPage);
 		
 		model.addAttribute("allMembers", allMembers);
-		model.addAttribute("activeMembers", activeMembers);
-		model.addAttribute("inactiveMembers", inactiveMembers);
+		model.addAttribute("allMembersPagesCnt", allMembersPagesCnt);
 		
+		model.addAttribute("activeMembers", activeMembers);
+		model.addAttribute("activeMembersPagesCnt", activeMembersPagesCnt);
+		
+		model.addAttribute("inactiveMembers", inactiveMembers);
+		model.addAttribute("inactiveMembersPagesCnt", inactiveMembersPagesCnt);
+		
+		model.addAttribute("page", page);
 
 		return "adm/member/main";
 	}

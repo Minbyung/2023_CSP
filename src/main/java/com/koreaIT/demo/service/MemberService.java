@@ -111,14 +111,14 @@ public class MemberService {
 		return memberDao.getProfilePhotoPathByMemberId(memberId);
 	}
 	
-	public List<Member> getAllMembers() {
-		return memberDao.getAllMembers();
+	public List<Member> getAllMembers(int limitStart, int itemsInAPage) {
+		return memberDao.getAllMembers(limitStart, itemsInAPage);
 	}
-	public List<Member> getActiveMembers() {
-		return memberDao.getActiveMembers();
+	public List<Member> getActiveMembers(int limitStart, int itemsInAPage) {
+		return memberDao.getActiveMembers(limitStart, itemsInAPage);
 	}
-	public List<Member> getInactiveMembers() {
-		return memberDao.getInactiveMembers();
+	public List<Member> getInactiveMembers(int limitStart, int itemsInAPage) {
+		return memberDao.getInactiveMembers(limitStart, itemsInAPage);
 	}
 
 	public void deleteMembers(List<Long> memberIds) {
@@ -132,6 +132,27 @@ public class MemberService {
 		for (Long id : memberIds) {
             memberDao.activateMember(id);
         }
+	}
+	
+	public int getMembersCnt() {
+		return memberDao.getMembersCnt();
+	}
+
+	public int getActiveMembersCnt() {
+		return memberDao.getActiveMembersCnt();
+	}
+
+	public int getInactiveMembersCnt() {
+		return memberDao.getInactiveMembersCnt();
+	}
+
+	public List<Member> searchMembers(String keyword, int limitStart, int itemsInAPage) {
 		
+		return memberDao.searchMembers(keyword, limitStart, itemsInAPage);
+	}
+
+	public int getSearchMembersCnt(String keyword) {
+		
+		return memberDao.getSearchMembersCnt(keyword);
 	}
 }

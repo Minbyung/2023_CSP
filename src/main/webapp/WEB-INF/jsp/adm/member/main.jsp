@@ -46,9 +46,13 @@
             });
             
             // 전체 선택 체크박스 
-            $('#selectAllAllUsers').click(function() {
-                $('.selectAllUsers').prop('checked', this.checked);
-            });
+             $('#selectAllAllUsers').change(function() {
+		        $('.selectAllUsers').each(function() {
+		            if (!$(this).prop('disabled')) {
+		                $(this).prop('checked', $('#selectAllAllUsers').prop('checked'));
+		            }
+		        });
+		    });
 
             $('#selectAllActiveUsers').click(function() {
                 $('.selectActiveUsers').prop('checked', this.checked);
@@ -64,19 +68,36 @@
 <body>
 	<div class="wrap">
 		<div class="header">
-			<h1>회원 관리</h1>
+			<h1 class="pt-4"><a href="main">회원 관리</a></h1>
+			<div>
+				<a class="home-button" href="/usr/home/main">HOME</a>
+			</div>
 		</div>
-		<div class="container">
-		    
+		<div class="container">   
 		    <div class="tab-buttons">
 		        <button class="tab-button">모든 회원</button>
 		        <button class="tab-button">활성화된 회원</button>
 		        <button class="tab-button">비활성화된 회원</button>
 		    </div>
-			
+		    <div class="flex justify-end">
+<!-- 			    <form action="/adm/member/main" method="get"> -->
+<%-- 			        <input type="text" name="keyword" placeholder="Search by username or email" value="${keyword}"> --%>
+<!-- 			        <button type="submit">Search</button> -->
+<!-- 			    </form> -->
+			    
+			    <div class="search-box flex justify-end">
+					<form action="/adm/member/main" method="get">
+						<input class="search-txt" type="text" name="keyword" placeholder="Search by username or email" value="${keyword}">
+						<button class="search-btn" type="submit">
+							<i class="fa-solid fa-magnifying-glass"></i>
+						</button>
+					</form>
+				</div>
+		    </div>
+		     
 			<form id="deleteForm" action="/member/delete" method="post">
 			    <div id="allUsers" class="adm-tab">
-			        <h2>모든 회원</h2>
+			        <h2 class="text-xl font-bold">모든 회원</h2>
 			        <table>
 			            <thead>
 			                <tr>
@@ -86,6 +107,7 @@
 			                    <th>Email</th>
 			                    <th>팀이름</th>
 			                    <th>Status</th>
+			                    <th>비활성 날짜</th>
 			                </tr>
 			            </thead>
 			            <tbody>
@@ -97,15 +119,38 @@
 			                        <td>${member.loginId}</td>
 			                        <td>${member.teamName}</td>
 			                        <td>${member.delStatus == 0 ? 'Active' : 'Inactive'}</td>
+			                        <td>
+				                        <c:choose>
+					                        <c:when test="${not empty member.delDate}">
+					                            ${member.delDate}
+					                        </c:when>
+					                        <c:otherwise>
+					                            
+					                        </c:otherwise>
+					                    </c:choose>
+			                        </td>
 			                    </tr>
 			                </c:forEach>
 			            </tbody>
 			        </table>
-			        <button type="button" class="deleteButton submit-btn">회원 비활성화</button>
+				    <div class="pagination">
+				        <c:if test="${page > 1}">
+				            <a href="?page=${page - 1}">&laquo; Previous</a>
+				        </c:if>
+				        <c:forEach begin="1" end="${allMembersPagesCnt}" var="pageNum">
+				            <a href="?page=${pageNum}" class="${pageNum == page ? 'current' : ''}">${pageNum}</a>
+				        </c:forEach>
+				        <c:if test="${page < allMembersPagesCnt}">
+				            <a href="?page=${page + 1}">Next &raquo;</a>
+				        </c:if>
+				    </div>
+			        <div class="flex justify-end">
+			        	<button type="button" class="deleteButton submit-btn">회원 비활성화</button>
+			        </div>
 			    </div>
 			
 			    <div id="activeUsers" class="adm-tab">
-			        <h2>활성화된 회원</h2>
+			        <h2 class="text-xl font-bold">활성화된 회원</h2>
 			        <table>
 			            <thead>
 			                <tr>
@@ -128,11 +173,24 @@
 			                </c:forEach>
 			            </tbody>
 			        </table>
-			        <button type="button" class="deleteButton submit-btn">회원 비활성화</button>
+			        <div class="pagination">
+				        <c:if test="${page > 1}">
+				            <a href="?page=${page - 1}">&laquo; Previous</a>
+				        </c:if>
+				        <c:forEach begin="1" end="${activeMembersPagesCnt}" var="pageNum">
+				            <a href="?page=${pageNum}" class="${pageNum == page ? 'current' : ''}">${pageNum}</a>
+				        </c:forEach>
+				        <c:if test="${page < activeMembersPagesCnt}">
+				            <a href="?page=${page + 1}">Next &raquo;</a>
+				        </c:if>
+				    </div>
+			        <div class="flex justify-end">
+			        	<button type="button" class="deleteButton submit-btn">회원 비활성화</button>
+			        </div>
 			    </div>
 			
 			    <div id="inactiveUsers" class="adm-tab">
-			        <h2>비활성화된 회원</h2>
+			        <h2 class="text-xl font-bold">비활성화된 회원</h2>
 			        <table>
 			            <thead>
 			                <tr>
@@ -141,6 +199,7 @@
 			                    <th>Username</th>
 			                    <th>Email</th>
 			                    <th>팀이름</th>
+			                    <th>비활성 날짜</th>
 			                </tr>
 			            </thead>
 			            <tbody>
@@ -151,11 +210,34 @@
 			                        <td>${member.name}</td>
 			                        <td>${member.loginId}</td>
 			                        <td>${member.teamName}</td>
+			                        <td>
+				                        <c:choose>
+					                        <c:when test="${not empty member.delDate}">
+					                            ${member.delDate}
+					                        </c:when>
+					                        <c:otherwise>
+					                            
+					                        </c:otherwise>
+					                    </c:choose>
+			                        </td>
 			                    </tr>
 			                </c:forEach>
 			            </tbody>
 			        </table>
-			        <button type="button" class="submit-btn" id="activateButton">회원 활성화</button>
+			        <div class="pagination">
+				        <c:if test="${page > 1}">
+				            <a href="?page=${page - 1}">&laquo; Previous</a>
+				        </c:if>
+				        <c:forEach begin="1" end="${inactiveMembersPagesCnt}" var="pageNum">
+				            <a href="?page=${pageNum}" class="${pageNum == page ? 'current' : ''}">${pageNum}</a>
+				        </c:forEach>
+				        <c:if test="${page < inactiveMembersPagesCnt}">
+				            <a href="?page=${page + 1}">Next &raquo;</a>
+				        </c:if>
+				    </div>
+			        <div class="flex justify-end">
+			        	<button type="button" class="submit-btn" id="activateButton">회원 활성화</button>
+			        </div>
 			    </div>
 	
 		    </form>

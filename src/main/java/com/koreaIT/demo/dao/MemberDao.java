@@ -162,9 +162,10 @@ public interface MemberDao {
 				FROM `member` m
 				JOIN teamMember tm ON m.id = tm.memberId
 				JOIN team t ON tm.teamId = t.id
-				ORDER BY m.id DESC;
+				ORDER BY m.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
 			""")
-	public List<Member> getAllMembers();
+	public List<Member> getAllMembers(int limitStart, int itemsInAPage);
 	
 	@Select("""
 			SELECT m.*, t.teamName
@@ -172,9 +173,10 @@ public interface MemberDao {
 				JOIN teamMember tm ON m.id = tm.memberId
 				JOIN team t ON tm.teamId = t.id
 				WHERE delStatus = 0
-				ORDER BY m.id DESC;
+				ORDER BY m.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
 			""")
-	public List<Member> getActiveMembers();
+	public List<Member> getActiveMembers(int limitStart, int itemsInAPage);
 	
 	@Select("""
 			SELECT m.*, t.teamName
@@ -182,22 +184,63 @@ public interface MemberDao {
 				JOIN teamMember tm ON m.id = tm.memberId
 				JOIN team t ON tm.teamId = t.id
 				WHERE delStatus = 1
-				ORDER BY m.id DESC;
+				ORDER BY m.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
 			""")
-	public List<Member> getInactiveMembers();
+	public List<Member> getInactiveMembers(int limitStart, int itemsInAPage);
 
 	@Update("""
 			UPDATE `member`
-				SET delStatus = 1
+				SET delDate = NOW(),
+					delStatus = 1
 				WHERE id = #{id}
 			""")
 	public void deleteMember(Long id);
 
 	@Update("""
 			UPDATE `member`
-				SET delStatus = 0
+				SET delDate = NULL,
+				delStatus = 0
 				WHERE id = #{id}
 			""")
 	public void activateMember(Long id);
+
+	@Select("""
+			SELECT COUNT(*) FROM `member`
+			""")
+	public int getMembersCnt();
+
+	@Select("""
+			SELECT COUNT(*) FROM `member`
+				WHERE delStatus = 0
+			""")
+	public int getActiveMembersCnt();
+
+	@Select("""
+			SELECT COUNT(*) FROM `member`
+				WHERE delStatus = 1
+			""")
+	public int getInactiveMembersCnt();
+
+	@Select("""
+			SELECT m.*, t.teamName
+				FROM `member` m
+				JOIN teamMember tm ON m.id = tm.memberId
+				JOIN team t ON tm.teamId = t.id
+				WHERE loginId LIKE CONCAT('%', #{keyword}, '%')
+			    OR `name` LIKE CONCAT('%', #{keyword}, '%')
+			    ORDER BY m.id DESC
+				LIMIT #{limitStart}, #{itemsInAPage}
+			""")
+	public List<Member> searchMembers(String keyword, int limitStart, int itemsInAPage);
+
+
+	
+	@Select("""
+			SELECT COUNT(*) FROM `member`
+		        WHERE loginId LIKE CONCAT('%', #{keyword}, '%')
+			    OR `name` LIKE CONCAT('%', #{keyword}, '%')
+			""")
+	public int getSearchMembersCnt(String keyword);
 	
 }
