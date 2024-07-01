@@ -1,0 +1,132 @@
+@charset "EUC-KR";
+
+.warp {
+	min-width: 1340px;
+}
+.header{
+	width: 1080px;
+	margin: 0 auto;
+	font-size: 40px;
+	font-weight: bold;	
+}
+.container {
+	width: 1080px;
+	margin: 0 auto;
+	padding-top: 100px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    cursor: pointer;
+}
+th {
+    background-color: #f2f2f2;
+}
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+.adm-tab {
+    display: none;
+}
+
+.tab-buttons {
+    margin-bottom: 20px;
+}
+
+.tab-buttons button {
+    margin-right: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tab-buttons .active {
+    font-weight: bold;
+}
+
+.inactive-row {
+    background-color: #d3d3d3; /* 회색 배경색 */
+}
+
+.inactive-row input[type="checkbox"] {
+    pointer-events: none; /* 체크박스 클릭 불가 */
+}
+
+.submit-btn {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.deleteButton:hover, #activateButton:hover {
+    background-color: #45a049;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.deleteButton:active, #activateButton:active {
+    background-color: #3e8e41;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(2px);
+}
+
+/* Red style for the delete button */
+.deleteButton {
+    background-color: #f44336; /* Red */
+}
+
+.deleteButton:hover {
+    background-color: #e53935;
+}
+
+.deleteButton:active {
+    background-color: #d32f2f;
+}
+
+/* Styles for tab buttons */
+.tab-buttons {
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #008CBA; /* Blue */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.tab-button:hover {
+    background-color: #007B9E;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tab-button:active {
+    background-color: #006B8C;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    transform: translateY(2px);
+}
