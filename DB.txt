@@ -13,7 +13,8 @@ CREATE TABLE article (
     projectId INT UNSIGNED NOT NULL,
     groupId INT UNSIGNED NOT NULL,
     startDate DATETIME NOT NULL,
-    endDate DATETIME NOT NULL
+    endDate DATETIME NOT NULL,
+    hitCount INT UNSIGNED NOT NULL DEFAULT 0
 );
 
 -- ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
@@ -191,7 +192,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'admin@admin.com',
 loginPw = 'admin!23',
-profilePhotoPath = 'images/default-profile.jpg',
+profilePhotoPath = 'default-profile.jpg',
 authLevel = 1,
 `name` = '관리자',
 nickname = '관리자닉',
@@ -202,7 +203,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test1@test1.com',
 loginPw = 'admin!23',
-profilePhotoPath = 'images/default-profile.jpg',
+profilePhotoPath = 'default-profile.jpg',
 authLevel = 2,
 `name` = '민병민',
 nickname = 'test1',
@@ -213,7 +214,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test2@test2.com',
 loginPw = 'admin!23',
-profilePhotoPath = 'images/default-profile.jpg',
+profilePhotoPath = 'default-profile.jpg',
 authLevel = 2,
 `name` = 'test2',
 nickname = 'test2',
@@ -224,7 +225,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test3@test3.com',
 loginPw = 'admin!23',
-profilePhotoPath = 'images/default-profile.jpg',
+profilePhotoPath = 'default-profile.jpg',
 authLevel = 2,
 `name` = 'test3',
 nickname = 'test3',
@@ -235,7 +236,7 @@ SET regDate = NOW(),
 updateDate = NOW(),
 loginId = 'test4@test4.com',
 loginPw = 'admin!23',
-profilePhotoPath = 'images/default-profile.jpg',
+profilePhotoPath = 'default-profile.jpg',
 authLevel = 2,
 `name` = 'test4',
 nickname = 'test4',
@@ -382,10 +383,12 @@ articleId = 3,
 memberId = 4;
 
 
-SELECT M.*, PM.projectId AS projectId, P.project_name as project_name
+
+
+SELECT M.*, PM.projectId AS projectId, P.project_name AS project_name
 	        FROM `member` AS M
 	        INNER JOIN projectMember AS PM ON M.id = PM.memberId
-	        inner join project as P on PM.projectId = P.id
+	        INNER JOIN project AS P ON PM.projectId = P.id
 	        WHERE PM.projectId = 1
 	        ORDER BY
 	            CASE WHEN M.id = 1 THEN 0 ELSE 1 END, -- 현재 사용자 우선 정렬
@@ -396,11 +399,11 @@ SELECT profilePhotoPath
 				FROM `member`
 				WHERE id = 1
 
-select * from `member`
+SELECT * FROM `member`
 
-select * from `projectMember`
+SELECT * FROM `projectMember`
 SELECT * FROM notification
-where writerId != 1;
+WHERE writerId != 1;
 SELECT M.*, TM.teamId AS teamId
 				FROM `member` AS M
 				INNER JOIN teamMember AS TM
@@ -414,17 +417,17 @@ SELECT M.*, TM.teamId AS teamId
 				WHERE M.id = 1
 
 
-SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name as projectName
+SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, P.project_name AS projectName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
 				LEFT JOIN tag AS T ON A.id = T.articleId
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				LEFT JOIN `group` AS G ON A.groupId = G.id
-				left join project as P on A.projectId = P.id
+				LEFT JOIN project AS P ON A.projectId = P.id
 				WHERE A.projectId = 1
 				GROUP BY A.id
-				ORDER BY A.id desc
-				limit 1;
+				ORDER BY A.id DESC
+				LIMIT 1;
 
 DROP TABLE chatRoom
 DROP TABLE article

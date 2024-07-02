@@ -1102,13 +1102,9 @@
 									  		<h6 class="card-subtitle text-muted">${article.writerName }</h6>
 									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
 								  		</div>
-								  		
-								  		<c:if test="${article.memberId == rq.getLoginedMemberId()}">
-									  		<div class="flex">
-									  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
-									  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
-									  		</div>
-								  		</c:if>
+								  		<div>
+								  			<a href="/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
+								  		</div>
 								  		
 								  	</div>
 								    <h5 class="card-title">${article.title }</h5>
@@ -1144,6 +1140,12 @@
 										    </ul>
 										</div>
 									</c:if>
+									<c:if test="${article.memberId == rq.getLoginedMemberId()}">
+								  		<div class="flex justify-end">
+								  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
+								  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+								  		</div>
+							  		</c:if>
 								  </div>
 								</div>
 							</c:forEach>

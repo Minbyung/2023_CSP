@@ -9,52 +9,55 @@
 	
 	<script>
 		$(document).ready(function(){
-			getRecommendPoint();
+// 			getRecommendPoint();
 			
-			$('#recommendBtn').click(function(){
-				let recommendBtn = $('#recommendBtn').hasClass('btn-active');
+// 			$('#recommendBtn').click(function(){
+// 				let recommendBtn = $('#recommendBtn').hasClass('btn-active');
 				
-				$.ajax({
-					url: "../recommendPoint/doRecommendPoint",
-					method: "get",
-					data: {
-							"relTypeCode" : "article",
-							"relId" : ${article.id },
-							"recommendBtn" : recommendBtn
-						},
-					dataType: "text",
-					success: function(data) {
+// 				$.ajax({
+// 					url: "../recommendPoint/doRecommendPoint",
+// 					method: "get",
+// 					data: {
+// 							"relTypeCode" : "article",
+// 							"relId" : ${article.id },
+// 							"recommendBtn" : recommendBtn
+// 						},
+// 					dataType: "text",
+// 					success: function(data) {
 						
-					},
-					error: function(xhr, status, error) {
-						console.error("ERROR : " + status + " - " + error);
-					}
-				})
+// 					},
+// 					error: function(xhr, status, error) {
+// 						console.error("ERROR : " + status + " - " + error);
+// 					}
+// 				})
 				
-				location.reload();
-			})
+// 				location.reload();
+// 			})
 		})
 		
 		
-		const getRecommendPoint = function(){
-				$.ajax({
-					url: "../recommendPoint/getRecommendPoint",
-					method: "get",
-					data: {
-							"relTypeCode" : "article",
-							"relId" : ${article.id }
-						},
-					dataType: "json",
-					success: function(data) {
-						if (data.success) {
-							$('#recommendBtn').addClass('btn-active');
-						}
-					},
-					error: function(xhr, status, error) {
-						console.error("ERROR : " + status + " - " + error);
-					}
-				})
-			}
+// 		const getRecommendPoint = function(){
+// 				$.ajax({
+// 					url: "../recommendPoint/getRecommendPoint",
+// 					method: "get",
+// 					data: {
+// 							"relTypeCode" : "article",
+// 							"relId" : ${article.id }
+// 						},
+// 					dataType: "json",
+// 					success: function(data) {
+// 						if (data.success) {
+// 							$('#recommendBtn').addClass('btn-active');
+// 						}
+// 					},
+// 					error: function(xhr, status, error) {
+// 						console.error("ERROR : " + status + " - " + error);
+// 					}
+// 				})
+// 			}
+		
+		
+		
 	</script>
 	
 	<section class="mt-8 text-xl">

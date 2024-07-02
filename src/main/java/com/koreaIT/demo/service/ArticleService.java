@@ -43,15 +43,14 @@ public class ArticleService {
 		return articleDao.getArticle(projectId, articleId);
 	}
 	
-	
-	public Article forPrintArticle(int id) {
-		return articleDao.forPrintArticle(id);
-	}
-	
 	public Article getArticleById(int id) {
 		return articleDao.getArticleById(id);
 	}
 	
+	public Article forPrintArticle(int id) {
+		return articleDao.forPrintArticle(id);
+	}
+
 	public void modifyArticle(int id, String title, String body) {
 		articleDao.modifyArticle(id, title, body);
 	}

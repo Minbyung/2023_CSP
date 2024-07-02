@@ -25,7 +25,12 @@ import com.koreaIT.demo.util.FileUtils;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.FileRequest;
+import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Rq;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class UsrArticleController {
@@ -63,15 +68,12 @@ public class UsrArticleController {
 		}
 		
 		int id = articleService.writeArticle(rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers, startDate, endDate);
-		
-//		int id = articleService.getLastInsertId();
-		
+			
 		if (fileRequests != null && !fileRequests.isEmpty()) {
 			List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
 	        fileService.saveFiles(id, projectId, files);
 		}
-    
-		
+
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
@@ -89,9 +91,7 @@ public class UsrArticleController {
 		}
 		
 		int id = articleService.updateArticle(articleId, rq.getLoginedMemberId(), title, content, status, projectId, selectedGroupId, managers, startDate, endDate);
-		
-//		int id = articleService.getLastInsertId();
-		
+			
 		if (fileRequests != null && !fileRequests.isEmpty()) {
 			List<FileRequest> files = fileUtils.uploadFiles(fileRequests);
 	        fileService.saveFiles(id, projectId, files);
@@ -101,9 +101,6 @@ public class UsrArticleController {
 		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
-	
-	
-	
 	@RequestMapping("/usr/article/doUpdateStatus")
 	@ResponseBody
 	public String doUpdateStatus(int articleId, String newStatus) {
@@ -112,7 +109,6 @@ public class UsrArticleController {
 		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
-	
 	@RequestMapping("/usr/article/doUpdateDate")
 	@ResponseBody
 	public String doUpdateDate(int articleId, String startDate, String endDate) {
@@ -120,8 +116,6 @@ public class UsrArticleController {
 		int id = articleId;
 		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
 	}
-	
-	
 	
 	@RequestMapping("/usr/article/getArticleCountsByStatus")
 	@ResponseBody
@@ -210,49 +204,48 @@ public class UsrArticleController {
 //		return "usr/article/list";
 //	}
 	
-//	@RequestMapping("/usr/article/detail")
-//	public String detail(HttpServletRequest req, HttpServletResponse resp, Model model, int id) {
-//		
-//		Cookie oldCookie = null;
-//		Cookie[] cookies = req.getCookies();
-//		
-//		if (cookies != null) {
-//			for (Cookie cookie : cookies) {
-//				if (cookie.getName().equals("hitCount")) {
-//					oldCookie = cookie;
-//				}
-//			}
-//		}
-//		
-//		if (oldCookie != null) {
-//			if (oldCookie.getValue().contains("[" + id + "]") == false) {
-//				articleService.increaseHitCount(id);
-//				oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
-//				oldCookie.setPath("/");
-//				oldCookie.setMaxAge(5);
-//				resp.addCookie(oldCookie);
-//			}
-//		} else {
-//			articleService.increaseHitCount(id);
-//			Cookie newCookie = new Cookie("hitCount", "[" + id + "]"); 
-//			newCookie.setPath("/");
-//			newCookie.setMaxAge(5);
-//			resp.addCookie(newCookie);
-//		}
-//		
-//		Article article = articleService.forPrintArticle(id);
-//		
+	@RequestMapping("/usr/article/detail")
+	public String detail(HttpServletRequest req, HttpServletResponse resp, Model model, int id) {
+		
+		Cookie oldCookie = null;
+		Cookie[] cookies = req.getCookies();
+		
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("hitCount")) {
+					oldCookie = cookie;
+				}
+			}
+		}
+		if (oldCookie != null) {
+			if (oldCookie.getValue().contains("[" + id + "]") == false) {
+				articleService.increaseHitCount(id);
+				oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+				oldCookie.setPath("/");
+				oldCookie.setMaxAge(5);
+				resp.addCookie(oldCookie);
+			}
+		} else {
+			articleService.increaseHitCount(id);
+			Cookie newCookie = new Cookie("hitCount", "[" + id + "]"); 
+			newCookie.setPath("/");
+			newCookie.setMaxAge(5);
+			resp.addCookie(newCookie);
+		}
+		
+		Article article = articleService.getArticleById(id);
+		
 //		List<Reply> replies = replyService.getReplies("article", id);
-//		
-//		Member member = memberService.getMemberById(rq.getLoginedMemberId());
-//		
-//		model.addAttribute("member", member);
-//		model.addAttribute("article", article);
+		
+		Member member = memberService.getMemberById(rq.getLoginedMemberId());
+		
+		model.addAttribute("member", member);
+		model.addAttribute("article", article);
 //		model.addAttribute("replies", replies);
-//		
-//		return "usr/article/detail";
-//	}
-//	
+		
+		return "usr/article/detail";
+	}
+	
 
 //	
 //	@RequestMapping("/usr/article/doModify")

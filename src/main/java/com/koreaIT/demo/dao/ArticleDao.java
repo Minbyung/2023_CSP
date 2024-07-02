@@ -82,7 +82,17 @@ public interface ArticleDao {
 	public Article getArticle(int projectId, int articleId);
 	
 	
-	
+	@Select("""
+			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName
+				FROM article AS A
+				INNER JOIN `member` AS M ON A.memberId = M.id
+				LEFT JOIN tag AS T ON A.id = T.articleId
+				LEFT JOIN `member` AS TA ON T.memberId = TA.id
+				LEFT JOIN `group` AS G ON A.groupId = G.id
+				WHERE A.id = #{id}
+				GROUP BY A.id
+			""")
+	public Article getArticleById(int id);
 	
 	@Update("""
 			UPDATE article
@@ -105,13 +115,6 @@ public interface ArticleDao {
 				GROUP BY A.id
 			""")
 	public Article forPrintArticle(int id);
-	
-	@Select("""
-			SELECT * 
-				FROM article
-				WHERE id = #{id}
-			""")
-	public Article getArticleById(int id);
 	
 	@Update("""
 			<script>

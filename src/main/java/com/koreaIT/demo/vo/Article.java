@@ -23,7 +23,7 @@ public class Article {
 	private String status;
 	private String startDate;
 	private String endDate;
-	
+	private int hitCount;
 	
 	
 	private String writerName;
