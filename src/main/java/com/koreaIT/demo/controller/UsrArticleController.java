@@ -26,6 +26,7 @@ import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.FileRequest;
 import com.koreaIT.demo.vo.Member;
+import com.koreaIT.demo.vo.Reply;
 import com.koreaIT.demo.vo.Rq;
 
 import jakarta.servlet.http.Cookie;
@@ -235,13 +236,13 @@ public class UsrArticleController {
 		
 		Article article = articleService.getArticleById(id);
 		
-//		List<Reply> replies = replyService.getReplies("article", id);
+		List<Reply> replies = replyService.getReplies("article", id);
 		
 		Member member = memberService.getMemberById(rq.getLoginedMemberId());
 		
 		model.addAttribute("member", member);
 		model.addAttribute("article", article);
-//		model.addAttribute("replies", replies);
+		model.addAttribute("replies", replies);
 		
 		return "usr/article/detail";
 	}
