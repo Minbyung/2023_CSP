@@ -24,6 +24,7 @@ public class Article {
 	private String startDate;
 	private String endDate;
 	private int hitCount;
+	private int point;
 	
 	
 	private String writerName;

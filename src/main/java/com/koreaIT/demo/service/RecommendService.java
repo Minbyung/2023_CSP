@@ -29,9 +29,13 @@ public class RecommendService {
 	public void insertRecommendPoint(int loginedMemberId, String relTypeCode, int relId) {
 		recommendDao.insertRecommendPoint(loginedMemberId, relTypeCode, relId);
 	}
-
+	
 	public void deleteRecommendPoint(int loginedMemberId, String relTypeCode, int relId) {
 		recommendDao.deleteRecommendPoint(loginedMemberId, relTypeCode, relId);
+	}
+
+	public int getRecommendPointByRelId(int relId) {
+		return recommendDao.getRecommendPointByRelId(relId);
 	}
 	
 }

@@ -1103,7 +1103,7 @@
 									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
 								  		</div>
 								  		<div>
-								  			<a href="/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
+								  			<a href="/usr/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
 								  		</div>
 								  		
 								  	</div>

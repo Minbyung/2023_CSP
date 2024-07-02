@@ -36,4 +36,12 @@ public interface RecommendDao {
 			""")
 	void deleteRecommendPoint(int loginedMemberId, String relTypeCode, int relId);
 
+	
+	@Select("""
+			SELECT IFNULL(SUM(point), 0)
+				FROM recommendPoint
+				WHERE relId = #{relId}
+			""")
+	int getRecommendPointByRelId(int relId);
+
 }
