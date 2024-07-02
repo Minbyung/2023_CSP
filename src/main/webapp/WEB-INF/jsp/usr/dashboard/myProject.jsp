@@ -220,7 +220,7 @@ function detailModal(memberId) {
 	                       <div class="profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></div>
 	                       ${member.name}님
 	                       <ul class="member-detail-menu">
-	                           <li><a href="#">내 프로필</a></li>
+	                           <li><a href="/usr/member/myPage">내 프로필</a></li>
 	                           <li><a href="/usr/dashboard/dashboard?teamId=${member.teamId}">내 대시보드</a></li>
 	                           <li><a href="/usr/member/doLogout">로그아웃</a></li>
 	                       </ul>

@@ -37,6 +37,17 @@ public interface MemberDao {
 				WHERE M.loginId = #{loginId}
 			""")
 	public Member getMemberByLoginId(String loginId);
+	
+	
+	@Select("""
+			SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE M.nickname = #{nickname}
+			""")
+	public Member getMemberByNickname(String nickname);
+	
 
 	@Select("""
 			SELECT M.*, TM.teamId AS teamId
@@ -243,5 +254,6 @@ public interface MemberDao {
 			    OR `name` LIKE CONCAT('%', #{keyword}, '%')
 			""")
 	public int getSearchMembersCnt(String keyword);
+
 	
 }

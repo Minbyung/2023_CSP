@@ -7,6 +7,9 @@
 	<%@ include file="../common/head.jsp" %>
 	
 	<script>
+		let validNickname = '';
+		let isNicknameChecked = false; // 닉네임 중복 체크 여부
+		
 	    $(document).ready(function(){
 	    	//#profilePhotoInput 아이디를 가진 HTML 요소에 대한 변경 사건(change event)을 감지 
 		    //이는 사용자가 파일 입력 필드에 파일을 선택할 때 발생. 사용자가 파일을 선택하면, 이 코드 블록 안의 함수가 실행.
@@ -50,10 +53,64 @@
 				return;
 			}
 			
+			// 닉네임이 변경되었는지 확인
+		    let originalNickname = $('#nickname').data('original-value');
+		    if (form.nickname.value !== originalNickname && !isNicknameChecked) {
+		        alert('닉네임 중복 검사를 완료해 주세요.');
+		        $('#nickname').focus();
+		        return;
+		    }
+			
+			
 			form.submit();
 		}
+		const nicknameDupChk = function() {
+	        let el = $('#nickname')[0];
+	        el.value = el.value.trim();
+	        
+	        let nicknameDupChkMsg = $('#nicknameDupChkMsg');
+	        
+	        nicknameDupChkMsg.empty();
+	        
+	        if (el.value.length == 0) {
+	        	nicknameDupChkMsg.removeClass('text-green-500');
+	        	nicknameDupChkMsg.addClass('text-red-500');
+	        	nicknameDupChkMsg.html('<span>닉네임은 필수 입력 정보입니다</span>');
+	            return;
+	        }
+	        
+	        $.ajax({
+	            url: "nicknameDupChk",
+	            method: "get",
+	            data: {
+	                "nickname" : el.value
+	            },
+	            dataType: "json",
+	            success: function(data) {
+	            	
+	                if (data.success) {
+	                	nicknameDupChkMsg.removeClass('text-red-500');
+	                	nicknameDupChkMsg.addClass('text-green-500');
+	                    nicknameDupChkMsg.html(`<span>\${data.msg}\</span>`);
+	                    validNickname = el.value;
+	                    isNicknameChecked = true;
+
+	                } else {
+	                	nicknameDupChkMsg.removeClass('text-green-500');
+	                	nicknameDupChkMsg.addClass('text-red-500');
+	                	nicknameDupChkMsg.html(`<span>\${data.msg}\</span>`);
+	                    validNickname = '';
+	                }
+	                
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("ERROR : " + status + " - " + error);
+	            }
+	        });
+	    }
 	</script>
 	
+
 	<section class="mt-8 text-xl">
 		<div class="container mx-auto px-3">
 			<form action="doModify" method="post" enctype="multipart/form-data" onsubmit="memberModifyForm_onSubmit(this); return false;">
@@ -85,15 +142,23 @@
 						</tr>
 						<tr>
 							<th>이름</th>
-							<td><input class="input input-bordered input-primary w-9/12" name="name" type="text" value="${member.name }" placeholder="이름을 입력해주세요" /></td>
+							<td><input class="input input-bordered input-primary w-30" name="name" type="text" value="${member.name }" placeholder="이름을 입력해주세요" /></td>
 						</tr>
 						<tr>
 							<th>닉네임</th>
-							<td><input class="input input-bordered input-primary w-9/12" name="nickname" type="text" value="${member.nickname }" placeholder="닉네임을 입력해주세요" /></td>
+							<td>
+								<div>
+									<input class="input input-bordered input-primary w-30" id="nickname" name="nickname" type="text" value="${member.nickname }" placeholder="닉네임을 입력해주세요" data-original-value="${member.nickname}"/>
+									<button type="button" class="btn ml-4" onclick="nicknameDupChk()">닉네임 중복 검사</button>
+								</div>
+								<div>
+									<span id="nicknameDupChkMsg" class="text-sm"></span>
+								</div>
+							</td>
 						</tr>
 						<tr>
 							<th>전화번호</th>
-							<td><input class="input input-bordered input-primary w-9/12" name="cellphoneNum" type="text" value="${member.cellphoneNum }" placeholder="전화번호를 입력해주세요" /></td>
+							<td><input class="input input-bordered input-primary w-30" name="cellphoneNum" type="text" value="${member.cellphoneNum }" placeholder="전화번호를 입력해주세요" /></td>
 						</tr>
 						<tr>
 							<td class="text-center" colspan="2"><button class="btn-text-color btn btn-wide btn-outline">수정</button></td>

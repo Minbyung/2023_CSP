@@ -65,6 +65,10 @@ public class MemberService {
 		return memberDao.getMemberByLoginId(loginId);
 	}
 	
+	public Member getMemberByNickname(String nickname) {
+		return memberDao.getMemberByNickname(nickname);
+	}
+	
 	public Member getMemberById(int id) {
 		return memberDao.getMemberById(id);
 	}

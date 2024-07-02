@@ -32,7 +32,7 @@ public class UsrMemberController {
 	
 	private MemberService memberService;
 	private Rq rq;
-	private static final String DEFAULT_PROFILE_IMAGE_PATH = "images/default-profile.jpg";
+	private static final String DEFAULT_PROFILE_IMAGE_PATH = "default-profile.jpg";
 	
 	
 	UsrMemberController(MemberService memberService, Rq rq) {
@@ -66,6 +66,23 @@ public class UsrMemberController {
 		}
 		
 		return ResultData.from("S-1", Util.f("%s은(는) 사용 가능한 아이디입니다.", loginId));
+	}
+	
+	@RequestMapping("/usr/member/nicknameDupChk")
+	@ResponseBody
+	public ResultData nicknameDupChk(String nickname) {
+		
+		if (Util.empty(nickname)) {
+			return ResultData.from("F-1", "닉네임 입력해주세요");
+		}
+		
+		Member member = memberService.getMemberByNickname(nickname);
+		
+		if (member != null) {
+			return ResultData.from("F-2", Util.f("%s은(는) 이미 사용중인 닉네임입니다.", nickname));
+		}
+		
+		return ResultData.from("S-1", Util.f("%s은(는) 사용 가능한 닉네임입니다.", nickname));
 	}
 	
 	@RequestMapping("/usr/member/doJoin")
@@ -112,7 +129,7 @@ public class UsrMemberController {
 			// 파일명 가져오기
 			String fileName = profilePhoto.getOriginalFilename();
 			// 파일 저장 경로 설정
-			String uploadDir = "C:/develop/upload-files/" + name;
+			String uploadDir = "src/main/resources/static/profile-photo/" + nickname;
 		
 			// 파일 저장 경로를 저장할 변수 선언 (try 블록 바깥에서 선언)
 			
@@ -134,9 +151,7 @@ public class UsrMemberController {
 			    Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 			    
 			    // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
-			    Path basePath = Paths.get("C:/develop/upload-files"); // basePath를 Path 타입으로 변경
-			    Path relativePath = basePath.relativize(filePath.toAbsolutePath()); // 상대 경로 계산
-			    profilePhotoPath = relativePath.toString();
+			    profilePhotoPath = nickname + "/" + fileName;
 			    
 			    // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환해주는 처리가 필요
 			    profilePhotoPath = profilePhotoPath.replace('\\', '/');
@@ -160,7 +175,7 @@ public class UsrMemberController {
 	        String photoPath = memberService.getProfilePhotoPathByMemberId(memberId);
 
 	        // 전체 파일 경로 구성
-	        String filePath = "C:/develop/upload-files/" + photoPath;
+	        String filePath = "src/main/resources/static/profile-photo/" + photoPath;
 	        Path path = Paths.get(filePath);
 	        Resource resource = new UrlResource(path.toUri());
 
@@ -246,7 +261,7 @@ public class UsrMemberController {
 			// 파일명 가져오기
 			String fileName = profilePhoto.getOriginalFilename();
 			// 파일 저장 경로 설정
-			String uploadDir = "C:/develop/upload-files/" + name;
+			String uploadDir = "src/main/resources/static/profile-photo/" + nickname;
 		
 			// 파일 저장 경로를 저장할 변수 선언 (try 블록 바깥에서 선언)
 			
@@ -268,9 +283,7 @@ public class UsrMemberController {
 			    Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 			    
 			    // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
-			    Path basePath = Paths.get("C:/develop/upload-files"); // basePath를 Path 타입으로 변경
-			    Path relativePath = basePath.relativize(filePath.toAbsolutePath()); // 상대 경로 계산
-			    profilePhotoPath = relativePath.toString();
+			    profilePhotoPath = nickname + "/" + fileName;
 			    
 			    // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환해주는 처리가 필요
 			    profilePhotoPath = profilePhotoPath.replace('\\', '/');
@@ -447,7 +460,7 @@ public class UsrMemberController {
 	        // 파일명 가져오기
 	        String fileName = profilePhoto.getOriginalFilename();
 	        // 파일 저장 경로 설정
-	        String uploadDir = "C:/develop/upload-files/" + name;
+	        String uploadDir = "src/main/resources/static/profile-photo/" + nickname;
 	    
 	        // Path 객체를 사용하여 파일 저장 경로를 생성
 	        Path uploadPath = Paths.get(uploadDir);
@@ -467,12 +480,10 @@ public class UsrMemberController {
 	            Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 	            
 	            // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
-	            Path basePath = Paths.get("C:/develop/upload-files");
-	            Path relativePath = basePath.relativize(filePath.toAbsolutePath());
-	            profilePhotoPath = relativePath.toString();
-	            
-	            // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환
-	            profilePhotoPath = profilePhotoPath.replace('\\', '/');
+			    profilePhotoPath = nickname + "/" + fileName;
+			    
+			    // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환해주는 처리가 필요
+			    profilePhotoPath = profilePhotoPath.replace('\\', '/');
 	            
 	        } catch (IOException e) {
 	            throw new RuntimeException("Failed to store file", e);
