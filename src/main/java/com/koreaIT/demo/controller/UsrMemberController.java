@@ -62,15 +62,15 @@ public class UsrMemberController {
 		Member member = memberService.getMemberByLoginId(loginId);
 		
 		if (member != null) {
-			return ResultData.from("F-2", Util.f("%s은(는) 이미 사용중인 아이디입니다", loginId));
+			return ResultData.from("F-2", Util.f("%s은(는) 이미 사용중인 아이디입니다.", loginId));
 		}
 		
-		return ResultData.from("S-1", Util.f("%s은(는) 사용 가능한 아이디입니다", loginId));
+		return ResultData.from("S-1", Util.f("%s은(는) 사용 가능한 아이디입니다.", loginId));
 	}
 	
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public String doJoin(String name, String teamName, String cellphoneNum, String loginId, String loginPw, MultipartFile profilePhoto) throws IOException {
+	public String doJoin(String name, String nickname, String teamName, String cellphoneNum, String loginId, String loginPw, MultipartFile profilePhoto) throws IOException {
 		
 		String profilePhotoPath;
 		
@@ -86,6 +86,9 @@ public class UsrMemberController {
 		}
 		if (Util.empty(name)) {
 			return Util.jsHistoryBack("이름을 입력해주세요");
+		}
+		if (Util.empty(nickname)) {
+			return Util.jsHistoryBack("닉네임을 입력해주세요");
 		}
 		if (Util.empty(teamName)) {
 			return Util.jsHistoryBack("팀 이름 (회사 또는 단체명)을 입력해주세요");
@@ -144,7 +147,7 @@ public class UsrMemberController {
 			}
 		}
 
-		memberService.joinMember(name, teamName, cellphoneNum, loginId, loginPw, profilePhotoPath);
+		memberService.joinMember(name, nickname, teamName, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
@@ -204,7 +207,7 @@ public class UsrMemberController {
 	
 	@RequestMapping("/usr/member/doJoinWithInvite")
 	@ResponseBody
-	public String doJoinWithInvite(String name, String cellphoneNum, String loginId, String loginPw, String inviteCode, @RequestParam("profilePhoto") MultipartFile profilePhoto) throws IOException {
+	public String doJoinWithInvite(String name, String nickname, String cellphoneNum, String loginId, String loginPw, String inviteCode, @RequestParam("profilePhoto") MultipartFile profilePhoto) throws IOException {
 		
 		String profilePhotoPath;
 		
@@ -220,6 +223,9 @@ public class UsrMemberController {
 		}
 		if (Util.empty(name)) {
 			return Util.jsHistoryBack("이름을 입력해주세요");
+		}
+		if (Util.empty(nickname)) {
+			return Util.jsHistoryBack("닉네임을 입력해주세요");
 		}
 		if (Util.empty(cellphoneNum)) {
 			return Util.jsHistoryBack("전화번호를 입력해주세요");
@@ -277,7 +283,7 @@ public class UsrMemberController {
 		
 		
 
-		    memberService.joinMemberWithInvite(name, cellphoneNum, loginId, loginPw, inviteCode, profilePhotoPath);
+		    memberService.joinMemberWithInvite(name, nickname, cellphoneNum, loginId, loginPw, inviteCode, profilePhotoPath);
 		
 		return Util.jsReplace(Util.f("%s님의 가입이 완료되었습니다", name), "login");
 	}
@@ -323,7 +329,6 @@ public class UsrMemberController {
 		
 		int teamId = member.getTeamId();
 		
-//		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/dashboard/dashboard?teamId=" + teamId);
 		return Util.jsReplace(Util.f("%s 회원님 환영합니다~", member.getName()), "/usr/home/main");
 	}
 	
@@ -364,33 +369,66 @@ public class UsrMemberController {
 	}
 	
 	@RequestMapping("/usr/member/checkPassword")
-	public String checkPassword(Model model, String loginId) {
+	public String checkPassword(Model model, String loginId, String action) {
 		model.addAttribute("loginId", loginId);
+		model.addAttribute("action", action);
 		
 		return "usr/member/checkPassword";
 	}
 	
+//	@RequestMapping("/usr/member/doCheckPassword")
+//	public String doCheckPassword(Model model, String loginPw) {
+//		
+//		if (Util.empty(loginPw)) {
+//			return rq.jsReturnOnView("비밀번호를 입력해주세요"); 
+//		}
+//		
+//		Member member = memberService.getMemberById(rq.getLoginedMemberId());
+//		
+//		if (member.getLoginPw().equals(loginPw) == false) {
+//			return rq.jsReturnOnView("비밀번호가 일치하지 않습니다");
+//		}
+//		
+//		model.addAttribute("member", member);
+//		
+//		return "usr/member/modify";
+//	}
+	
 	@RequestMapping("/usr/member/doCheckPassword")
-	public String doCheckPassword(Model model, String loginPw) {
-		
-		if (Util.empty(loginPw)) {
-			return rq.jsReturnOnView("비밀번호를 입력해주세요"); 
-		}
-		
-		Member member = memberService.getMemberById(rq.getLoginedMemberId());
-		
-		if (member.getLoginPw().equals(loginPw) == false) {
-			return rq.jsReturnOnView("비밀번호가 일치하지 않습니다");
-		}
-		
-		model.addAttribute("member", member);
-		
-		return "usr/member/modify";
+	public String doCheckPassword(Model model, String loginPw, String action) {
+	    
+	    if (Util.empty(loginPw)) {
+	        return rq.jsReturnOnView("비밀번호를 입력해주세요"); 
+	    }
+	    
+	    Member member = memberService.getMemberById(rq.getLoginedMemberId());
+	    
+	    if (member.getLoginPw().equals(loginPw) == false) {
+	        return rq.jsReturnOnView("비밀번호가 일치하지 않습니다");
+	    }
+	    
+	    if ("modify".equals(action)) {
+	        model.addAttribute("member", member);
+	        return "usr/member/modify";
+	        
+	    } else if ("delete".equals(action)) {
+	        memberService.deleteMember(member.getId()); // 회원 삭제 로직 수행
+	        return rq.jsReturnOnView("회원탈퇴가 완료되었습니다"); // 탈퇴 완료 메시지와 함께 홈으로 리다이렉트
+	    }
+	    
+	    // 기본값은 비밀번호 확인 페이지로 리다이렉트
+	    return "redirect:/usr/member/checkPassword";
 	}
+	
+	
+	
 	
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody
-	public String doModify(String name, String nickname, String cellphoneNum, String email) {
+	public String doModify(String name, String nickname, String cellphoneNum, String email, MultipartFile profilePhoto,  @RequestParam("existingProfilePhoto") String existingProfilePhoto) {
+		
+		String profilePhotoPath = null;
+		
 		
 		if (Util.empty(name)) {
 			return Util.jsHistoryBack("이름을 입력해주세요"); 
@@ -404,11 +442,49 @@ public class UsrMemberController {
 			return Util.jsHistoryBack("전화번호를 입력해주세요"); 
 		}
 		
-		if (Util.empty(email)) {
-			return Util.jsHistoryBack("이메일을 입력해주세요"); 
-		}
+		// 프로필 사진 업데이트 로직
+	    if (profilePhoto != null && !profilePhoto.isEmpty()) {
+	        // 파일명 가져오기
+	        String fileName = profilePhoto.getOriginalFilename();
+	        // 파일 저장 경로 설정
+	        String uploadDir = "C:/develop/upload-files/" + name;
+	    
+	        // Path 객체를 사용하여 파일 저장 경로를 생성
+	        Path uploadPath = Paths.get(uploadDir);
+	        
+	        // 경로에 폴더가 없으면 생성
+	        if (!Files.exists(uploadPath)) {
+	            try {
+	                Files.createDirectories(uploadPath);
+	            } catch (IOException e) {
+	                throw new RuntimeException("Could not create upload directory", e);
+	            }
+	        }
+	    
+	        try {
+	            // 파일 저장
+	            Path filePath = uploadPath.resolve(fileName);
+	            Files.copy(profilePhoto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	            
+	            // 파일 저장 경로에서 기본 경로 부분을 제외한 상대 경로만 profilePhotoPath 변수에 저장
+	            Path basePath = Paths.get("C:/develop/upload-files");
+	            Path relativePath = basePath.relativize(filePath.toAbsolutePath());
+	            profilePhotoPath = relativePath.toString();
+	            
+	            // 윈도우 시스템에서는 경로 구분자가 '\' 이므로, 이를 '/'로 변환
+	            profilePhotoPath = profilePhotoPath.replace('\\', '/');
+	            
+	        } catch (IOException e) {
+	            throw new RuntimeException("Failed to store file", e);
+	        }
+	    } else {
+	        // 새 파일이 업로드되지 않은 경우 기존 프로필 사진 유지
+	        profilePhotoPath = existingProfilePhoto;
+	    }
 		
-		memberService.doModify(rq.getLoginedMemberId(), name, nickname, cellphoneNum, email);
+		System.out.println(profilePhoto);
+		
+		memberService.doModify(rq.getLoginedMemberId(), name, nickname, cellphoneNum, profilePhotoPath);
 		
 		return Util.jsReplace(Util.f("%s님의 회원정보가 수정되었습니다", name), "myPage");
 	}

@@ -23,9 +23,9 @@ public class MemberService {
 		this.teamDao = teamDao;
 	}
 
-	public void joinMember(String name, String teamName, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath) {
+	public void joinMember(String name, String nickname, String teamName, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath) {
 		
-		memberDao.joinMember(name, cellphoneNum, loginId, loginPw, profilePhotoPath);
+		memberDao.joinMember(name, nickname, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		int memberId = memberDao.getLastInsertId();
 		
@@ -36,9 +36,9 @@ public class MemberService {
 		memberDao.insert(memberId, teamId);	
 	}
 	
-	public void joinMemberWithInvite(String name, String cellphoneNum, String loginId, String loginPw, String inviteCode, String profilePhotoPath) {
+	public void joinMemberWithInvite(String name, String nickName, String cellphoneNum, String loginId, String loginPw, String inviteCode, String profilePhotoPath) {
 	
-		memberDao.joinMember(name, cellphoneNum, loginId, loginPw, profilePhotoPath);
+		memberDao.joinMember(name, nickName, cellphoneNum, loginId, loginPw, profilePhotoPath);
 		
 		 
 		// 초대 코드가 있는 경우에만 해당 팀에 추가합니다.
@@ -69,8 +69,8 @@ public class MemberService {
 		return memberDao.getMemberById(id);
 	}
 	
-	public void doModify(int id, String name, String nickname, String cellphoneNum, String email) {
-		memberDao.doModify(id, name, nickname, cellphoneNum, email);
+	public void doModify(int id, String name, String nickname, String cellphoneNum, String profilePhotoPath) {
+		memberDao.doModify(id, name, nickname, cellphoneNum, profilePhotoPath);
 	}
 
 	public void doPasswordModify(int id, String loginPw) {
@@ -127,7 +127,11 @@ public class MemberService {
         }
 		
 	}
-
+	
+	public void deleteMember(long memberId) {
+		memberDao.deleteMember(memberId);
+	}
+	
 	public void activateMembers(List<Long> memberIds) {
 		for (Long id : memberIds) {
             memberDao.activateMember(id);

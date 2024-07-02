@@ -19,10 +19,11 @@ public interface MemberDao {
 					, loginId = #{loginId}
 					, loginPw = #{loginPw}
 					, name = #{name}
+					, nickname = #{nickname}
 					, cellphoneNum = #{cellphoneNum}
 					, profilePhotoPath = #{profilePhotoPath}
 			""")
-	public void joinMember(String name, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath);
+	public void joinMember(String name, String nickname, String cellphoneNum, String loginId, String loginPw, String profilePhotoPath);
 	
 
 	@Select("SELECT LAST_INSERT_ID()")
@@ -53,10 +54,10 @@ public interface MemberDao {
 					, `name` = #{name}
 					, nickname = #{nickname}
 					, cellphoneNum = #{cellphoneNum}
-					, email = #{email}
+					, profilePhotoPath = #{profilePhotoPath}
 				WHERE id = #{id}
 			""")
-	public void doModify(int id, String name, String nickname, String cellphoneNum, String email);
+	public void doModify(int id, String name, String nickname, String cellphoneNum, String profilePhotoPath);
 
 	@Update("""
 			UPDATE `member`

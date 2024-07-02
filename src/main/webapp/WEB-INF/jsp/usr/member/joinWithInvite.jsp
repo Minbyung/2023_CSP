@@ -188,6 +188,10 @@
 				<input class="input input-bordered input-primary w-full" name="name" type="text" placeholder="이름"/>
 				<div class="space-box h-7"></div>
 				
+				<div class="pb-2 font-medium">닉네임</div>
+				<input class="input input-bordered input-primary w-full" name="nickname" type="text" placeholder="이름"/>
+				<div class="space-box h-7"></div>
+				
 				<div class="pb-2 font-medium">팀 이름 (회사 또는 단체명)</div>
 				<input class="input input-bordered input-primary w-full" name="teamName" type="text" placeholder="팀 이름 (회사 또는 단체명)"/>
 				<div class="space-box h-7"></div>

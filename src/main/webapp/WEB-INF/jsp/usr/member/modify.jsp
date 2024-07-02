@@ -7,6 +7,19 @@
 	<%@ include file="../common/head.jsp" %>
 	
 	<script>
+	    $(document).ready(function(){
+	    	//#profilePhotoInput 아이디를 가진 HTML 요소에 대한 변경 사건(change event)을 감지 
+		    //이는 사용자가 파일 입력 필드에 파일을 선택할 때 발생. 사용자가 파일을 선택하면, 이 코드 블록 안의 함수가 실행.
+			$('#profilePhotoInput').change(function(event) {
+				var reader = new FileReader();
+				// 파일 읽기 작업이 성공적으로 완료되면 이 함수가 호출
+				reader.onload = function(e) {
+				    $('#profilePhotoPreview').attr('src', e.target.result);
+				};
+				
+				reader.readAsDataURL(event.target.files[0]);
+			});
+	    });
 		const memberModifyForm_onSubmit = function(form) {
 			form.name.value = form.name.value.trim();
 			form.nickname.value = form.nickname.value.trim();
@@ -43,7 +56,15 @@
 	
 	<section class="mt-8 text-xl">
 		<div class="container mx-auto px-3">
-			<form action="doModify" method="post" onsubmit="memberModifyForm_onSubmit(this); return false;">
+			<form action="doModify" method="post" enctype="multipart/form-data" onsubmit="memberModifyForm_onSubmit(this); return false;">
+				<input type="hidden" name="existingProfilePhoto" value="${member.profilePhotoPath}" />
+				<label for="profilePhotoInput" class="profile-photo-label">
+			        <div class="profile-photo-container">
+					    <img src="/profile-photo/${member.id}" id="profilePhotoPreview" alt="" />
+					    <div class="profile-photo-text">프로필 사진</div>
+					</div>
+			        <input type="file" id="profilePhotoInput" name="profilePhoto" accept="image/*" style="display: none;">
+			    </label>
 				<div class="table-box-type">
 					<table class="table table-lg">
 						<tr>
@@ -73,10 +94,6 @@
 						<tr>
 							<th>전화번호</th>
 							<td><input class="input input-bordered input-primary w-9/12" name="cellphoneNum" type="text" value="${member.cellphoneNum }" placeholder="전화번호를 입력해주세요" /></td>
-						</tr>
-						<tr>
-							<th>이메일</th>
-							<td><input class="input input-bordered input-primary w-9/12" name="email" type="text" value="${member.email }" placeholder="이메일을 입력해주세요" /></td>
 						</tr>
 						<tr>
 							<td class="text-center" colspan="2"><button class="btn-text-color btn btn-wide btn-outline">수정</button></td>

@@ -62,6 +62,10 @@
                 $('.selectInactiveUsers').prop('checked', this.checked);
             });
             
+            $("#allmember-tab").click(function(){
+                window.location.href = 'http://localhost:8082/adm/member/main?keyword=';
+            });
+            
         });
     </script>
 </head>
@@ -75,7 +79,7 @@
 		</div>
 		<div class="container">   
 		    <div class="tab-buttons">
-		        <button class="tab-button">모든 회원</button>
+		        <button class="tab-button" id="allmember-tab">모든 회원</button>
 		        <button class="tab-button">활성화된 회원</button>
 		        <button class="tab-button">비활성화된 회원</button>
 		    </div>

@@ -27,11 +27,11 @@ CREATE TABLE `member`(
     profilePhotoPath TEXT,
     authLevel SMALLINT UNSIGNED NOT NULL DEFAULT 2 COMMENT '권한 레벨 (일반 = 2, 관리자 = 1)',
     `name` VARCHAR(20) NOT NULL,
+    nickName VARCHAR(50) NOT NULL,
     cellphoneNum VARCHAR(20),
     delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (탈퇴 전 = 0, 탈퇴 후 = 1)',
     delDate DATETIME COMMENT '탈퇴 날짜'
 );
-
 
 CREATE TABLE board(
     id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -186,9 +186,6 @@ CREATE TABLE zoomMeeting (
     `password` TEXT NOT NULL
 );
 
-
-SELECT * FROM `member`;
-
 INSERT INTO `member`
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -197,6 +194,7 @@ loginPw = 'admin!23',
 profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 1,
 `name` = '관리자',
+nickname = '관리자닉',
 cellphoneNum = '010-0000-0000';
 
 INSERT INTO `member`
@@ -206,7 +204,8 @@ loginId = 'test1@test1.com',
 loginPw = 'admin!23',
 profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
-`name` = 'test1',
+`name` = '민병민',
+nickname = 'test1',
 cellphoneNum = '010-1111-1111';
 
 INSERT INTO `member`
@@ -217,6 +216,7 @@ loginPw = 'admin!23',
 profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
 `name` = 'test2',
+nickname = 'test2',
 cellphoneNum = '010-2222-2222';
 
 INSERT INTO `member`
@@ -227,6 +227,7 @@ loginPw = 'admin!23',
 profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
 `name` = 'test3',
+nickname = 'test3',
 cellphoneNum = '010-3333-3333';
 
 INSERT INTO `member`
@@ -237,6 +238,7 @@ loginPw = 'admin!23',
 profilePhotoPath = 'images/default-profile.jpg',
 authLevel = 2,
 `name` = 'test4',
+nickname = 'test4',
 cellphoneNum = '010-4444-4444';
 
 INSERT INTO team
@@ -390,12 +392,20 @@ SELECT M.*, PM.projectId AS projectId, P.project_name as project_name
 	            M.id ASC -- 그 외 멤버는 ID 순으로 정렬
 
 
+SELECT profilePhotoPath 
+				FROM `member`
+				WHERE id = 1
 
+select * from `member`
 
 select * from `projectMember`
 SELECT * FROM notification
 where writerId != 1;
-
+SELECT M.*, TM.teamId AS teamId
+				FROM `member` AS M
+				INNER JOIN teamMember AS TM
+				ON M.id = TM.memberId
+				WHERE M.id = 1
 
 SELECT M.*, TM.teamId AS teamId
 				FROM `member` AS M
