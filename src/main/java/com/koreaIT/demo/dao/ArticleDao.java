@@ -83,13 +83,14 @@ public interface ArticleDao {
 	
 	
 	@Select("""
-			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, IFNULL(SUM(R.point), 0) AS `point`
+			SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, IFNULL(SUM(R.point), 0) AS `point`, P.project_name AS projectName
 				FROM article AS A
 				INNER JOIN `member` AS M ON A.memberId = M.id
 				LEFT JOIN tag AS T ON A.id = T.articleId
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				LEFT JOIN `group` AS G ON A.groupId = G.id
 				LEFT JOIN recommendPoint AS R ON relTypeCode = 'article' AND A.id = R.relId
+				LEFT JOIN project AS P ON A.projectId = P.id
 				WHERE A.id = #{id}
 				GROUP BY A.id
 			""")

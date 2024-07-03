@@ -5,11 +5,29 @@
 	<c:set var="pageTitle" value="ARTICLE DETAIL" />
 	
 	<%@ include file="../common/head.jsp" %>
+	<!-- 제이쿼리 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 	<%@ include file="../common/toastUiEditorLib.jsp" %>
 	<link rel="stylesheet" href="/resource/article/detail.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
 	
 	<script>
 		$(document).ready(function(){
+			var projectId = ${article.projectId};
+			const { Editor } = toastui;
+		    const { colorSyntax } = Editor.plugin;
+			
+		    const updateEditor = new Editor({
+	            el: document.querySelector('#update-editor'),
+	            previewStyle: 'vertical',
+	            height: '500px',
+	            initialEditType: 'wysiwyg',
+	            initialValue: '',
+	            plugins: [colorSyntax]
+	        });
+		    
 			getRecommendPoint();
 			
 			
@@ -44,6 +62,206 @@
 		             }
 		         });
 		     });
+		     $(".status-btn-write").click(function(){
+		 	     $(".status-btn-write").removeClass("active");
+		 	     $(this).addClass("active");
+	 
+		 	     status = $(this).data('status');
+		 	  });
+			
+		     $('.article-update-btn').click(function(){
+		    	 $('.layer-bg').show();
+		    	 $('.update-layer').show();
+		    	 $('.file-list').empty();
+		    	 var articleId = $(this).data('article-id');
+		    	 
+		    	 $.ajax({
+				        url: '../article/modify',
+				        type: 'GET',
+				        data: {"projectId": projectId,
+				        	"articleId": articleId 
+				        },
+				        success: function(data) {
+				          
+				         // startDate를 YYYY-MM-DD 형식으로 변환
+			              var startDate = data.startDate.split(' ')[0];
+			              var endDate = data.endDate.split(' ')[0];
+			              ;
+				          // taggedNames 필드를 콤마(,)로 분리
+						  var taggedNamesArray = data.taggedNames.split(',');
+			              // 분리된 값을 각각 요소로 추가
+			              $.each(taggedNamesArray, function(index, name) {
+			              	  var tag = $('<span class="tag">' + name + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+					          $('#update-tag-container').prepend(tag);
+					          tag.find('.tag-remove').on('click', function() {
+					          	tag.remove();
+					       	  });
+			              });
+	 				      $("#updateBtn").data("article-id", data.id);
+						  $("#updateTitle1").val(data.title);
+						  console.log(data.title);
+//	  			          $("#updateContent").val(data.content);
+						  updateEditor.setMarkdown(data.content);
+			              $("#upadte-start-date").val(startDate);
+	 				      $("#upadte-end-date").val(endDate);
+	 				      $('#update-status .status-btn-write').each(function() {
+	 		                 if ($(this).data('update-status') === data.status) {
+	 		                    $(this).addClass('active');
+	 		                    
+	 		                 }
+	 		              });
+	 				      
+				        }
+				      });
+			    	  // 기존 파일 목록 가져오기
+				      $.ajax({
+				          url: '../file/findFile',
+				          method: 'GET',
+				          data: {"projectId": projectId,
+					        	"articleId": articleId 
+				          },
+				          success: function(data) {
+				        	  console.log(data)
+				              data.forEach(file => {
+				                  var fileItem = $('<div class="file-item" data-filename="' + file.original_name + '" data-articleid="' + file.article_id + '" data-projectid="' + file.project_id + '">' + file.original_name + '<button class="file-remove btns del_btn p-2 border border-gray-400">삭제</button></div>');
+				                  $('.file-list').prepend(fileItem);
+				              });
+				          }
+				      });
+		     });
+		     $("#updateBtn").click(function(){
+		    	 var selectedGroupId = parseInt($('#updateGroupSelect').val());
+		    	 var title = $("#updateTitle1").val();
+//	 	    	 var content = $("#updateContent").val();
+		    	 var content = updateEditor.getHTML(); // TOAST UI Editor에서 내용 가져오기
+		    	 var startDate = $("#upadte-start-date").val();
+				 var endDate = $("#upadte-end-date").val();
+				 var managers = $('.tag').map(function() {
+				 // 'x' 버튼을 제외한 텍스트만 반환합니다.
+			        return $(this).clone().children().remove().end().text();
+			     }).get();
+				 var status = $('#update-status .status-btn-write.active').data('update-status');
+				 var articleId = $(this).data('article-id');
+
+				 console.log(selectedGroupId);
+				 var formData = new FormData();
+				 
+				 // 기존 폼 데이터를 FormData 객체에 추가
+			     formData.append('title', title);
+			     formData.append('content', content);
+			     formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
+			     formData.append('projectId', projectId); 
+			     formData.append('selectedGroupId', selectedGroupId);
+			     formData.append('startDate', startDate);
+			     formData.append('endDate', endDate);
+			     formData.append('articleId', articleId);
+			    
+
+			     $.each(managers, function(i, manager) {
+			         formData.append('managers[]', manager);
+			     });
+			    
+			  // 파일 데이터 추가
+			     $('.file_input input[type="file"]').each(function(index, element) {
+			         if (element.files.length > 0) {
+			             formData.append('fileRequests[]', element.files[0]);
+			         }
+			     });
+			  
+			     $.ajax({
+				        url: '../article/doUpdate',
+				        type: 'POST',
+				        data: formData,
+				        contentType: false, 
+				        processData: false, 
+				        success: function(data) {
+//	 			          $("#title").val("");
+//	 			          $("#content").val("");
+//	 			          $('.tag').remove();
+				          $('.layer-bg').hide();
+						  $('.layer').hide();
+						  location.reload();
+				        }
+				      });
+		    	  
+		    	 
+		      });	
+		      
+		     $("#update-search").autocomplete({
+					// source 는 자동완성의 대상(배열)
+					// request는 현재 입력 필드에 입력된 값(term)을 포함하고 있으며, 이 값을 사용하여 서버에 데이터를 요청할 때 필요한 매개변수로 사용
+				    source: function(request, response) {
+				        $.ajax({
+				            url: "../project/getMembers",
+				            type: "GET",
+				            data: { term: request.term, "projectId": projectId },
+				            success: function(data) {
+				            	console.log(data);
+				                var taggedMembers = $('#update-tag-container .tag').map(function() {
+				                    return $(this).clone().children().remove().end().text().trim();
+				                }).get();
+				                var results = $.grep(data, function(result){
+				                    return $.inArray(result.trim(), taggedMembers) === -1;
+				                });
+				
+				                response(results);
+				            },
+				            error: function(err) {
+				                console.error(err);
+				            }
+				        });
+				    },
+				    select: function(event, ui) {
+				        var newValue = ui.item.value;
+				        $('#update-search').val('');
+				
+				        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+				        $('#update-tag-container').prepend(tag);
+				
+						$('#update-autocomplete-container').prepend($('#update-search'));
+						
+				        tag.find('.tag-remove').on('click', function() {
+				            tag.remove();
+				        });
+				
+				        return false;
+				    }
+				}).on("focus", function() {
+				    $(this).autocomplete("search", " "); 
+				});
+		     
+		     $(document).on('click', '.file-remove', function() {
+		    	 var $fileItem = $(this).closest('.file-item');
+		    	 var fileName = $fileItem.data('filename');
+		    	 var articleId = $fileItem.data('articleid');
+		    	 var projectId = $fileItem.data('projectid');
+		    	 
+		    	 $.ajax({
+		    	        url: '../file/deleteFile',
+		    	        type: 'POST',
+		    	        data: { fileName: fileName, projectId: projectId, articleId: articleId },
+		    	        success: function(response) {
+		    	        	console.log(response);
+		    	            if (response == "S-1") {
+		    	                $fileItem.remove();
+		    	            } else {
+		    	                alert('파일 삭제에 실패했습니다.');
+		    	            }
+		    	        },
+		    	        error: function(err) {
+		    	            console.error(err);
+		    	            alert('파일 삭제 중 오류가 발생했습니다.');
+		    	        }
+		    	    });
+		     });
+		     $('.close-btn-x').click(function(){
+		    		$('.layer-bg').hide();
+		    		$('.update-layer').hide();
+		     });
+		     $('.layer-bg').click(function(){
+		    		$('.layer-bg').hide();
+		    		$('.update-layer').hide();
+		    	})
 			
 		});
 		
@@ -66,6 +284,49 @@
 					}
 				})
 			}
+		
+		
+		function selectFile(element) {
+	        var file = $(element).prop('files')[0];
+	        var filename = $(element).closest('.file_input').find('input[type="text"]');
+
+	        if (!file) {
+	            filename.val('');
+	            return false;
+	        }
+
+	        var fileSize = Math.floor(file.size / 1024 / 1024);
+	        if (fileSize > 10) {
+	            alert('10MB 이하의 파일로 업로드해 주세요.');
+	            filename.val('');
+	            $(element).val('');
+	            return false;
+	        }
+
+	        filename.val(file.name);
+	    }
+	    
+		function addFile() {
+			console.log("작동");
+		    var fileInputHTML =
+		        '<div class="file_input pb-3 flex items-center">' +
+		        '<div> 첨부파일 ' +
+		        '<input type="file" name="files" onchange="selectFile(this); " />' +
+		        '</div>' +
+		        '<button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>';
+
+		    $('.file_list').append(fileInputHTML);
+		}
+	    
+	    function removeFile(element) {
+	        var fileAddBtn = $(element).next('.fn_add_btn');
+	        if (fileAddBtn.length) {
+	            var inputs = $(element).prev('.file_input').find('input');
+	            inputs.val('');
+	            return false;
+	        }
+	        $(element).parent().remove();
+	    }
 		
 		
 		
@@ -104,6 +365,8 @@
 						<td>${article.endDate.substring(2, 16) }</td>
 					</tr>
 					<tr>
+						<th>프로젝트 이름</th>
+						<td>${article.projectName }</td>
 						<th>상태</th>
 						<td>
 							<div class="status-btns-update" data-current-status="${article.status }" >
@@ -150,7 +413,8 @@
 				<button class="btn-text-color btn btn-outline btn-sm" onclick="history.back();">뒤로가기</button>
 				
 				<c:if test="${rq.getLoginedMemberId() != null && rq.getLoginedMemberId() == article.memberId }">
-					<a class="btn-text-color btn btn-outline btn-sm" href="modify?id=${article.id }">수정</a>
+					<a class="btn-text-color btn btn-outline btn-sm" href="/usr/project/detail?projectId=${article.projectId}">프로젝트</a>
+					<button class="btn-text-color btn btn-outline btn-sm article-update-btn" data-article-id="${article.id}"> 수정</button>
 					<a class="btn-text-color btn btn-outline btn-sm" href="doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
 				</c:if>
 			</div>
@@ -269,5 +533,82 @@
 			</c:if>
 		</div>
 	</section>
+	
+	<!-- 모달창 -->
+	<div class="layer-bg"></div>
+	<div class="update-layer p-10">
+		<div class="tabs flex">
+	        <button class="tab-btn tab-write" data-for-tab="1">수정</button>
+	    </div>
+
+       	<span id="close" class="close close-btn-x">&times;</span>
+		<div class="flex flex-col h-full">
+			<div class="write-modal-body">
+				<input type="hidden" id="projectId" value="${article.projectId }">
+<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+				<div id="update-status" class="mt-4">
+			      <button class="status-btn-write btn btn-active" data-update-status="요청">요청</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="진행">진행</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="피드백">피드백</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="완료">완료</button>
+			      <button class="status-btn-write btn btn-active" data-update-status="보류">보류</button>
+			    </div>
+					<div id="inputArea">
+					  <div class ="update-tag-container" id="update-tag-container"></div>
+					  <div class="autocomplete-container flex flex-col mb-3">
+						  <input type="text" class="form-control w-72" id="update-search" autocomplete="off" placeholder="담당자를 입력해주세요">
+						  <section id="update-autocomplete-results" style="width:20%;"></section>
+					  </div>
+					<div class="mb-3">
+						<label for="upadte-start-date">시작일:</label>
+						<input type="date" id="upadte-start-date" class="start-date" name="start-date">
+
+					    <label for="upadte-end-date">마감일:</label>
+					    <input type="date" id="upadte-end-date" class="end-date"  name="end-date">		
+						  		
+						  						  
+						<select id="updateGroupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+						    <c:forEach var="group" items="${groups}">
+						        <c:choose>
+						            <c:when test="${group.group_name eq '그룹 미지정'}">
+						                <option value="${group.id}" selected>${group.group_name}</option>
+						            </c:when>
+						            <c:otherwise>
+						                <option value="${group.id}">${group.group_name}</option>
+						            </c:otherwise>
+						        </c:choose>
+						    </c:forEach>
+						</select> 
+					</div>
+					
+					</div>
+					<div class="mb-3">
+					  <label for="updateTitle1" class="form-label">제목</label>
+					  <input type="email" class="form-control title" id="updateTitle1" placeholder="제목을 입력해주세요" required />
+					</div>
+<!-- 					<div class="mb-3"> -->
+<!-- 					  <label for="updateContent" class="form-label h-4">내용</label> -->
+<!-- 					  <textarea class="form-control h-80 content" id="updateContent" rows="3" placeholder="내용을 입력해주세요" required></textarea> -->
+<!-- 					</div> -->
+					<div id="update-editor"></div>
+					<div class="file_list" id="update-file_list">
+						<div class="file-list flex">
+						
+						</div>
+					
+						<div class="file_input pb-3 pt-3 flex items-center">
+	                        <div> 첨부파일
+	                            <input type="file" name="files" onchange="selectFile(this);" />
+	                        </div>
+	                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+                 					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+	                    </div>
+                    </div>
+				</div>	
+			<div class="write-modal-footer">	
+		 	   <button id="updateBtn" type="button">수정하기</button>
+		    </div>
+	    </div>
+	</div>
 	
 	<%@ include file="../common/foot.jsp" %>

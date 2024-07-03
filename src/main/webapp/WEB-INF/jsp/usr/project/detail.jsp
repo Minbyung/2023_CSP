@@ -17,7 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 <!--chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<!--   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script> -->
   <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
   <title>${project.project_name }</title>
 
@@ -35,16 +35,27 @@
 		var loginedMemberName = '${loginedMember.name}';
 		
 		const { Editor } = toastui;
+	    const { colorSyntax } = Editor.plugin;
 
 	    const editor = new Editor({
 		    el: document.querySelector('#editor'),
 		    previewStyle: 'vertical',
 		    height: '500px',
 		    initialEditType: 'wysiwyg',
-		    initialValue: 'Select some text and choose a color from the toolbar.'
+		    initialValue: '',
+		    plugins: [colorSyntax]
 
 	    });
-		
+	    
+	    const updateEditor = new Editor({
+            el: document.querySelector('#update-editor'),
+            previewStyle: 'vertical',
+            height: '500px',
+            initialEditType: 'wysiwyg',
+            initialValue: '',
+            plugins: [colorSyntax]
+        });
+	    
 	     $.ajax({
 	         url: '../favorite/getFavorite',
 	         method: 'GET',
@@ -118,7 +129,8 @@
 		              });
  				      $("#updateBtn").data("article-id", data.id);
 					  $("#updateTitle").val(data.title);
- 			          $("#updateContent").val(data.content);
+//  			          $("#updateContent").val(data.content);
+					  updateEditor.setMarkdown(data.content);
 		              $("#upadte-start-date").val(startDate);
  				      $("#upadte-end-date").val(endDate);
  				      $('#update-status .status-btn-write').each(function() {
@@ -150,7 +162,8 @@
 	     $("#updateBtn").click(function(){
 	    	 var selectedGroupId = parseInt($('#updateGroupSelect').val());
 	    	 var title = $("#updateTitle").val();
-	    	 var content = $("#updateContent").val();
+// 	    	 var content = $("#updateContent").val();
+	    	 var content = updateEditor.getHTML(); // TOAST UI Editor에서 내용 가져오기
 	    	 var startDate = $("#upadte-start-date").val();
 			 var endDate = $("#upadte-end-date").val();
 			 var managers = $('.tag').map(function() {
@@ -1291,7 +1304,7 @@
 						<div id="editor"></div>
 						
 						<div class="file_list" id="file_list">
-							<div class="file_input pb-3 flex items-center">
+							<div class="file_input pb-3 pt-3 flex items-center">
 		                        <div> 첨부파일
 		                            <input type="file" name="files" onchange="selectFile(this);" />
 		                        </div>
@@ -1372,17 +1385,17 @@
 					  <label for="updateTitle" class="form-label">제목</label>
 					  <input type="email" class="form-control title" id="updateTitle" placeholder="제목을 입력해주세요" required />
 					</div>
-					<div class="mb-3">
-					  <label for="updateContent" class="form-label h-4">내용</label>
-					  <textarea class="form-control h-80 content" id="updateContent" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-					</div>
-					
+<!-- 					<div class="mb-3"> -->
+<!-- 					  <label for="updateContent" class="form-label h-4">내용</label> -->
+<!-- 					  <textarea class="form-control h-80 content" id="updateContent" rows="3" placeholder="내용을 입력해주세요" required></textarea> -->
+<!-- 					</div> -->
+					<div id="update-editor"></div>
 					<div class="file_list" id="update-file_list">
 						<div class="file-list flex">
 						
 						</div>
 					
-						<div class="file_input pb-3 flex items-center">
+						<div class="file_input pb-3 pt-3 flex items-center">
 	                        <div> 첨부파일
 	                            <input type="file" name="files" onchange="selectFile(this);" />
 	                        </div>

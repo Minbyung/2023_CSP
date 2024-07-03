@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
 import com.koreaIT.demo.service.FileService;
+import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.FileUtils;
@@ -26,6 +27,7 @@ import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.FileRequest;
 import com.koreaIT.demo.vo.FileResponse;
+import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Reply;
 import com.koreaIT.demo.vo.Rq;
@@ -43,16 +45,18 @@ public class UsrArticleController {
 	private BoardService boardService;
 	private ReplyService replyService;
 	private MemberService memberService;
+	private GroupService groupService;
 	private Rq rq;
 	
 	
-	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, BoardService boardService, ReplyService replyService, MemberService memberService, Rq rq) {
+	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, BoardService boardService, ReplyService replyService, MemberService memberService, GroupService groupService, Rq rq) {
 		this.articleService = articleService;
 		this.fileService = fileService;
 		this.fileUtils = fileUtils;
 		this.boardService = boardService;
 		this.replyService = replyService;
 		this.memberService = memberService;
+		this.groupService = groupService;
 		this.rq = rq;
 	}
 	
@@ -243,10 +247,13 @@ public class UsrArticleController {
 		List<Reply> replies = replyService.getReplies("article", id);
 		
 		Member member = memberService.getMemberById(rq.getLoginedMemberId());
+		int projectId = article.getProjectId();
+		List<Group> groups = groupService.getGroups(projectId);
 		
 		model.addAttribute("member", member);
 		model.addAttribute("article", article);
 		model.addAttribute("replies", replies);
+		model.addAttribute("groups", groups);
 		
 		return "usr/article/detail";
 	}
