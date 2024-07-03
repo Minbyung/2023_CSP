@@ -929,7 +929,7 @@
                     			<c:when test="${not empty group.value}">
 			                <c:forEach var="article" items="${group.value}">
 			                    <tr>
-			                        <td><c:out value="${article.title}"></c:out></td>						
+			                    	<td><a href="/usr/article/detail?id=${article.id }"><c:out value="${article.title}"></c:out></a></td>					
 	                                <td class="status relative" data-id="${article.id}">
 	                                    <button class="status-btn-taskupdate btn btn-active btn-xs btn-block" data-status="${article.status}">
 	                                        <c:out value="${article.status}"></c:out>
@@ -945,9 +945,9 @@
 	                                    </div>
 	                                </td>						
 	                                <td style="text-align: center;">
-	                                    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-	                                        <c:out value="${name}"></c:out>
-	                                    </c:forEach>
+	                                    <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
+						                    <c:out value="${name}"></c:out><c:if test="${!status.last}">, </c:if>
+						                </c:forEach>
 	                                </td>
 	                                <td style="text-align: center;"><c:out value="${article.startDate.substring(2, 10)}"></c:out></td>
 	                                <td style="text-align: center;"><c:out value="${article.endDate.substring(2, 10)}"></c:out></td>

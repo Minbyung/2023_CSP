@@ -1145,22 +1145,17 @@
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
 								    </div>
 								    
-								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}">
-									    ${name}
-									</c:forEach>
+								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
+							                    ${name}<c:if test="${!status.last}">, </c:if>
+							                </c:forEach>
 								    <div class="flex">
 									    <div>시작일: ${article.startDate.substring(2, 10)}</div>
 									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
 								    </div>
 								    <div class="article-content">
-<%-- 									    <p class="content-summary">${fn:substring(article.contentBr, 0, 100) }</p> --%>
-<%-- 									    <p class="content-summary">${article.contentBr }</p> --%>
-<%-- 									    <p class="content-full hidden">${article.contentBr }</p> --%>
-<!-- 									    <a href="#!" class="more-btn">더보기</a> -->
-									<div class="toast-ui-viewer">
-										<script type="text/x-template">${article.content }</script>
-									</div>
-									
+										<div class="toast-ui-viewer">
+											<script type="text/x-template">${article.content }</script>
+										</div>
 								    </div>
 									<c:if test="${not empty article.infoFiles}">
 										<div class="files">

@@ -195,23 +195,23 @@
 	margin-right: 10px;
 }
 
-.status-btn-write.active[data-status="요청"], .status-btn-update.active[data-status="요청"] {
+.status-btn-write.active[data-status="요청"], .status-btn-update.active[data-status="요청"], .status-btn-taskupdate[data-status="요청"] {
     background-color: rgba(255, 99, 132, 0.8);
     color: white;
 }
-.status-btn-write.active[data-status="진행"], .status-btn-update.active[data-status="진행"] {
+.status-btn-write.active[data-status="진행"], .status-btn-update.active[data-status="진행"], .status-btn-taskupdate[data-status="진행"] {
     background-color: rgba(54, 162, 235, 0.8);
     color: white;
 }
-.status-btn-write.active[data-status="피드백"], .status-btn-update.active[data-status="피드백"] {
+.status-btn-write.active[data-status="피드백"], .status-btn-update.active[data-status="피드백"], .status-btn-taskupdate[data-status="피드백"] {
     background-color: rgba(255, 206, 86, 0.8);
     color: white;
 }
-.status-btn-write.active[data-status="완료"], .status-btn-update.active[data-status="완료"] {
+.status-btn-write.active[data-status="완료"], .status-btn-update.active[data-status="완료"], .status-btn-taskupdate[data-status="완료"] {
     background-color: rgba(75, 192, 192, 0.8);
     color: white;
 }
-.status-btn-write.active[data-status="보류"], .status-btn-update.active[data-status="보류"] {
+.status-btn-write.active[data-status="보류"], .status-btn-update.active[data-status="보류"], .status-btn-taskupdate[data-status="보류"] {
     background-color: rgba(153, 102, 255, 0.8);
     color: white;
 }

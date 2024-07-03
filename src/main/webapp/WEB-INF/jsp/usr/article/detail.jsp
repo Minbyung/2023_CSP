@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 	<c:set var="pageTitle" value="ARTICLE DETAIL" />
 	
@@ -383,6 +384,12 @@
 						<td>${article.title }</td>
 						<th>작성자</th>
 						<td>${article.writerName }</td>
+						<th>담당자</th>
+						<td>
+							<c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
+			                    ${name}<c:if test="${!status.last}">, </c:if>
+			                </c:forEach>
+						</td>
 					</tr>
 					<tr>
 						<th>내용</th>
@@ -409,7 +416,7 @@
 				</table>
 			</div>
 			
-			<div class="btns mt-2">
+			<div class="btns mt-2 flex justify-end gap-2">
 				<button class="btn-text-color btn btn-outline btn-sm" onclick="history.back();">뒤로가기</button>
 				
 				<c:if test="${rq.getLoginedMemberId() != null && rq.getLoginedMemberId() == article.memberId }">

@@ -323,7 +323,7 @@ function detailModal(memberId) {
 		   			<div class="card-long-body flex flex-wrap">
 		   				<c:forEach items="${taggedArticles}" var="taggedArticle">
 		   					<div class="project-list">
-									<div>${taggedArticle.title }</div>
+	   							<a href="/usr/article/detail?id=${taggedArticle.id}">${taggedArticle.title }</a>
 							</div>
 						</c:forEach>
 	   				</div>
