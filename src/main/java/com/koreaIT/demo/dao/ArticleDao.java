@@ -10,7 +10,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.koreaIT.demo.vo.Article;
-import com.koreaIT.demo.vo.ArticleAndTagInfo;
 
 @Mapper
 public interface ArticleDao {
@@ -25,8 +24,8 @@ public interface ArticleDao {
 					, `status` = #{status}
 					, projectId = #{projectId}
 					, groupId = #{selectedGroupId}
-					, startDate = #{startDate}
-					, endDate = #{endDate}
+					, startDate = #{startDate, jdbcType=TIMESTAMP}
+					, endDate = #{endDate, jdbcType=TIMESTAMP}
 			""")
 	public void writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, String startDate, String endDate);
 	

@@ -69,6 +69,8 @@ public class ArticleService {
 	
 	@Transactional
 	public int writeArticle(int memberId, String title, String content, String status, int projectId, int selectedGroupId, List<String> managers, String startDate, String endDate) {
+		
+		
 		articleDao.writeArticle(memberId, title, content, status, projectId, selectedGroupId, startDate, endDate);
 		
 		int articleId = getLastInsertId();

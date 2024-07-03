@@ -110,8 +110,7 @@ public class UsrProjectController {
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
 		Member member = memberService.getMemberById(memberId);
-		
-		
+
 		model.addAttribute("project", project);
 		model.addAttribute("projects", projects);
 		model.addAttribute("projectId", projectId);

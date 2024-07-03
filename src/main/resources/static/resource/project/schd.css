@@ -679,3 +679,11 @@ ul.ui-autocomplete {
 .card-long-body, .card-short-body {
 	padding: 5px 16px 0 30px;
 }
+
+.fc-event {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.fc-event:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

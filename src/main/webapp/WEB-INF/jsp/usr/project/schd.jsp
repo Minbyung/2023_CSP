@@ -242,10 +242,31 @@
 	                		var articles = data[group];
 	                	    for (var i = 0; i < articles.length; i++) {
 	                            var article = articles[i];
+	                            var color;
+	                            
+	                            switch(article.status) {
+	                            case '요청':
+	                                color = 'rgba(255, 99, 132, 0.8)';
+	                                break;
+	                            case '진행':
+	                                color = 'rgba(54, 162, 235, 0.8)';
+	                                break;
+	                            case '피드백':
+	                                color = 'rgba(255, 206, 86, 0.8)';
+	                                break;
+	                            case '완료':
+	                                color = 'rgba(75, 192, 192, 0.8)';
+	                                break;
+	                            case '보류':
+	                                color = 'rgba(153, 102, 255, 0.8)';
+	                                break;
+	                            default:
+	                                color = '#8b00ea'; // 기본 색상
+                     			}
 	                            
 	                            events.push({
 	                                id: article.id,
-	                                color : "#8b00ea",
+	                                color : color, // 상태에 따른 색상 지정
 	                                textColor : "#fff",
  	                                title: article.title,
 	                                start: article.startDate,

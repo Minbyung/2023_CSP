@@ -27,6 +27,7 @@
 <body>
 	<script>
 	$(document).ready(function() {
+		setMinDate();
 		var status = "요청"; // Default status 
 		$(".status-btn-write[data-status='요청']").addClass("active"); // '요청' 버튼에 'active' 클래스를 추가합니다.
 		
@@ -98,7 +99,7 @@
 	 	    status = $(this).data('status');
 	 	  });
 	     
-// 임시
+// 수정
 	     $('.article-update-btn').click(function(){
 	    		$('.layer-bg').show();
 	    		$('.update-layer').show();
@@ -113,9 +114,13 @@
 			        },
 			        success: function(data) {
 			          console.log(data);
-			         // startDate를 YYYY-MM-DD 형식으로 변환
-		              var startDate = data.startDate.split(' ')[0];
-		              var endDate = data.endDate.split(' ')[0];
+			         // startDate를 YYYY-MM-DD YYYY-MM-DDT시간:분'형식으로 변환
+		              // startDate와 endDate 변환
+			          var startDate = (data.startDate === "1000-01-01 00:00:00") ? null : data.startDate.replace(" ", "T");
+			          var endDate = (data.endDate === "1000-01-01 00:00:00") ? null : data.endDate.replace(" ", "T");
+		              
+			         
+			          
 		              
 			          // taggedNames 필드를 콤마(,)로 분리
 					  var taggedNamesArray = data.taggedNames.split(',');
@@ -129,10 +134,9 @@
 		              });
  				      $("#updateBtn").data("article-id", data.id);
 					  $("#updateTitle").val(data.title);
-//  			          $("#updateContent").val(data.content);
 					  updateEditor.setMarkdown(data.content);
-		              $("#upadte-start-date").val(startDate);
- 				      $("#upadte-end-date").val(endDate);
+		              $("#update-start-date").val(startDate);
+ 				      $("#update-end-date").val(endDate);
  				      $('#update-status .status-btn-write').each(function() {
  		                 if ($(this).data('update-status') === data.status) {
  		                    $(this).addClass('active');
@@ -162,10 +166,21 @@
 	     $("#updateBtn").click(function(){
 	    	 var selectedGroupId = parseInt($('#updateGroupSelect').val());
 	    	 var title = $("#updateTitle").val();
-// 	    	 var content = $("#updateContent").val();
+
 	    	 var content = updateEditor.getHTML(); // TOAST UI Editor에서 내용 가져오기
-	    	 var startDate = $("#upadte-start-date").val();
-			 var endDate = $("#upadte-end-date").val();
+	    	 var startDate = $("#update-start-date").val();
+			 var endDate = $("#update-end-date").val();
+			 
+			 if (!startDate) {
+	                $('#update-start-date').val('1000-01-01T00:00:00');
+	                startDate = $("#update-start-date").val();
+	         }
+	
+            if (!endDate) {
+                $('#update-end-date').val('1000-01-01T00:00:00');
+                endDate = $("#update-end-date").val();
+           	}
+			 
 			 var managers = $('.tag').map(function() {
 			 // 'x' 버튼을 제외한 텍스트만 반환합니다.
 		        return $(this).clone().children().remove().end().text();
@@ -348,14 +363,25 @@
 	            $('#groupSelect').val('그룹 미지정');
 	        }
 		    var title = $("#exampleFormControlInput1").val();
-// 		    var content = $("#exampleFormControlTextarea1").val();
 		    var content = editor.getHTML(); // TOAST UI Editor에서 내용 가져오기
+		    
+		    
 		    
 		 // 시작일과 마감일을 가져옵니다.
 		    var startDate = $("#start-date").val();
 		    var endDate = $("#end-date").val();
 		    
-		    
+		    if (!startDate) {
+                $('#start-date').val('1000-01-01T00:00:00');
+                startDate = $("#start-date").val();
+            }
+
+            if (!endDate) {
+                $('#end-date').val('1000-01-01T00:00:00');
+                endDate = $("#end-date").val();
+            }
+		 
+		    console.log(startDate);
 		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 		    var managers = $('.tag').map(function() {
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
@@ -386,7 +412,7 @@
 		        }
 		    });
 		 	
-		 
+		    console.log("Form Data:", formData);
 		    var writeNotification = {
 		    		writerId: loginedMemberId,
 		    		writerName: loginedMemberName,
@@ -961,9 +987,21 @@
         $('.member-modal .modal-memberContent').click(function(event) {
             event.stopPropagation();
         });
-     	
-     	
-     	
+    }
+    function setMinDate() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var day = String(now.getDate()).padStart(2, '0');
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+
+        var minDate = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+
+        $('#start-date').attr('min', minDate);
+        $('#end-date').attr('min', minDate);
+        $('#update-start-date').attr('min', minDate);
+        $('#update-end-date').attr('min', minDate);
     }
     
     
@@ -1133,25 +1171,29 @@
 								  		<div>
 								  			<a href="/usr/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
 								  		</div>
-								  		
 								  	</div>
-								    <h5 class="card-title">${article.title }</h5>
-								    <p>그룹: ${article.groupName }</p> 
-								    <div class="status-btns-update" data-current-status="${article.status }" >
+								  	<div class="status-btns-update" data-current-status="${article.status }" >
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
 								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
 								    </div>
+								    <h5 class="card-title">${article.title }</h5>
+								    <p>${article.groupName }</p> 
 								    
-								    담당자: <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
+								    
+								    담당자 : <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
 							                    ${name}<c:if test="${!status.last}">, </c:if>
 							                </c:forEach>
 								    <div class="flex">
-									    <div>시작일: ${article.startDate.substring(2, 10)}</div>
-									    <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
-								    </div>
+									    <c:if test="${article.startDate != '1000-01-01 00:00:00'}">
+									        <div>시작일: ${article.startDate.substring(2, 10)}</div>
+									    </c:if>
+									    <c:if test="${article.endDate != '1000-01-01 00:00:00'}">
+									        <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
+									    </c:if>
+									</div>
 								    <div class="article-content">
 										<div class="toast-ui-viewer">
 											<script type="text/x-template">${article.content }</script>
@@ -1267,10 +1309,10 @@
 						  </div>
 						<div class="mb-3">
 							<label for="start-date">시작일:</label>
-							<input type="date" id="start-date" name="start-date">
+							<input type="datetime-local" id="start-date" name="start-date">
 	
 						    <label for="end-date">마감일:</label>
-						    <input type="date" id="end-date" name="end-date">		
+						    <input type="datetime-local" id="end-date" name="end-date">		
 							  		
 							  						  
 							<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
@@ -1354,11 +1396,11 @@
 						  <section id="update-autocomplete-results" style="width:20%;"></section>
 					  </div>
 					<div class="mb-3">
-						<label for="upadte-start-date">시작일:</label>
-						<input type="date" id="upadte-start-date" class="start-date" name="start-date">
+						<label for="update-start-date">시작일:</label>
+						<input type="datetime-local" id="update-start-date" class="start-date" name="start-date">
 
-					    <label for="upadte-end-date">마감일:</label>
-					    <input type="date" id="upadte-end-date" class="end-date"  name="end-date">		
+					    <label for="update-end-date">마감일:</label>
+					    <input type="datetime-local" id="update-end-date" class="end-date"  name="end-date">		
 						  		
 						  						  
 						<select id="updateGroupSelect" class="select select-bordered select-xs w-full max-w-xs"">
