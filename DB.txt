@@ -382,7 +382,7 @@ SET projectId = 3,
 articleId = 3,
 memberId = 4;
 
-SELECT * FROM article
+select * from reply
 
 SELECT A.*, M.name AS writerName, GROUP_CONCAT(TA.name) AS taggedNames, G.group_name AS groupName, IFNULL(SUM(R.point), 0) AS `point`
 				FROM article AS A

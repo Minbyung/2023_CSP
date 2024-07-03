@@ -203,12 +203,12 @@
 	  return { toHTMLRenderers }
 	}
 
-	const ToastEditor__chartOptions = {
-	  minWidth: 100,
-	  maxWidth: 600,
-	  minHeight: 100,
-	  maxHeight: 300
-	};
+// 	const ToastEditor__chartOptions = {
+// 	  minWidth: 100,
+// 	  maxWidth: 600,
+// 	  minHeight: 100,
+// 	  maxHeight: 300
+// 	};
 
 	function ToastEditor__init() {
 	  $('.toast-ui-editor').each(function(index, node) {
@@ -222,7 +222,7 @@
 	      initialValue: initialValue,
 	      height:'600px',
 	      plugins: [
-	        [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
+// 	        [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
 	        [toastui.Editor.plugin.codeSyntaxHighlight, {highlighter:Prism}],
 	        toastui.Editor.plugin.colorSyntax,
 	        toastui.Editor.plugin.tableMergedCell,
@@ -253,7 +253,7 @@
 	      initialValue: initialValue,
 	      viewer:true,
 	      plugins: [
-	        [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
+// 	        [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
 	        [toastui.Editor.plugin.codeSyntaxHighlight, {highlighter:Prism}],
 	        toastui.Editor.plugin.colorSyntax,
 	        toastui.Editor.plugin.tableMergedCell,

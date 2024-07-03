@@ -1,0 +1,49 @@
+@charset "UTF-8"; /* CSS 파일 인코딩을 UTF-8로 명시 */
+
+.status-btn-write, .status-btn-update {
+  background-color: #f8f8f8;
+  color: black;
+  margin-right: 10px;
+}
+
+.status-btn-write.active[data-status="요청"], .status-btn-update.active[data-status="요청"] {
+    background-color: rgba(255, 99, 132, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="진행"], .status-btn-update.active[data-status="진행"] {
+    background-color: rgba(54, 162, 235, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-status="피드백"], .status-btn-update.active[data-status="피드백"] {
+    background-color: rgba(255, 206, 86, 0.8);
+    color: white;
+}
+.status-btn-update.active[data-status="완료"] {
+    background-color: rgba(75, 192, 192, 0.8) ;
+    color: white ;
+}
+.status-btn-update.active[data-status="보류"] {
+    background-color: rgba(153, 102, 255, 0.8);
+    color: white;
+}
+
+.status-btn-write.active[data-update-status="요청"] {
+    background-color: rgba(255, 99, 132, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-update-status="진행"] {
+    background-color: rgba(54, 162, 235, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-update-status="피드백"] {
+    background-color: rgba(255, 206, 86, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-update-status="완료"] {
+    background-color: rgba(75, 192, 192, 0.8);
+    color: white;
+}
+.status-btn-write.active[data-update-status="보류"] {
+    background-color: rgba(153, 102, 255, 0.8);
+    color: white;
+}

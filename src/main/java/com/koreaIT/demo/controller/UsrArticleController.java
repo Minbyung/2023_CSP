@@ -25,6 +25,7 @@ import com.koreaIT.demo.util.FileUtils;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.FileRequest;
+import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Reply;
 import com.koreaIT.demo.vo.Rq;
@@ -235,6 +236,9 @@ public class UsrArticleController {
 		}
 		
 		Article article = articleService.getArticleById(id);
+		
+		List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
+        article.setInfoFiles(infoFiles);
 		
 		List<Reply> replies = replyService.getReplies("article", id);
 		

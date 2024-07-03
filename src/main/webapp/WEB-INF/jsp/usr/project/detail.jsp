@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../common/head2.jsp" %>
+<%@ include file="../common/toastUiEditorLib.jsp" %>
 
 <!DOCTYPE html>
 <html lang="en" >
@@ -16,6 +17,8 @@
   <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 <!--chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
   <title>${project.project_name }</title>
 
 </head>
@@ -30,6 +33,17 @@
 		var projectId = ${project.id};
 		var loginedMemberId = ${rq.getLoginedMemberId()};
 		var loginedMemberName = '${loginedMember.name}';
+		
+		const { Editor } = toastui;
+
+	    const editor = new Editor({
+		    el: document.querySelector('#editor'),
+		    previewStyle: 'vertical',
+		    height: '500px',
+		    initialEditType: 'wysiwyg',
+		    initialValue: 'Select some text and choose a color from the toolbar.'
+
+	    });
 		
 	     $.ajax({
 	         url: '../favorite/getFavorite',
@@ -321,8 +335,8 @@
 	            $('#groupSelect').val('그룹 미지정');
 	        }
 		    var title = $("#exampleFormControlInput1").val();
-		    var content = $("#exampleFormControlTextarea1").val();
-		    
+// 		    var content = $("#exampleFormControlTextarea1").val();
+		    var content = editor.getHTML(); // TOAST UI Editor에서 내용 가져오기
 		    
 		 // 시작일과 마감일을 가져옵니다.
 		    var startDate = $("#start-date").val();
@@ -597,38 +611,38 @@
 
 		    
 		    
-		    $('.article-content').each(function() {
-		        var $content = $(this);
-		        var $summary = $content.find('.content-summary');
-		        var $fullContent = $content.find('.content-full');
-		        var $moreBtn = $content.find('.more-btn');
+// 		    $('.article-content').each(function() {
+// 		        var $content = $(this);
+// 		        var $summary = $content.find('.content-summary');
+// 		        var $fullContent = $content.find('.content-full');
+// 		        var $moreBtn = $content.find('.more-btn');
 		        
-		        // 5줄 이상일 경우 더보기 버튼을 표시하고, 5줄 미만이면 숨깁니다.
-		        // 이를 위해 CSS에서 설정한 line-height와 비교합니다.
-		        var lineHeight = parseInt($summary.css('line-height'));
-		        var contentHeight = $summary[0].scrollHeight;
-		        var maxLines = 5;
+// 		        // 5줄 이상일 경우 더보기 버튼을 표시하고, 5줄 미만이면 숨깁니다.
+// 		        // 이를 위해 CSS에서 설정한 line-height와 비교합니다.
+// 		        var lineHeight = parseInt($summary.css('line-height'));
+// 		        var contentHeight = $summary[0].scrollHeight;
+// 		        var maxLines = 5;
 
-		        if (contentHeight > lineHeight * maxLines) {
-		          // 내용이 5줄 이상이면 '더보기' 버튼을 표시합니다.
-		          $moreBtn.show();
-		        } else {
-		          // 5줄 미만이면 '더보기' 버튼을 숨깁니다.
-		          $moreBtn.hide();
-		        }
-		      });
+// 		        if (contentHeight > lineHeight * maxLines) {
+// 		          // 내용이 5줄 이상이면 '더보기' 버튼을 표시합니다.
+// 		          $moreBtn.show();
+// 		        } else {
+// 		          // 5줄 미만이면 '더보기' 버튼을 숨깁니다.
+// 		          $moreBtn.hide();
+// 		        }
+// 		      });
 
-		      $('.more-btn').click(function() {
-		        var $this = $(this);
-		        var $content = $this.closest('.article-content');
-		        var $summary = $content.find('.content-summary');
-		        var $fullContent = $content.find('.content-full');
+// 		      $('.more-btn').click(function() {
+// 		        var $this = $(this);
+// 		        var $content = $this.closest('.article-content');
+// 		        var $summary = $content.find('.content-summary');
+// 		        var $fullContent = $content.find('.content-full');
 		        
-		        $summary.toggleClass('hidden');
-		        $fullContent.toggleClass('hidden');
+// 		        $summary.toggleClass('hidden');
+// 		        $fullContent.toggleClass('hidden');
 		        
-		        $this.text($fullContent.hasClass('hidden') ? '더보기' : '접기');
-		      });
+// 		        $this.text($fullContent.hasClass('hidden') ? '더보기' : '접기');
+// 		      });
 
 		    
 
@@ -803,8 +817,7 @@
 		            $('.member-detail-menu').hide();
 		        }
 		    });
-
-
+		    
 		 
 		    connect();
 	});
@@ -935,9 +948,11 @@
         $('.member-modal .modal-memberContent').click(function(event) {
             event.stopPropagation();
         });
+     	
+     	
+     	
     }
-
-
+    
     
 </script>
 	<div class="task-manager">
@@ -1126,9 +1141,13 @@
 								    </div>
 								    <div class="article-content">
 <%-- 									    <p class="content-summary">${fn:substring(article.contentBr, 0, 100) }</p> --%>
-									    <p class="content-summary">${article.contentBr }</p>
-									    <p class="content-full hidden">${article.contentBr }</p>
-									    <a href="#!" class="more-btn">더보기</a>
+<%-- 									    <p class="content-summary">${article.contentBr }</p> --%>
+<%-- 									    <p class="content-full hidden">${article.contentBr }</p> --%>
+<!-- 									    <a href="#!" class="more-btn">더보기</a> -->
+									<div class="toast-ui-viewer">
+										<script type="text/x-template">${article.content }</script>
+									</div>
+									
 								    </div>
 									<c:if test="${not empty article.infoFiles}">
 										<div class="files">
@@ -1265,10 +1284,11 @@
 						  <label for="exampleFormControlInput1" class="form-label">제목</label>
 						  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
 						</div>
-						<div class="mb-3">
-						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-						</div>
+<!-- 						<div class="mb-3"> -->
+<!-- 						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label> -->
+<!-- 						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea> -->
+<!-- 						</div> -->
+						<div id="editor"></div>
 						
 						<div class="file_list" id="file_list">
 							<div class="file_input pb-3 flex items-center">

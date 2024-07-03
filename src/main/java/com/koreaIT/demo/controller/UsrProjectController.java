@@ -91,8 +91,6 @@ public class UsrProjectController {
 		
 		for (Article article : articles) {
 	        List<FileResponse> infoFiles = fileService.findAllFileByArticleId(article.getId());
-	        System.out.println(infoFiles);
-	        
 	        article.setInfoFiles(infoFiles); 
 	    }
 		

@@ -6,6 +6,7 @@
 	
 	<%@ include file="../common/head.jsp" %>
 	<%@ include file="../common/toastUiEditorLib.jsp" %>
+	<link rel="stylesheet" href="/resource/article/detail.css" />
 	
 	<script>
 		$(document).ready(function(){
@@ -33,8 +34,18 @@
 					}
 				})
 				
-			})
-		})
+			});
+			//상태버튼 현재 상태 활성화 표시
+		     $('.status-btns-update').each(function() {
+		         var currentStatus = $(this).data('current-status');
+		         $(this).find('.status-btn-update').each(function() {
+		             if ($(this).data('status') === currentStatus) {
+		                 $(this).addClass("active");
+		             }
+		         });
+		     });
+			
+		});
 		
 		const getRecommendPoint = function(){
 				$.ajax({
@@ -67,28 +78,8 @@
 					<tr>
 						<th>번호</th>
 						<td>${article.id }</td>
-					</tr>
-					<tr>
-						<th>제목</th>
-						<td>${article.title }</td>
-					</tr>
-					<tr>
-						<th>작성일</th>
-						<td>${article.regDate.substring(2, 16) }</td>
-					</tr>
-					<tr>
-						<th>수정일</th>
-						<td>${article.updateDate.substring(2, 16) }</td>
-					</tr>
-					<tr>
 						<th>조회수</th>
 						<td>${article.hitCount }</td>
-					</tr>
-					<tr>
-						<th>작성자</th>
-						<td>${article.writerName }</td>
-					</tr>
-					<tr>
 						<th>추천</th>
 						<td>
 							<c:if test="${rq.getLoginedMemberId() == 0 }">
@@ -100,13 +91,56 @@
 							</c:if>
 						</td>
 					</tr>
-					
+					<tr>
+						<th>작성일</th>
+						<td>${article.regDate.substring(2, 16) }</td>
+						<th>수정일</th>
+						<td>${article.updateDate.substring(2, 16) }</td>
+					</tr>
+					<tr>
+						<th>시작일</th>
+						<td>${article.startDate.substring(2, 16) }</td>
+						<th>마감일</th>
+						<td>${article.endDate.substring(2, 16) }</td>
+					</tr>
+					<tr>
+						<th>상태</th>
+						<td>
+							<div class="status-btns-update" data-current-status="${article.status }" >
+						        <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
+						        <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
+						        <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
+						        <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
+						        <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
+						    </div>
+						</td>
+					</tr>
+					<tr>
+						<th>제목</th>
+						<td>${article.title }</td>
+						<th>작성자</th>
+						<td>${article.writerName }</td>
+					</tr>
 					<tr>
 						<th>내용</th>
 						<td>
 							<div class="toast-ui-viewer">
 								<script type="text/x-template">${article.content }</script>
 							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>첨부파일</th>
+						<td>
+							<c:if test="${not empty article.infoFiles}">
+								<div class="files">
+								    <ul>
+								        <c:forEach var="file" items="${article.infoFiles}">
+											<li><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
+										</c:forEach>
+								    </ul>
+								</div>
+							</c:if>
 						</td>
 					</tr>
 				</table>
