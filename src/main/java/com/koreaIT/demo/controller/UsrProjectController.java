@@ -207,6 +207,7 @@ public class UsrProjectController {
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		Member member = memberService.getMemberById(memberId);
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		
 		
 		// groupId 별로 article을 그룹화
@@ -231,6 +232,7 @@ public class UsrProjectController {
 		model.addAttribute("groupedArticles", groupedArticles);
 		model.addAttribute("member", member);
 		model.addAttribute("teamId", teamId);
+		model.addAttribute("loginedMember", loginedMember);
 
 		return "usr/project/task";
 	}
@@ -338,6 +340,7 @@ public class UsrProjectController {
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		
 		Member member = memberService.getMemberById(memberId);
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		
 		model.addAttribute("projectId", projectId);
 		model.addAttribute("projects", projects);
@@ -348,6 +351,8 @@ public class UsrProjectController {
 		
 		model.addAttribute("member", member);
 		model.addAttribute("teamId", teamId);
+		model.addAttribute("loginedMember", loginedMember);
+		
 		return "usr/project/schd"; 
 	}
 	

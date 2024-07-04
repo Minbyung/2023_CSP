@@ -2,14 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <%@ include file="../common/head2.jsp" %>    
+<%@ include file="../common/toastUiEditorLib.jsp" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<!--   <meta charset='utf-8' /> -->
-<!--   <!-- 화면 해상도에 따라 글자 크기 대응(모바일 대응) --> 
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<!--   <link rel="stylesheet" href="/resource/dist/style.css" /> -->
   <link rel="stylesheet" href="/resource/project/schd.css" />
   <link rel="stylesheet" href="/resource/home/home.css" />	
   <!-- fullcalendar CDN -->
@@ -17,9 +14,8 @@
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
   <!-- fullcalendar 언어 CDN -->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
-<!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
-<!-- <!-- 글작성 양식 -->
   <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
 <!--   웹소켓 -->
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>  
@@ -46,7 +42,13 @@
 <script>
 
 	$(document).ready(function() {
+		setMinDate();
+		var loginedMemberId = ${rq.getLoginedMemberId()};
+		var loginedMemberName = '${loginedMember.name}';
+		
 		var projectId = ${projectId};
+		var status = "요청"; // Default status 
+		$(".status-btn-write[data-status='요청']").addClass("active");
 		
 		 $.ajax({
 	         url: '../favorite/getFavorite',
@@ -216,12 +218,12 @@
 			locale: 'ko', // 한국어 설정
 			select: function(info) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
 				// 종료일이 하루가 더 추가되어서 하루 빼줌
-				var endDate = new Date(info.endStr);
-				endDate.setDate(endDate.getDate() - 1);
-				var endStrAdjusted = endDate.toISOString().slice(0, 10);
-				$('#start-date').val(info.startStr);
-			    $('#end-date').val(endStrAdjusted);
-			   
+		        var endDate = new Date(info.endStr);
+		        endDate.setDate(endDate.getDate() - 1);
+		        var endStrAdjusted = endDate.toISOString().split('.')[0];
+		        var startStrAdjusted = new Date(info.startStr).toISOString().split('.')[0];
+		        $('#start-date').val(startStrAdjusted);
+		        $('#end-date').val(endStrAdjusted);
 			    showModal();
 			},
 			// 이벤트 
@@ -316,131 +318,147 @@
 		
 		
 //      글쓰기
-		var status = "요청"; // Default status 
-		$(".status-btn-write[data-status='요청']").addClass("active");
-		
+
+		const { Editor } = toastui;
+	    const { colorSyntax } = Editor.plugin;
+
+	    const editor = new Editor({
+		    el: document.querySelector('#editor'),
+		    previewStyle: 'vertical',
+		    height: '500px',
+		    initialEditType: 'wysiwyg',
+		    initialValue: '',
+		    plugins: [colorSyntax]
+
+	    });
+	    		
+	 	// 상태 버튼 누를때 활성화
 		$(".status-btn-write").click(function(){
 	 	    $(".status-btn-write").removeClass("active");
 	 	    $(this).addClass("active");
-
-	 	    status = $(this).attr('data-status');
-	 	  });
+	 	    status = $(this).data('status');
+	 	 });
 
 //		글쓰기	     	    	
     	$("#submitBtn").click(function(){
-    	var selectedGroupId = parseInt($('#groupSelect').val());
-    	if (!selectedGroupId) {
-            // 아무 것도 선택되지 않았다면 '그룹 미지정' 그룹의 ID 설정
-            $('#groupSelect').val('그룹 미지정');
-        }
-	    var title = $("#exampleFormControlInput1").val();
-	    var content = $("#exampleFormControlTextarea1").val();
-	    
-	    
-	 // 시작일과 마감일을 가져옵니다.
-	    var startDate = $("#start-date").val();
-	    var endDate = $("#end-date").val();
-	    
-	    
-	 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
-	    var managers = $('.tag').map(function() {
-	  // 'x' 버튼을 제외한 텍스트만 반환합니다.
-	        return $(this).clone().children().remove().end().text();
-	    }).get();
-	 
-	    var formData = new FormData();
-	 
-	 // 기존 폼 데이터를 FormData 객체에 추가
-	    formData.append('title', title);
-	    formData.append('content', content);
-	    formData.append('status', status); // status 변수가 정의되어 있어야 합니다.
-	    formData.append('projectId', projectId); // projectId 변수가 정의되어 있어야 합니다.
-	    formData.append('selectedGroupId', selectedGroupId);
-	    formData.append('startDate', startDate);
-	    formData.append('endDate', endDate);
-	    
-	    // 담당자 정보를 FormData 객체에 추가
-	    $.each(managers, function(i, manager) {
-	        formData.append('managers[]', manager);
-	    });
-	    
-	 // 파일 데이터 추가
-	    $('.file_input input[type="file"]').each(function(index, element) {
-	        if (element.files.length > 0) {
-	            // 'files[]'를 사용하여 서버에 배열로 전송
-	            formData.append('fileRequests[]', element.files[0]);
+	    	var selectedGroupId = parseInt($('#groupSelect').val());
+	    	if (!selectedGroupId) {
+	            $('#groupSelect').val('그룹 미지정');
 	        }
-	    });
-	 	
-	    $.ajax({
-	        url: '../article/doWrite',
-	        type: 'POST',
-	        data: formData,
-	        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
-	        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
-	        success: function(data) {
-	          console.log(selectedGroupId);
-	          $("#title").val("");
-	          $("#content").val("");
-	          $('.tag').remove();
-	          $('.layer-bg').hide();
-			  $('.layer').hide();
-			  location.reload();
-	        }
-	      });
-	    });
-      
-     
-		 $("#search").autocomplete({
-			// source 는 자동완성의 대상(배열)
-			// request는 현재 입력 필드에 입력된 값(term)을 포함하고 있으며, 이 값을 사용하여 서버에 데이터를 요청할 때 필요한 매개변수로 사용
-		    source: function(request, response) {
-		        $.ajax({
-		            url: "../project/getMembers",
-		            type: "GET",
-		            data: { term: request.term, "projectId": projectId },
-		            success: function(data) {
-		            	console.log(data);
-		                var taggedMembers = $('.tag').map(function() {
-		                    return $(this).clone().children().remove().end().text().trim();
-		                }).get();
-		                var results = $.grep(data, function(result){
-		                    return $.inArray(result.trim(), taggedMembers) === -1;
-		                });
-		
-		                response(results);
-		            },
-		            error: function(err) {
-		                console.error(err);
-		            }
-		        });
-		    },
-		    select: function(event, ui) {
-		        var newValue = ui.item.value;
-		        $('#search').val('');
-		
-		        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
-		        $('#tag-contianer').prepend(tag);
-		
-		        $('#search').prependTo('.autocomplete-container');
-		
-		        tag.find('.tag-remove').on('click', function() {
-		            tag.remove();
-		        });
-		
-		        return false;
-		    }
-		}).on("focus", function() {
-			// $(this).autocomplete("search", ""); 원래 이렇게 하려했는데 서버에서 처리를 못하고있음
-			// request.term은 빈 문자열("")이 되는데, 서버에서 이를 처리하지 못하는 경우 
-			// 클라이언트 측에서 빈 문자열 대신 기본 검색어(" ")를 제공 모든 가능한 검색 결과를 반환하는 기본 검색어를 사용
-		    $(this).autocomplete("search", " "); 
-		});
+		    var title = $("#exampleFormControlInput1").val();
+		    var content = editor.getHTML(); 
+		    var startDate = $("#start-date").val();
+		    var endDate = $("#end-date").val();
+		    
+		    if (!startDate) {
+                $('#start-date').val('1000-01-01T00:00:00');
+                startDate = $("#start-date").val();
+            }
 
-		// 달력아이콘과 옆 년월일 눌러도 달력나오게
-		    $('#start-date, #end-date').on('click', function() {
-		        this.showPicker(); 
+            if (!endDate) {
+                $('#end-date').val('1000-01-01T00:00:00');
+                endDate = $("#end-date").val();
+            }
+		    
+		    var managers = $('.tag').map(function() {
+		        return $(this).clone().children().remove().end().text();
+		    }).get();
+		 	
+		    var formData = new FormData();
+		 
+		    formData.append('title', title);
+		    formData.append('content', content);
+		    formData.append('status', status); 
+		    formData.append('projectId', projectId); 
+		    formData.append('selectedGroupId', selectedGroupId);
+		    formData.append('startDate', startDate);
+		    formData.append('endDate', endDate);
+		    
+		    $.each(managers, function(i, manager) {
+		        formData.append('managers[]', manager);
 		    });
+		    
+		    $('.file_input input[type="file"]').each(function(index, element) {
+		        if (element.files.length > 0) {
+		            formData.append('fileRequests[]', element.files[0]);
+		        }
+		    });
+		 	
+		   // 글 작성하면 알림
+		    var writeNotification = {
+		    		writerId: loginedMemberId,
+		    		writerName: loginedMemberName,
+		    		title: title,
+		    		content: content,
+		    		regDate: '${lastPostedArticle.regDate}',
+		    		projectName: '${lastPostedArticle.projectName}'
+		        };
+		 
+		 
+		    $.ajax({
+		        url: '../article/doWrite',
+		        type: 'POST',
+		        data: formData,
+		        contentType: false, // 필수: 폼 데이터의 인코딩 타입을 multipart/form-data로 설정
+		        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
+		        success: function(data) {
+		          stompClient.send("/app/write.notification." + projectId, {}, JSON.stringify(writeNotification));	
+				  location.reload();
+		        }
+		      });
+		    });
+	      
+	     
+		    $("#search").autocomplete({
+				// source 는 자동완성의 대상(배열)
+				// request는 현재 입력 필드에 입력된 값(term)을 포함하고 있으며, 이 값을 사용하여 서버에 데이터를 요청할 때 필요한 매개변수로 사용
+			    source: function(request, response) {
+			        $.ajax({
+			            url: "../project/getMembers",
+			            type: "GET",
+			            data: { term: request.term, "projectId": projectId },
+			            success: function(data) {
+			            	console.log(data);
+			                var taggedMembers = $('#tag-container .tag').map(function() {
+			                    return $(this).clone().children().remove().end().text().trim();
+			                }).get();
+			                var results = $.grep(data, function(result){
+			                    return $.inArray(result.trim(), taggedMembers) === -1;
+			                });
+			
+			                response(results);
+			            },
+			            error: function(err) {
+			                console.error(err);
+			            }
+			        });
+			    },
+			    select: function(event, ui) {
+			        var newValue = ui.item.value;
+			        $('#search').val('');
+			
+			        var tag = $('<span class="tag">' + newValue + '<button class="tag-remove"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></span>');
+			        $('#tag-container').prepend(tag);
+			
+			        $('#search').prependTo('#autocomplete-container');
+			
+			        tag.find('.tag-remove').on('click', function() {
+			            tag.remove();
+			        });
+			
+			        return false;
+			    }
+			}).on("focus", function() {
+				// $(this).autocomplete("search", ""); 원래 이렇게 하려했는데 서버에서 처리를 못하고있음
+				// request.term은 빈 문자열("")이 되는데, 서버에서 이를 처리하지 못하는 경우 
+				// 클라이언트 측에서 빈 문자열 대신 기본 검색어(" ")를 제공 모든 가능한 검색 결과를 반환하는 기본 검색어를 사용
+			    $(this).autocomplete("search", " "); 
+			});
+
+			// 달력아이콘과 옆 년월일 눌러도 달력나오게
+			    $('#start-date, #end-date').on('click', function() {
+			        this.showPicker(); 
+			    });
 		
 		    $('.member-detail').click(function(){
 				$('.member-detail-menu').toggle();
@@ -453,6 +471,25 @@
 		            $('.member-detail-menu').hide();
 		        }
 		    });
+		    
+		 // 글쓰기 탭
+		    $(".tab-btn").click(function() {
+		        // 모든 탭 내용을 숨깁니다.
+		        $(".tab-content").hide();
+
+		        // 모든 탭 버튼에서 'active' 클래스를 제거합니다.
+		        $(".tab-btn").removeClass('active active-tab');
+
+		        // 선택된 탭에 'active' 클래스를 추가합니다.
+		        $(this).addClass('active active-tab');
+
+		        // data-for-tab 속성 값을 사용하여 해당 탭의 내용을 보여줍니다.
+		        var tabId = $(this).data('for-tab');
+		        $("#tab-" + tabId).show();
+		    });
+
+		    // 기본적으로 첫 번째 탭을 활성화합니다.
+		    $(".tab-btn:first").click();
 		
 	    connect();
 		
@@ -542,7 +579,21 @@
         $(element).parent().remove();
     }
 	
-	
+    function setMinDate() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var day = String(now.getDate()).padStart(2, '0');
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+
+        var minDate = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+
+        $('#start-date').attr('min', minDate);
+        $('#end-date').attr('min', minDate);
+        $('#update-start-date').attr('min', minDate);
+        $('#update-end-date').attr('min', minDate);
+    }
     
     
     
@@ -679,93 +730,15 @@
   
   
   
-	<div class="modal-exam"><span>글 작성</span></div>
-	<!-- 모달창 -->
-						<div class="layer-bg"></div>
-						<div class="layer">
-							
-							<span id="close" class="close close-btn-x">&times;</span>
-							
-							
-							<div class="flex flex-col">
-								<div class="write-modal-body">
-									<input type="hidden" id="projectId" value="${project.id }">
-		<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
-									<div id="status">
-								      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
-								      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
-								      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
-								      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
-								      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
-								    </div>
-										<div id="inputArea">
-										  <div id ="tag-contianer"></div>
-										  <div class="autocomplete-container flex flex-col mb-3">
-											  <!-- 기존의 입력 필드 -->
-											  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
-											  <!-- 자동완성 목록 -->
-											  <section id="autocomplete-results" style="width:20%;"></section>
-										  </div>
-										<div class="mb-3">
-											<label for="start-date">시작일:</label>
-											<input type="date" id="start-date" name="start-date">
-			
-										    <label for="end-date">마감일:</label>
-										    <input type="date" id="end-date" name="end-date">		
-											  		
-											  						  
-											<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
-											    <c:forEach var="group" items="${groups}">
-											        <c:choose>
-											            <c:when test="${group.group_name eq '그룹 미지정'}">
-											                <option value="${group.id}" selected>${group.group_name}</option>
-											            </c:when>
-											            <c:otherwise>
-											                <option value="${group.id}">${group.group_name}</option>
-											            </c:otherwise>
-											        </c:choose>
-											    </c:forEach>
-											</select> 
-										</div>
-										
-										</div>
-										<div class="mb-3">
-										  <label for="exampleFormControlInput1" class="form-label">제목</label>
-										  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
-										</div>
-										<div class="mb-3">
-										  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label>
-										  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea>
-										</div>
-										
-										<div class="file_list">
-											<div class="file_input pb-3 flex items-center">
-						                        <div> 첨부파일
-						                            <input type="file" name="files" onchange="selectFile(this);" />
-						                        </div>
-						                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
-			                   					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
-						                    </div>
-					                    </div>
-									</div>	
-								<div class="write-modal-footer flex justify-end">	
-							 	   <button id="submitBtn" type="button">제출</button>
-							    </div>
-						    </div>
-						    
-						</div>
-  
-  
-  
-  
-  <!-- calendar 태그 -->
-  <div id='calendar-container'>
-    <div id='calendar'></div>
-  </div>
+		  
+		  <!-- calendar 태그 -->
+		  <div id='calendar-container'>
+		    <div id='calendar'></div>
+		  </div>
 
 
-</div>
-</div>
+		</div>
+	</div>
 
 
 
@@ -781,6 +754,102 @@
 	</div>
 	
 	<div id="messageBox" class="message-box" style="display: none;"></div>
+	
+	
+	 <div class="layer-bg"></div>
+		<div class="layer p-10">
+		<div class="tabs flex">
+	        <button class="tab-btn tab-write" data-for-tab="1">글 작성</button>
+	        <button class="tab-btn tab-meeting" data-for-tab="2">화상 회의</button>
+	    </div>
+	    <!-- 탭 내용 -->
+	    <div class="tab-content" id="tab-1">
+        	<span id="close" class="close close-btn-x">&times;</span>
+			<div class="flex flex-col h-full">
+				<div class="write-modal-body">
+					<input type="hidden" id="projectId" value="${project.id }">
+	<!-- 							<input type="file" id="fileInput" name="files" multiple> -->
+					<div id="status" class="mt-4">
+				      <button class="status-btn-write btn btn-active" data-status="요청">요청</button>
+				      <button class="status-btn-write btn btn-active" data-status="진행">진행</button>
+				      <button class="status-btn-write btn btn-active" data-status="피드백">피드백</button>
+				      <button class="status-btn-write btn btn-active" data-status="완료">완료</button>
+				      <button class="status-btn-write btn btn-active" data-status="보류">보류</button>
+				    </div>
+						<div id="inputArea">
+						  <div class ="tag-container" id="tag-container"></div>
+						  <div class="autocomplete-container flex flex-col mb-3" id="autocomplete-container">
+							  <!-- 기존의 입력 필드 -->
+							  <input type="text" class="form-control w-72" id="search" autocomplete="off" placeholder="담당자를 입력해주세요">
+							  <!-- 자동완성 목록 -->
+							  <section id="autocomplete-results" style="width:20%;"></section>
+						  </div>
+						<div class="mb-3">
+							<label for="start-date">시작일:</label>
+							<input type="datetime-local" id="start-date" name="start-date">
+	
+						    <label for="end-date">마감일:</label>
+						    <input type="datetime-local" id="end-date" name="end-date">		
+							  		
+							  						  
+							<select id="groupSelect" class="select select-bordered select-xs w-full max-w-xs"">
+							    <c:forEach var="group" items="${groups}">
+							        <c:choose>
+							            <c:when test="${group.group_name eq '그룹 미지정'}">
+							                <option value="${group.id}" selected>${group.group_name}</option>
+							            </c:when>
+							            <c:otherwise>
+							                <option value="${group.id}">${group.group_name}</option>
+							            </c:otherwise>
+							        </c:choose>
+							    </c:forEach>
+							</select> 
+						</div>
+						
+						</div>
+						<div class="mb-3">
+						  <label for="exampleFormControlInput1" class="form-label">제목</label>
+						  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력해주세요" required />
+						</div>
+<!-- 						<div class="mb-3"> -->
+<!-- 						  <label for="exampleFormControlTextarea1" class="form-label h-4">내용</label> -->
+<!-- 						  <textarea class="form-control h-80" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력해주세요" required></textarea> -->
+<!-- 						</div> -->
+						<div id="editor"></div>
+						
+						<div class="file_list" id="file_list">
+							<div class="file_input pb-3 pt-3 flex items-center">
+		                        <div> 첨부파일
+		                            <input type="file" name="files" onchange="selectFile(this);" />
+		                        </div>
+		                        <button type="button" onclick="removeFile(this);" class="btns del_btn p-2 border border-gray-400"><span>삭제</span></button>
+	                 					<button type="button" onclick="addFile();" class="btns fn_add_btn p-2 border border-gray-400"><span>파일 추가</span></button>
+		                    </div>
+	                    </div>
+					</div>	
+				<div class="write-modal-footer">	
+			 	   <button id="submitBtn" type="button">작성하기</button>
+			    </div>
+		    </div>
+    	</div>
+	    <div class="tab-content tab-meeting-content" id="tab-2" style="display: none;">
+	    	<span id="close" class="close close-btn-x">&times;</span>
+	    	<div class="flex flex-col h-full mt-4">
+	    		<div class="flex-grow">
+			    	<input type="text" id="meetingTopic" class="form-control w-72 mt-4" name="meetingTopic" placeholder="회의의 제목을 입력해주세요">
+				    <input type="number" id="meetingDuration" class="form-control w-72 mt-4" name="meetingDuration" placeholder="회의 시간(분)을 입력해주세요" />
+				    <label for="meetingStartTime">회의 시작 시간 :</label>
+		      		<input type="datetime-local" id="meetingStartTime" class="mt-4" name="meetingStartTime">
+		      		<input type="text" id="meetingPassword" class="form-control w-72 mt-4" name="meetingPassword" placeholder="회의의 비밀번호를 입력해주세요">
+		    	</div>    
+			    <div class="write-modal-footer flex justify-end">	
+					<button id="createMeetingBtn">Zoom 인증 및 회의 생성</button>
+				</div>
+	    	</div>
+    	</div>
+	</div>
+
+
 
 </body>
 </html>

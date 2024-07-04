@@ -31,6 +31,9 @@
 
 	<script>
 	$(document).ready(function() {
+		setMinDate();
+		var loginedMemberId = ${rq.getLoginedMemberId()};
+		var loginedMemberName = '${loginedMember.name}';
 		var projectId = $('#favoriteIcon').data('project-id');
 		var status = "요청"; // Default status 
 		$(".status-btn-write[data-status='요청']").addClass("active");
