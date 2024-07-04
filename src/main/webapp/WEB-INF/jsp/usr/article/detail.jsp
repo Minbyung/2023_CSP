@@ -144,10 +144,7 @@
 	                $('#update-end-date').val('1000-01-01T00:00:00');
 	                endDate = $("#update-end-date").val();
 	           	}
-				 
-	            console.log(startDate);
-	            console.log(endDate);
-	            
+
 				 var managers = $('.tag').map(function() {
 				 // 'x' 버튼을 제외한 텍스트만 반환합니다.
 			        return $(this).clone().children().remove().end().text();
@@ -268,10 +265,12 @@
 		     $('.close-btn-x').click(function(){
 		    		$('.layer-bg').hide();
 		    		$('.update-layer').hide();
+		    		$('.tag').remove();
 		     });
 		     $('.layer-bg').click(function(){
 		    		$('.layer-bg').hide();
 		    		$('.update-layer').hide();
+		    		$('.tag').remove();
 		    	})
 			
 		});

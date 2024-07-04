@@ -113,15 +113,10 @@
 			        	"articleId": articleId 
 			        },
 			        success: function(data) {
-			          console.log(data);
 			         // startDate를 YYYY-MM-DD YYYY-MM-DDT시간:분'형식으로 변환
-		              // startDate와 endDate 변환
 			          var startDate = (data.startDate === "1000-01-01 00:00:00") ? null : data.startDate.replace(" ", "T");
 			          var endDate = (data.endDate === "1000-01-01 00:00:00") ? null : data.endDate.replace(" ", "T");
-		              
-			         
-			          
-		              
+
 			          // taggedNames 필드를 콤마(,)로 분리
 					  var taggedNamesArray = data.taggedNames.split(',');
 		              // 분리된 값을 각각 요소로 추가
@@ -380,8 +375,7 @@
                 $('#end-date').val('1000-01-01T00:00:00');
                 endDate = $("#end-date").val();
             }
-		 
-		    console.log(startDate);
+
 		 // 태그에 있는 모든 담당자를 배열로 가져옵니다.
 		    var managers = $('.tag').map(function() {
 		  // 'x' 버튼을 제외한 텍스트만 반환합니다.
@@ -411,8 +405,7 @@
 		            formData.append('fileRequests[]', element.files[0]);
 		        }
 		    });
-		 	
-		    console.log("Form Data:", formData);
+
 		    var writeNotification = {
 		    		writerId: loginedMemberId,
 		    		writerName: loginedMemberName,
@@ -431,11 +424,6 @@
 		        processData: false, // 필수: FormData를 사용할 때는 processData를 false로 설정
 		        success: function(data) {
 		          stompClient.send("/app/write.notification." + projectId, {}, JSON.stringify(writeNotification));	
-		          $("#title").val("");
-		          $("#content").val("");
-		          $('.tag').remove();
-		          $('.layer-bg').hide();
-				  $('.layer').hide();
 				  location.reload();
 		        }
 		      });
@@ -939,10 +927,6 @@
         }, 3000); // 3000ms = 3초
     }
 
-    // 예제를 위해 페이지 로드 시 자동으로 메시지를 보여줍니다.
-    
-    
-    
     
     function detailModal(memberId) {
     	

@@ -216,7 +216,7 @@
     color: white;
 }
 
-#submitBtn, #createMeetingBtn {
+#submitBtn, #createMeetingBtn, #updateBtn {
   position: fixed;
   right: 30px;
   bottom: 30px;
@@ -227,6 +227,10 @@
   width: 33%;
   display: block;
   border-radius: 10px;
+}
+
+#submitBtn, #updateBtn {
+	bottom: -90px;
 }
 
 #submitBtn:hover, #createMeetingBtn:hover {

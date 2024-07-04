@@ -274,17 +274,21 @@
   color: white;
 }
 
-#submitBtn, #createMeetingBtn {
+#submitBtn, #createMeetingBtn, #updateBtn {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
   background-color: #4CAF50;
   color: white;
   padding: 13px 10px;
-/*  margin: 8px 0;*/
-  border: none;
   cursor: pointer;
   width: 33%;
   display: block;
-/*  margin-top: 20px;*/
-  font-size: 14px;
+  border-radius: 10px;
+}
+
+#submitBtn, #updateBtn {
+	bottom: -120px;
 }
 
 #submitBtn:hover, #createMeetingBtn:hover {
@@ -687,3 +691,4 @@ ul.ui-autocomplete {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+

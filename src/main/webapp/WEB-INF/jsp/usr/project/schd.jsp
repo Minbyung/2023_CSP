@@ -283,6 +283,10 @@
 	                 }
 	        	});
 	        },
+	        eventClick: function(info) {
+	            var articleId = info.event.id;
+	            window.location.href = "/usr/article/detail?id=" + articleId;
+	        },
 		});
 		calendar.render(); // 캘린더 렌더링
 		
