@@ -32,7 +32,7 @@
    padding-right: 1em;
  }
  #calendar-container {
- 	padding-top: 30px;
+ 	padding-top: 5px;
  	padding-left: 30px;
  	padding-right: 30px;
  	padding-bottom: 150px;
@@ -490,7 +490,16 @@
 
 		    // 기본적으로 첫 번째 탭을 활성화합니다.
 		    $(".tab-btn:first").click();
-		
+		    
+		    $('#helpIcon').hover(
+	            function() {
+	                $('#tooltip').addClass('show');
+	            }, 
+	            function() {
+	                $('#tooltip').removeClass('show');
+	            }
+	        );
+
 	    connect();
 		
 	});
@@ -717,6 +726,7 @@
 		</div>
 		
 		<div class="page-content">
+			
     		<nav class="menu-box-1">
     			<ul>
     				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
@@ -726,8 +736,15 @@
     			</ul>
     		</nav>
   
-  
-  
+  			
+		  <!--물음표 아이콘 -->
+           <div class="relative helpIcon-box">
+               <i class="fas fa-question-circle text-2xl cursor-pointer" id="helpIcon"></i>
+               <div class="tooltip" id="tooltip">
+               		 날짜 칸을 드래그하여 업무 추가를 할 수 있어요.
+               		<br>막대를 드래그하여 시작일을 변경할 수 있어요.
+               </div>
+           </div>
 		  
 		  <!-- calendar 태그 -->
 		  <div id='calendar-container'>

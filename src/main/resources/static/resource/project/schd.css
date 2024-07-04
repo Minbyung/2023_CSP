@@ -708,3 +708,39 @@ ul.ui-autocomplete {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.helpIcon-box {
+	top: 55px;
+	left: 200px;
+}
+
+.tooltip {
+    position: absolute;
+    top: -5px;
+    left: 5px;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: left !important;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    transform: translateY(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #333 transparent transparent;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
