@@ -310,10 +310,8 @@
     			<ul>
     				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
     				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
-    				<li><a class="block" href="../project/gantt?projectId=${project.id }">간트차트</a></li>
     				<li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
     				<li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
-    				<li><a class="block" href="">알림</a></li>
     			</ul>
     		</nav> 	
     		
@@ -324,9 +322,9 @@
 						<div class="files">
 						    <ul class="border border-black">
 						        <c:forEach var="file" items="${projectFiles}">
-									<li class="p-4 border border-b hover:hover:bg-gray-300">
-										<a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">
-											<div class="flex justify-between">
+									<li class=" border border-b hover:hover:bg-gray-300">
+										<a class="flex w-full h-full p-4" href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">
+											<div class="flex w-full justify-between">
 												<div>${file.original_name}</div>
 												<div><i class="fa-solid fa-download download-btn"></i></div>
 											</div>
