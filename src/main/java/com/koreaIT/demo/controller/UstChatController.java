@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +29,8 @@ import com.koreaIT.demo.vo.GroupChatRoom;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Notification;
 import com.koreaIT.demo.vo.Project;
+import com.koreaIT.demo.vo.Reply;
+import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 
 @Controller
@@ -207,7 +210,7 @@ public class UstChatController {
     public Notification handleWriteNotification(@Payload Notification writeNotification,
                                             @DestinationVariable String projectId) {
 		   
-    	
+    	System.out.println(writeNotification);
     	List<Integer> memberIds = projectService.getProjectMemberIdsByProjectId(Integer.parseInt(projectId));
     	
     	notificationService.insertNotification(writeNotification);
@@ -230,6 +233,21 @@ public class UstChatController {
 	@ResponseBody
     public List<Notification> getWriteNotifications(String loginedMemberId) {
     	return notificationService.getWriteNotifications(Integer.parseInt(loginedMemberId));
+    }
+    
+    @PostMapping("/deleteNotificationById")
+    @ResponseBody
+    public ResultData<String> deleteNotificationById(int notificationId) {
+    	
+    	boolean isDeleted = notificationService.deleteNotificationById(notificationId);
+
+    	if (isDeleted) {
+    		return ResultData.from("S-1", "알림 삭제 성공");
+    	} else {
+    		return ResultData.from("F-1", "알림 삭제 실패");
+    	}
+    	
+    	
     }
 	
 }

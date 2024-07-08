@@ -308,9 +308,13 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
 	padding: 10px;
 }
 
-.notification-card {
-	padding: 16px 16px 18px;
+.notification-card-wrap {
+	
 	border-bottom: 1px solid #ddd; /* 테두리 */
+}
+
+.notification-card {
+	padding: 16px 25px 18px;
 }
 
 .notification-card > .notification-project-name {

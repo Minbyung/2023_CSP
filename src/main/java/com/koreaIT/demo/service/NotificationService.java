@@ -27,6 +27,12 @@ public class NotificationService {
 		return notificationDao.getWriteNotifications(loginedMemberId);
 	}
 
+	public boolean deleteNotificationById(int id) {
+		int rowsAffected = notificationDao.deleteNotificationById(id);
+		
+		return rowsAffected > 0;
+	}
+
 	
 	
 }

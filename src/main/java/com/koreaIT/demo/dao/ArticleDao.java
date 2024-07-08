@@ -223,7 +223,7 @@ public interface ArticleDao {
 				LEFT JOIN `member` AS TA ON T.memberId = TA.id
 				LEFT JOIN `group` AS G ON A.groupId = G.id
 				LEFT JOIN project AS P ON A.projectId = P.id
-				WHERE A.projectId = 1
+				WHERE A.projectId = #{projectId}
 				GROUP BY A.id
 				ORDER BY A.id DESC
 				LIMIT 1;

@@ -17,9 +17,14 @@ import com.koreaIT.demo.vo.Notification;
 public interface NotificationDao {
 
 	
-	@Insert("INSERT INTO notification (writerId, writerName, title, content, regDate, projectName) VALUES (#{writerId}, #{writerName}, #{title}, #{content}, #{regDate}, #{projectName})")
+	@Insert("INSERT INTO notification (writerId, writerName, title, content, regDate, projectName, articleId) VALUES (#{writerId}, #{writerName}, #{title}, #{content}, #{regDate}, #{projectName}, #{articleId})")
 	public void insertNotification(Notification writeNotification);
-
+	
+	@Delete("""
+			DELETE FROM notification 
+				WHERE id = #{id}
+			""")
+	public int deleteNotificationById(int id);
 	
 	@Select("""
 			SELECT * FROM notification

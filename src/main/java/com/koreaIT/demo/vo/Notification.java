@@ -15,4 +15,5 @@ public class Notification {
 	private String content;
 	private String regDate;
 	private String projectName;
+	private int articleId;
 }
