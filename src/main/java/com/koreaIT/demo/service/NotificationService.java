@@ -18,18 +18,23 @@ public class NotificationService {
 		this.notificationDao = notificationDao;
 	}
 
-	public void insertNotification(Notification writeNotification) {
+	public void insertNotification(Notification managerNotification) {
 		
-		notificationDao.insertNotification(writeNotification);
+		notificationDao.insertNotification(managerNotification);
 	}
 
-	public List<Notification> getWriteNotifications(int loginedMemberId) {
-		return notificationDao.getWriteNotifications(loginedMemberId);
+	public List<Notification> getTaggedNotifications(int loginedMemberId) {
+		return notificationDao.getTaggedNotifications(loginedMemberId);
 	}
 
 	public boolean deleteNotificationById(int id) {
 		int rowsAffected = notificationDao.deleteNotificationById(id);
 		
+		return rowsAffected > 0;
+	}
+
+	public boolean deleteAllNotification(int id) {
+		int rowsAffected = notificationDao.deleteAllNotification(id);
 		return rowsAffected > 0;
 	}
 

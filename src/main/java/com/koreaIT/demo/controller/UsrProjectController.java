@@ -365,13 +365,14 @@ public class UsrProjectController {
 		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		List<FileResponse> projectFiles = fileService.findAllFileByProjectId(projectId);
-		
+		Member member = memberService.getMemberById(memberId);
 		
 		model.addAttribute("project", project);
 		model.addAttribute("projects", projects);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("projectFiles", projectFiles);
+		model.addAttribute("member", member);
 		
 		return "usr/project/file"; 
 	}

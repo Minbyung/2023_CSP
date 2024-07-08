@@ -163,4 +163,9 @@ public class MemberService {
 		
 		return memberDao.getSearchMembersCnt(keyword);
 	}
+
+	public int getMemberIdByMembername(String manager) {
+		
+		return memberDao.getMemberIdByMembername(manager);
+	}
 }

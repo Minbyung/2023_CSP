@@ -84,10 +84,54 @@ $(document).ready(function() {
             icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
         }
     });
-	
-		
-	
-	
+    
+    $('.notification').click(function() {
+    	$('.rpanel').toggle();
+    	$('.notification-badge').hide();
+    });
+    
+    $('.close-btn-x').click(function(){
+		$('.rpanel').hide();
+	})
+    
+ // 서버로부터 사용자별 알림 목록을 가져옵니다.
+    $.ajax({
+        url: '/getTaggedNotifications',
+        type: 'GET',
+        data: { loginedMemberId: ${rq.getLoginedMemberId()} },
+        success: function(notifications) {
+            // 가져온 알림 목록을 페이지에 추가합니다.
+            notifications.forEach(function(notification) {
+            	// 새 알림 카드 HTML 구조 생성
+	            const newNotificationCardHtml = `
+	            	<div class="notification-card-wrap" style="position: relative;">
+			            <a href="/usr/article/detail?id=\${notification.articleId}\" class="notification-link">
+						    <div class="notification-card">
+				            	<div class="notification-project-name">\${notification.projectName}\</div>
+						        <div class="notification-project-writername">글쓴이 : \${notification.writerName}\</div>
+						        <div class="notification-project-regdate">작성날짜 : \${notification.regDate}\</div>
+						        <div class="notification-project-title">제목 : \${notification.title}\</div>
+						    </div>
+					    </a>
+					    <button class="delete-notification-btn" data-id="\${notification.id}\" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+				    </div>
+				    `;
+
+                $('.list-notification').prepend(newNotificationCardHtml);
+            });
+            $('.delete-notification-btn').click(function() {
+                const notificationId = $(this).data('id');
+                deleteNotification(notificationId);
+            });
+            $('.clear-all-btn').click(function() {
+                deleteAllNotification();
+            });
+		 
+        },
+        error: function() {
+            $('.list-notification').text('Failed to load notifications.');
+        }
+    });
 });
 
 function detailModal(memberId) {
@@ -132,9 +176,45 @@ function detailModal(memberId) {
     $('.member-modal .modal-memberContent').click(function(event) {
         event.stopPropagation();
     });
-	
-	
-	
+ 	
+}
+
+//서버로 삭제 요청을 보내는 함수
+function deleteNotification(notificationId) {
+    $.ajax({
+        url: '/deleteNotificationById',
+        type: 'POST',
+        data: { notificationId: notificationId },
+        success: function(response) {
+        	console.log(response.success);
+            if (response.success) {
+                // 알림 삭제 성공 시, 해당 알림 카드를 제거합니다.
+            	 $(`button[data-id="\${notificationId}\"]`).closest('.notification-card-wrap').remove();
+            } else {
+                alert('Failed to delete notification.');
+            }
+        },
+        error: function() {
+            alert('Error deleting notification.');
+        }
+    });
+}
+function deleteAllNotification() {
+    $.ajax({
+        url: '/deleteAllNotification',
+        type: 'POST',
+        success: function(response) {
+            if (response.success) {
+                // 알림 삭제 성공 시, 해당 알림 카드를 제거합니다.
+            	 $('.list-notification').empty();
+            } else {
+                alert('Failed to delete notification.');
+            }
+        },
+        error: function() {
+            alert('Error deleting notification.');
+        }
+    });
 }
 
 
@@ -346,6 +426,19 @@ function detailModal(memberId) {
 			</div>
 		</div>
 	</div>  
+</div>
+
+<div class="rpanel">
+	<div class="rpanel-list">
+		<div class="list-header border-b">
+			<div class="text-lg font-bold">알림 센터</div>
+			<span id="close" class="close close-btn-x">&times;</span>
+			<button class="clear-all-btn">모두 읽음</button>
+		</div>
+		
+		<div class="list-notification">
+		</div>
+	</div>
 </div>
   
 </body>

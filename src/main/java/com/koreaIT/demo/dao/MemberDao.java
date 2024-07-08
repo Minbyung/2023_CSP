@@ -255,5 +255,12 @@ public interface MemberDao {
 			""")
 	public int getSearchMembersCnt(String keyword);
 
+	//태그된멤버알림
+	@Select("""
+			SELECT id FROM `member`
+				WHERE `name` = #{manager}
+			""")
+	public int getMemberIdByMembername(String manager);
+
 	
 }

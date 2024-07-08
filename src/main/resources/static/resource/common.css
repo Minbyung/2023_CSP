@@ -293,7 +293,7 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
 	min-width: 389px;
 	width: 441px;
 	position: absolute;
-	top: 80px;
+	top: 92px;
 	right: 0;
 	bottom: 0;
 	background-color: white;
@@ -301,6 +301,7 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
 	border: 1px solid #ddd; /* 테두리 */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     border-radius: 4px; /* 테두리 둥글게 */
+    overflow: auto;
 }
 
 .rpanel .rpanel-list > .list-header {
@@ -341,6 +342,19 @@ input[type="date"].after::-webkit-calendar-picker-indicator{
   display: none;
   justify-content: center;
   align-items: center;
+}
+/*알림 메세지박스 */
+.message-box {
+	margin: 0 auto;
+    position: fixed;
+    top: 92px;
+    right: 0px;
+    background-color: deepskyblue;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 1000;
 }
 
 .box-shadow {

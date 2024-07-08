@@ -1,6 +1,7 @@
 package com.koreaIT.demo.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -210,29 +211,51 @@ public class UstChatController {
     public Notification handleWriteNotification(@Payload Notification writeNotification,
                                             @DestinationVariable String projectId) {
 		   
-    	System.out.println(writeNotification);
     	List<Integer> memberIds = projectService.getProjectMemberIdsByProjectId(Integer.parseInt(projectId));
     	
-    	notificationService.insertNotification(writeNotification);
+//    	notificationService.insertNotification(writeNotification);
     	int writerId = writeNotification.getWriterId();
     	Article lastPostedArticle = articleService.getRecentlyAddArticle(Integer.parseInt(projectId));
     	
-    	for (int memberId : memberIds) {
-    		if (memberId != writerId) {
-    			// 구독 주소와 같게
-    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, lastPostedArticle);
-    		}
-    	}
+//    	for (int memberId : memberIds) {
+//    		if (memberId != writerId) {
+//    			// 구독 주소와 같게
+//    			messagingTemplate.convertAndSend("/queue/writeNotify-" + projectId + memberId, lastPostedArticle);
+//    		}
+//    	}
+    	
+    	// 태그된 사람들에 대한 알림 전송
+        List<String> managers = writeNotification.getManagers();
+        
+        for (String manager : managers) {
+            int managerId = memberService.getMemberIdByMembername(manager); // 사용자 이름으로 사용자 ID를 조회하는 메서드
+            if (managerId != writerId) {
+                Notification managerNotification = new Notification();
+                managerNotification.setWriterId(writerId);
+                managerNotification.setWriterName(writeNotification.getWriterName());
+                managerNotification.setTitle(writeNotification.getTitle());
+                managerNotification.setContent(writeNotification.getContent());
+                managerNotification.setRegDate(lastPostedArticle.getRegDate());
+                managerNotification.setProjectName(lastPostedArticle.getProjectName());
+                managerNotification.setArticleId(lastPostedArticle.getId());
+                managerNotification.setTaggedMemberId(managerId); // 태그된 사람을 개별적으로 설정
+
+                notificationService.insertNotification(managerNotification); // 태그된 사람별로 DB에 저장
+                
+                messagingTemplate.convertAndSend("/queue/tagNotify-" + projectId + managerId, lastPostedArticle);
+            }
+        }
+    	
     	
     	
         // 사용자간의 고유 대기열로 메시지 전송
         return writeNotification;
     }
     
-    @RequestMapping("/usr/project/getWriteNotifications")
+    @RequestMapping("/getTaggedNotifications")
 	@ResponseBody
-    public List<Notification> getWriteNotifications(String loginedMemberId) {
-    	return notificationService.getWriteNotifications(Integer.parseInt(loginedMemberId));
+    public List<Notification> getTaggedNotifications(String loginedMemberId) {
+    	return notificationService.getTaggedNotifications(Integer.parseInt(loginedMemberId));
     }
     
     @PostMapping("/deleteNotificationById")
@@ -246,8 +269,19 @@ public class UstChatController {
     	} else {
     		return ResultData.from("F-1", "알림 삭제 실패");
     	}
-    	
-    	
     }
+    @PostMapping("/deleteAllNotification")
+    @ResponseBody
+    public ResultData<String> deleteAllNotification() {
+    	
+    	boolean isDeleted = notificationService.deleteAllNotification(rq.getLoginedMemberId());
+
+    	if (isDeleted) {
+    		return ResultData.from("S-1", "알림 삭제 성공");
+    	} else {
+    		return ResultData.from("F-1", "알림 삭제 실패");
+    	}
+    }
+    
 	
 }

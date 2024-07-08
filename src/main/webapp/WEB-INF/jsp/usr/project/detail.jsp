@@ -411,9 +411,7 @@
 		    		writerName: loginedMemberName,
 		    		title: title,
 		    		content: content,
-		    		regDate: '${lastPostedArticle.regDate}',
-		    		projectName: '${lastPostedArticle.projectName}',
-		    		articleId: '${lastPostedArticle.id}'
+		    		managers: managers // managers 정보를 추가
 		        };
 		 
 		 
@@ -736,7 +734,7 @@
 		    
 		 // 서버로부터 사용자별 알림 목록을 가져옵니다.
 		    $.ajax({
-		        url: '../project/getWriteNotifications',
+		        url: '/getTaggedNotifications',
 		        type: 'GET',
 		        data: { loginedMemberId: ${rq.getLoginedMemberId()} },
 		        success: function(notifications) {
@@ -751,7 +749,6 @@
 								        <div class="notification-project-writername">글쓴이 : \${notification.writerName}\</div>
 								        <div class="notification-project-regdate">작성날짜 : \${notification.regDate}\</div>
 								        <div class="notification-project-title">제목 : \${notification.title}\</div>
-								        <div class="notification-project-content">내용 : \${notification.content}\</div>  
 								    </div>
 							    </a>
 							    <button class="delete-notification-btn" data-id="\${notification.id}\" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
@@ -763,6 +760,9 @@
 		            $('.delete-notification-btn').click(function() {
 		                const notificationId = $(this).data('id');
 		                deleteNotification(notificationId);
+		            });
+		            $('.clear-all-btn').click(function() {
+		                deleteAllNotification();
 		            });
 				 
 		        },
@@ -920,11 +920,11 @@
 	        });
 	     
 	     
-	        stompClient.subscribe('/queue/writeNotify-' + projectId + ${rq.getLoginedMemberId()}, function(lastPostedArticle) {
+	        stompClient.subscribe('/queue/tagNotify-' + projectId + ${rq.getLoginedMemberId()}, function(lastPostedArticle) {
 	            // 알림 메시지 처리 로직을 여기에 구현합니다.
 	        	const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
 
-	            showMessage(writeNotificationMessage.writerName + "님이 새 글을 작성하셨습니다");
+	            showMessage(writeNotificationMessage.writerName + "님이 태그하셨습니다");
 	            $('.notification-badge').show();
 	        });
 	    });
@@ -1020,7 +1020,23 @@
             }
         });
     }
-    
+    function deleteAllNotification() {
+        $.ajax({
+            url: '/deleteAllNotification',
+            type: 'POST',
+            success: function(response) {
+                if (response.success) {
+                    // 알림 삭제 성공 시, 해당 알림 카드를 제거합니다.
+                	 $('.list-notification').empty();
+                } else {
+                    alert('Failed to delete notification.');
+                }
+            },
+            error: function() {
+                alert('Error deleting notification.');
+            }
+        });
+    }
     
 </script>
 	<div class="task-manager">
@@ -1131,7 +1147,9 @@
 				<div class="list-header border-b">
 					<div class="text-lg font-bold">알림 센터</div>
 					<span id="close" class="close close-btn-x">&times;</span>
+					<button class="clear-all-btn">모두 읽음</button>
 				</div>
+				
 				<div class="list-notification">
 				</div>
 			</div>
