@@ -1,5 +1,7 @@
 package com.koreaIT.demo.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 // Zoom 회의 응답 정보를 담을 DTO 클래스
 public class ZoomMeetingResponse {
 	private String uuid; // 추가

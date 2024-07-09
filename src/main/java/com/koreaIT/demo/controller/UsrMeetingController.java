@@ -14,10 +14,12 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -30,11 +32,11 @@ import com.koreaIT.demo.vo.ZoomMeetingRequest;
 import com.koreaIT.demo.vo.ZoomMeetingResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 @Controller
@@ -54,39 +56,64 @@ public class UsrMeetingController {
         return "redirect:" + meetingService.getOAuthUrl();
     }
 
+	
+	@PostMapping("/saveZoomMeetingRequest")
+    @ResponseBody
+    public String saveZoomMeetingRequest(@RequestBody ZoomMeetingRequest meetingRequest, HttpSession session) {
+        session.setAttribute("zoomMeetingRequest", meetingRequest);
+        return "Request data saved in session";
+    }
+	
     @GetMapping("/oauth/callback")
-    public String callback(@RequestParam String code, Model model) {
+    public String callback(@RequestParam String code, Model model, HttpSession session) {
         try {
-            String accessToken = meetingService.getAccessToken(code);
-            model.addAttribute("accessToken", accessToken);
-            return "createMeeting";
+        	String accessToken = meetingService.getAccessToken(code);
+        	
+            session.setAttribute("accessToken", accessToken);
+         
+         // 세션에서 객체를 올바르게 가져옵니다.
+            ZoomMeetingRequest meetingRequest = (ZoomMeetingRequest) session.getAttribute("zoomMeetingRequest");
+
+            ZoomMeetingResponse meetingResponse = meetingService.createMeeting(accessToken, meetingRequest);
+            
+            model.addAttribute("meetingInfo", meetingResponse);
+            
+
+            return "redirect:/usr/project/detail?projectId=" + 1;
+            
         } catch (IOException e) {
             model.addAttribute("error", "Failed to retrieve access token: " + e.getMessage());
             return "error";
         }
     }
 
-    @GetMapping("/createMeeting")
-    public String showCreateMeetingPage() {
-        return "createMeeting";
-    }
-
-    @GetMapping("/createMeetingAction")
-    public String createMeeting(
-            @RequestParam String accessToken,
-            @RequestParam String topic,
-            @RequestParam String startTime,
-            @RequestParam int duration,
-            Model model) {
-        try {
-            Map<String, Object> meetingDetails = meetingService.createMeeting(accessToken, topic, startTime, duration);
-            model.addAttribute("meetingDetails", meetingDetails);
-            return "meetingDetails";
-        } catch (IOException e) {
-            model.addAttribute("error", "Failed to create meeting: " + e.getMessage());
-            return "error";
-        }
-    }
+//    @GetMapping("/createMeeting")
+//    public String showCreateMeetingPage() {
+//        return "createMeeting";
+//    }
+//
+//    @GetMapping("/createMeetingAction")
+//    public String createMeeting(
+//            @RequestParam String accessToken,
+//    		@RequestParam String code,
+//            @RequestParam String topic,
+//            @RequestParam String startTime,
+//            @RequestParam int duration,
+//            @RequestParam String password,
+//            Model model) {
+//        try {
+//            ZoomMeetingRequest meetingRequest = new ZoomMeetingRequest(topic, 2, startTime, duration, password);
+//            
+//            ZoomMeetingResponse meetingResponse = meetingService.createMeeting(accessToken, meetingRequest);
+//            // 미팅 정보
+//            model.addAttribute("meetingDetails", meetingResponse);
+//            return "meetingDetails";
+//            
+//        } catch (IOException e) {
+//            model.addAttribute("error", "Failed to create meeting: " + e.getMessage());
+//            return "error";
+//        }
+//    }
 	
 	
 	

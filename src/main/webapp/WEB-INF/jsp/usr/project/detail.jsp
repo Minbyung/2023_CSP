@@ -808,22 +808,60 @@
 		 	
 		    
 		    $('#createMeetingBtn').click(function() {
-                var projectId = ${project.id}; // 프로젝트 ID는 예시 값입니다. 실제 값으로 대체 필요
-                var topic = $('#meetingTopic').val(); // 사용자가 입력한 토픽 제목
-                var duration = $('#meetingDuration').val(); // 사용자가 입력한 회의 길이
-                var startTime = $('#meetingStartTime').val(); // 사용자가 입력한 회의 시작시간
-                var password = $('#meetingPassword').val(); 
+//                 var projectId = ${project.id}; // 프로젝트 ID는 예시 값입니다. 실제 값으로 대체 필요
+//                 var topic = $('#meetingTopic').val(); // 사용자가 입력한 토픽 제목
+//                 var duration = $('#meetingDuration').val(); // 사용자가 입력한 회의 길이
+//                 var startTime = $('#meetingStartTime').val(); // 사용자가 입력한 회의 시작시간
+//                 var password = $('#meetingPassword').val(); 
                 
-                // state 파라미터에 프로젝트 ID와 토픽 제목을 포함
-                var state = encodeURIComponent(projectId + ',' + topic + ',' + duration + ',' + startTime + ',' + password);
-                console.log(state);
-                // Zoom OAuth 인증 URL 구성
-                var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=\${state}`;
-//                 var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=1,\${topic}`;
+//                 // state 파라미터에 프로젝트 ID와 토픽 제목을 포함
+//                 var state = encodeURIComponent(projectId + ',' + topic + ',' + duration + ',' + startTime + ',' + password);
+//                 console.log(state);
+//                 // Zoom OAuth 인증 URL 구성
+//                 var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=\${state}`;
+// //                 var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/usr/meeting/zoomApi&state=1,\${topic}`;
                 
-                // 사용자를 Zoom 인증 페이지로 리디렉션
-                window.location.href = authUrl;
-            });
+//                 // 사용자를 Zoom 인증 페이지로 리디렉션
+//                 window.location.href = authUrl;
+// 		    	});
+		    	var projectId = ${project.id};
+		    	const topic = $('#meetingTopic').val();
+		        const duration = $('#meetingDuration').val();
+		        const startTime = $('#meetingStartTime').val();
+		        const password = $('#meetingPassword').val();
+
+		        const requestData = {
+		            topic: topic,
+		            type: 2,
+		            start_time: startTime,
+		            duration: duration,
+		            password: password
+		        };
+
+		        // 요청 데이터를 로컬 스토리지에 저장
+		        localStorage.setItem('zoomMeetingRequest', JSON.stringify(requestData));
+
+		     // 서버에 세션 데이터를 저장하는 요청
+		        $.ajax({
+		            url: '/saveZoomMeetingRequest',
+		            type: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify(requestData),
+		            success: function(response) {
+		                // OAuth 인증 URL로 리디렉션
+		                var authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=hS7eo62IQn4P7NhEDhmtA&redirect_uri=http://localhost:8082/oauth/callback`;
+		                window.location.href = authUrl;
+		            },
+		            error: function(error) {
+		                console.error('Error:', error);
+		                // Handle error
+		            }
+		        });
+		    });
+
+
+
+            
 		    
 		    
 		    // 글쓰기 탭

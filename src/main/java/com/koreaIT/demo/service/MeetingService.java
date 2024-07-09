@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.koreaIT.demo.dao.MeetingDao;
+import com.koreaIT.demo.vo.ZoomMeetingRequest;
 import com.koreaIT.demo.vo.ZoomMeetingResponse;
 
 import okhttp3.Credentials;
@@ -31,9 +32,9 @@ public class MeetingService {
 
 	
 	private static final String ZOOM_API_URL = "https://api.zoom.us/v2";
-    private static final String CLIENT_ID = "YOUR_CLIENT_ID";
-    private static final String CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-    private static final String REDIRECT_URI = "http://localhost:8080/oauth/callback";
+    private static final String CLIENT_ID = "hS7eo62IQn4P7NhEDhmtA";
+    private static final String CLIENT_SECRET = "ZJQQFFCKPpnn9L4NqdBZLCbIA6o8Kw3F";
+    private static final String REDIRECT_URI = "http://localhost:8082/oauth/callback";
 
     private final OkHttpClient httpClient = new OkHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -73,14 +74,12 @@ public class MeetingService {
         }
     }
 
-    public Map<String, Object> createMeeting(String accessToken, String topic, String startTime, int duration) throws IOException {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("topic", topic);
-        requestBody.put("type", 2);
-        requestBody.put("start_time", startTime);
-        requestBody.put("duration", duration);
-
-        String json = objectMapper.writeValueAsString(requestBody);
+    // 액세스 토큰을 사용하여 Zoom 미팅을 생성
+    public ZoomMeetingResponse createMeeting(String accessToken, ZoomMeetingRequest meetingRequest) throws IOException {
+    	
+    	// 미팅 정보를 포함하는 meetingRequest를 JSON 형식으로 변환
+        String json = objectMapper.writeValueAsString(meetingRequest);
+        // OkHttp의 RequestBody.create를 사용하여 요청 본문을 생성
         RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
 
         Request request = new Request.Builder()
@@ -89,12 +88,14 @@ public class MeetingService {
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json")
                 .build();
-
+        
+        // httpClient.newCall(request).execute()를 호출하여 요청을 실행하고 응답을 처리
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             String responseBody = response.body().string();
-            return objectMapper.readValue(responseBody, Map.class);
+            // 미팅 정보 반환
+            return objectMapper.readValue(responseBody, ZoomMeetingResponse.class);
         }
     }
 	
