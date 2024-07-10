@@ -815,12 +815,6 @@
 		            </li>
 		        </ul>
 		    </div>
-<!-- 		    <div class="lnb-bottom-customer"> -->
-<!-- 		        <a href="#" class=""> -->
-<!-- 		            <i class="fa-regular fa-circle-question self-center mr-3"></i> -->
-<!-- 		            <div>고객센터</div> -->
-<!-- 		        </a> -->
-<!-- 		    </div> -->
 		</div>
 		
 		
@@ -834,6 +828,7 @@
     				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
                     <li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
                     <li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
+                    <li><a class="block" href="../project/meeting?projectId=${project.id }">영상회의</a></li>
                 </ul>
             </nav>        
 
@@ -842,7 +837,7 @@
             	<button class="btn btn-active btn-sm modal-exam mx-2">업무 추가</button>
             </div>	
 			<div class="bg-white p-4">
-			    <table id="task-table-1" class="table task-table rounded-xl">
+			    <table id="task-table-1" class="table task-table rounded-xl table-hover">
 			        <colgroup>
 			            <col style="width: 20%;">
 			            <col style="width: 10%;">

@@ -361,6 +361,7 @@
     				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
     				<li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
     				<li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
+    				<li><a class="block" href="../project/meeting?projectId=${project.id }">영상회의</a></li>
     			</ul>
     		</nav> 	
     		

@@ -17,6 +17,7 @@ import com.koreaIT.demo.service.BoardService;
 import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.GroupService;
+import com.koreaIT.demo.service.MeetingService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ProjectService;
 import com.koreaIT.demo.service.ReplyService;
@@ -30,6 +31,7 @@ import com.koreaIT.demo.vo.Project;
 import com.koreaIT.demo.vo.RecommendPoint;
 import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
+import com.koreaIT.demo.vo.ZoomMeetingResponse;
 
 @Controller
 public class UsrProjectController {
@@ -40,15 +42,17 @@ public class UsrProjectController {
 	private FileService fileService;
 	private MemberService memberService;
 	private ChatService chatService;
+	private MeetingService meetingService;
 	private Rq rq;
 	
-	UsrProjectController(ProjectService projectService, ChatService chatService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, Rq rq) {
+	UsrProjectController(ProjectService projectService, ChatService chatService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, MeetingService meetingService, Rq rq) {
 		this.projectService = projectService;
 		this.articleService = articleService;
 		this.groupService = groupService;
 		this.fileService = fileService;
 		this.memberService = memberService;
 		this.chatService = chatService;
+		this.meetingService = meetingService;
 		this.rq = rq;
 	}
 	
@@ -388,7 +392,9 @@ public class UsrProjectController {
 		Member member = memberService.getMemberById(memberId);
 		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		
-		
+		List<ZoomMeetingResponse> meetingInfos = meetingService.getMeetingInfo(projectId);
+        model.addAttribute("meetingInfos", meetingInfos);
+
 		model.addAttribute("project", project);
 		model.addAttribute("projects", projects);
 		model.addAttribute("chatRooms", chatRooms);

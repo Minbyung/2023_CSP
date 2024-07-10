@@ -82,15 +82,21 @@ public class UsrMeetingController {
             
             meetingService.saveMeeting(meetingResponse, projectId, rq.getLoginedMemberId()); // 회의 정보를 데이터베이스에 저장
 
-            List<ZoomMeetingResponse> meetingInfo = meetingService.getMeetingInfo(projectId);
-            model.addAttribute("meetingInfo", meetingInfo);
             
-            return "redirect:/usr/project/detail?projectId=" + projectId;
+            
+            return "redirect:/usr/project/meeting?projectId=" + projectId;
             
         } catch (IOException e) {
             model.addAttribute("error", "Failed to retrieve access token: " + e.getMessage());
             return "error";
         }
+    }
+    
+    @RequestMapping("/usr/project/meeting/doDelete")
+    @ResponseBody
+    public String delete(@RequestParam("meetingId") String meetingId) {
+        meetingService.deleteMeeting(meetingId);
+        return "회의가 삭제되었습니다";
     }
 
 //    @GetMapping("/createMeeting")

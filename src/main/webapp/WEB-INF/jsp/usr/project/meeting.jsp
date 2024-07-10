@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ include file="../common/head2.jsp" %>
 <%@ include file="../common/toastUiEditorLib.jsp" %>
@@ -21,6 +22,23 @@
   
   
   <title>${project.project_name }</title>
+  
+	<style>
+	   .menu-box-1 > ul > li:nth-of-type(2) > a::after {
+	   		content: none;
+		}
+	 .menu-box-1 > ul > li:nth-of-type(5) > a::after {
+		    content: "";
+		    background-color: black;
+		    width: 100%;
+		    height: 2px;
+		    position: absolute;
+		    bottom: 0;
+		    left: 0;
+		   	transition: width .3s;
+		}
+	</style>
+  
 </head>
 <!-- partial:index.partial.html -->
 <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet">
@@ -324,6 +342,27 @@
 	            $('.member-detail-menu').hide();
 	        }
 	    });
+	    
+	    $('.btn-delete').click(function() {
+            var meetingId = $(this).data('meeting-id');
+            
+            if (confirm("정말로 이 회의를 삭제하시겠습니까?")) {
+            	console.log(meetingId);
+                $.ajax({
+                    url: '/usr/project/meeting/doDelete',
+                    type: 'POST',
+                    data: { meetingId: meetingId },
+                    success: function(response) {
+                        alert(response);
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        alert('회의 삭제 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        });
 		
 	   connect();
 	});	
@@ -526,7 +565,7 @@
 		        </ul>
 		    </div>
 		</div>
-		
+			
 
 		<div class="page-content">
             <nav class="menu-box-1">
@@ -535,73 +574,71 @@
     				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
                     <li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
                     <li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
-                    <li><a class="block" href="../project/file?projectId=${project.id }">영상회의</a></li>
+                    <li><a class="block" href="../project/meeting?projectId=${project.id }">영상회의</a></li>
                 </ul>
             </nav>        
 
             <div class="flex justify-end p-2">
             	<button class="btn btn-active btn-sm modal-exam mx-2">화상회의 추가</button>
             </div>	
-			<div class="bg-white p-4">
-			    <table id="task-table-1" class="table task-table rounded-xl">
-			        <colgroup>
-			            <col style="width: 20%;">
-			            <col style="width: 10%;">
-			            <col style="width: 14%;">
-			            <col style="width: 14%;">
-			            <col style="width: 14%;">
-			            <col style="width: 14%;">
-			            <col style="width: 14%;">
-			        </colgroup>
-			        <thead>
-			            <tr>
-			                <th>업무명
-				                <button class="sort-btn" data-column="title" data-order="ASC">▲</button>
-	   							<button class="sort-btn" data-column="title" data-order="DESC">▼</button>
-   							</th>
-			                <th style="text-align: center;">상태</th>
-			                <th style="text-align: center;">담당자</th>
-			                <th style="text-align: center;">시작일
-			                	<button class="sort-btn" data-column="startDate" data-order="ASC">▲</button>
-	   							<button class="sort-btn" data-column="startDate" data-order="DESC">▼</button>
-			                </th>
-			                <th style="text-align: center;">마감일
-				                <button class="sort-btn" data-column="endDate" data-order="ASC">▲</button>
-		   						<button class="sort-btn" data-column="endDate" data-order="DESC">▼</button>
-			                </th>
-			                <th style="text-align: center;">등록일
-				                <button class="sort-btn" data-column="regDate" data-order="ASC">▲</button>
-		   						<button class="sort-btn" data-column="regDate" data-order="DESC">▼</button>
-			                </th>
-			                <th style="text-align: center;">업무번호
-				                <button class="sort-btn" data-column="id" data-order="ASC">▲</button>
-		   						<button class="sort-btn" data-column="id" data-order="DESC">▼</button>
-			                </th>
-			            </tr>
-			        </thead>
-	                <c:forEach var="meetingInfo" items="${meetingInfo}">
-			            <tbody>
-			                <c:choose>
-	                   			<c:when test="${not empty meetingInfo.value}">
-			                    <tr>
-			                    	<td></td>					
-	                                <td></td>						
-	                                <td style="text-align: center;"></td>
-	                                <td style="text-align: center;"></td>
-	                                <td style="text-align: center;"></td>
-	                                <td style="text-align: center;"></td>
-	                                <td style="text-align: center;"></td>
-			                    </tr>
-			                </c:forEach>
+			<div class="p-4">
+			    <table id="task-table-1" class="table task-table rounded-xl table-hover">
+				    <colgroup>
+				        <col style="width: 20%;">
+				        <col style="width: 20%;">
+				        <col style="width: 20%;">
+				        <col style="width: 20%;">
+				        <col style="width: 10%;">
+				        <col style="width: 10%;">
+				    </colgroup>
+				    <thead class="thead-dark">
+				        <tr>
+				            <th style="text-align: center;">회의 이름
+				                <button class="sort-btn" data-column="topic" data-order="ASC">▲</button>
+				                <button class="sort-btn" data-column="topic" data-order="DESC">▼</button>
+				            </th>
+				            <th style="text-align: center;">회의 생성일
+				                <button class="sort-btn" data-column="createdAt" data-order="ASC">▲</button>
+				                <button class="sort-btn" data-column="createdAt" data-order="DESC">▼</button>
+				            </th>
+				            <th style="text-align: center;">회의 시작일
+				                <button class="sort-btn" data-column="StartDate" data-order="ASC">▲</button>
+				                <button class="sort-btn" data-column="StartDate" data-order="DESC">▼</button>
+				            </th>
+				            <th style="text-align: center;">회의 시간
+				                <button class="sort-btn" data-column="duration" data-order="ASC">▲</button>
+				                <button class="sort-btn" data-column="duration" data-order="DESC">▼</button>
+				            </th>
+				            <th style="text-align: center;">참여</th>
+				            <th style="text-align: center;">삭제</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        <c:forEach var="meetingInfo" items="${meetingInfos}">
+				            <c:choose>
+				                <c:when test="${not empty meetingInfos}">
+				                    <tr>
+				                        <td style="text-align: center; vertical-align: middle;">${meetingInfo.topic }</td>
+				                        <td style="text-align: center; vertical-align: middle;">
+				                        	<fmt:formatDate value="${meetingInfo.createdAt}" pattern="yy-MM-dd HH:mm"/>
+				                        </td>
+				                        <td style="text-align: center; vertical-align: middle;">
+				                        	<fmt:formatDate value="${meetingInfo.start_time}" pattern="yy-MM-dd HH:mm"/>
+				                        </td>
+				                        <td style="text-align: center; vertical-align: middle;">${meetingInfo.duration }분</td>
+				                        <td style="text-align: center; vertical-align: middle;"><a href="${meetingInfo.join_url }" class="btn-join">참여하기</a></td>
+				                        <td style="text-align: center; vertical-align: middle;"><button class="btn-delete" data-meeting-id="${meetingInfo.id}">삭제하기</button></td>
+				                    </tr>
 				                </c:when>
-		                  		<c:otherwise>
-		                  		<tr>
-		                            <td colspan="7" style="text-align: center;">예정된 영상 회의가 없습니다.</td>
-		                        </tr>
-		                  	  </c:otherwise>
-			            </tbody>
-              		</c:choose>
-			    </table>
+				                <c:otherwise>
+				                    <tr>
+				                        <td colspan="6" style="text-align: center;">예정된 영상 회의가 없습니다.</td>
+				                    </tr>
+				                </c:otherwise>
+				            </c:choose>
+				        </c:forEach>
+				    </tbody>
+				</table>
 			</div>
 			
 			
@@ -630,7 +667,7 @@
 	        <button class="tab-btn tab-meeting" data-for-tab="2">화상 회의</button>
 	    </div>
 	    <!-- 탭 내용 -->
-	    <div class="tab-content tab-meeting-content" id="tab-2">
+	    <div class="tab-meeting-content" id="tab-2">
 	    	<span id="close" class="close close-btn-x">&times;</span>
 	    	<div class="flex flex-col h-full mt-4">
 	    		<div class="flex-grow">

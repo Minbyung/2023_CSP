@@ -22,7 +22,7 @@ public class ZoomMeetingResponse {
     private String join_url;
     private String password;
     private int duration;
-    private Timestamp created_at;
+    private Timestamp createdAt;
     private Timestamp start_time;
     
     private int projectId;

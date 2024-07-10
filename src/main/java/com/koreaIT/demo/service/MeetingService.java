@@ -108,6 +108,11 @@ public class MeetingService {
 	public List<ZoomMeetingResponse> getMeetingInfo(int projectId) {
 		return meetingDao.getMeetingInfo(projectId);
 	}
+
+	public void deleteMeeting(String meetingId) {
+		meetingDao.deleteMeeting(meetingId);
+		
+	}
 	
 	
 	

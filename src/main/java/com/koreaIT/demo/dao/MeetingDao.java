@@ -2,6 +2,7 @@ package com.koreaIT.demo.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -33,6 +34,13 @@ public interface MeetingDao {
 				WHERE projectId = #{projectId}
 			""")
 	List<ZoomMeetingResponse> getMeetingInfo(int projectId);
+
+	
+	@Delete("""
+			DELETE FROM zoomMeeting
+				WHERE id = #{meetingId}
+			""")
+	void deleteMeeting(String meetingId);
 }
 
 
