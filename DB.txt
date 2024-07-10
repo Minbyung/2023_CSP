@@ -175,18 +175,19 @@ CREATE TABLE notification (
 );
 
 CREATE TABLE zoomMeeting (
-    id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT UNSIGNED NOT NULL PRIMARY KEY,
     `uuid` TEXT NOT NULL,
-    hostId INT UNSIGNED NOT NULL,
     projectId INT UNSIGNED NOT NULL,
+    memberId INT UNSIGNED NOT NULL,
     topic TEXT NOT NULL COMMENT '회의 이름',
-    startTime DATETIME NOT NULL COMMENT '회의 시작시간',
+    start_time TIMESTAMP NOT NULL COMMENT '회의 시작시간',
     duration INT UNSIGNED NOT NULL COMMENT '회의의 예상 지속 시간(분 단위)',
-    createdAt DATETIME NOT NULL COMMENT '회의 생성시간',
-    startUrl TEXT NOT NULL COMMENT '호스트가 회의를 시작하기 위해 접속할 URL',
-    joinUrl TEXT NOT NULL COMMENT '참가자가 회의에 참여하기 위해 사용하는 URL',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '회의 생성시간',
+    start_url TEXT NOT NULL COMMENT '호스트가 회의를 시작하기 위해 접속할 URL',
+    join_url TEXT NOT NULL COMMENT '참가자가 회의에 참여하기 위해 사용하는 URL',
     `password` TEXT NOT NULL
 );
+
 
 INSERT INTO `member`
 SET regDate = NOW(),

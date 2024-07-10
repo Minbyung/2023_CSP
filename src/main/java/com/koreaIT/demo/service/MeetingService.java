@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -98,6 +99,15 @@ public class MeetingService {
             return objectMapper.readValue(responseBody, ZoomMeetingResponse.class);
         }
     }
+
+	public void saveMeeting(ZoomMeetingResponse meetingResponse, int projectId, int memberId) {
+		meetingDao.saveMeeting(meetingResponse, projectId, memberId);
+		
+	}
+
+	public List<ZoomMeetingResponse> getMeetingInfo(int projectId) {
+		return meetingDao.getMeetingInfo(projectId);
+	}
 	
 	
 	

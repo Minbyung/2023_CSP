@@ -377,5 +377,28 @@ public class UsrProjectController {
 		return "usr/project/file"; 
 	}
 	
+	@RequestMapping("/usr/project/meeting")
+	public String meeting(Model model, int projectId) {
+		
+		int memberId = rq.getLoginedMemberId();
+		Project project = projectService.getProjectByProjectId(projectId);
+		int teamId = project.getTeamId();
+		List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+		Member member = memberService.getMemberById(memberId);
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
+		
+		
+		model.addAttribute("project", project);
+		model.addAttribute("projects", projects);
+		model.addAttribute("chatRooms", chatRooms);
+		model.addAttribute("member", member);
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("loginedMember", loginedMember);
+
+		return "usr/project/meeting";
+	}
+	
+	
 
 }
