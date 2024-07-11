@@ -3,6 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%
+    java.util.Date now = new java.util.Date();
+    request.setAttribute("currentTime", now);
+%>
+
 <%@ include file="../common/head2.jsp" %>
 <%@ include file="../common/toastUiEditorLib.jsp" %>
 
@@ -591,7 +597,7 @@
 				        <col style="width: 10%;">
 				        <col style="width: 10%;">
 				    </colgroup>
-				    <thead class="thead-dark">
+				    <thead>
 				        <tr>
 				            <th style="text-align: center;">회의 이름
 				                <button class="sort-btn" data-column="topic" data-order="ASC">▲</button>
@@ -615,6 +621,8 @@
 				    </thead>
 				    <tbody>
 				        <c:forEach var="meetingInfo" items="${meetingInfos}">
+				        	<c:set var="startTime" value="${meetingInfo.start_time.time}" />
+            				<c:set var="endTime" value="${startTime + meetingInfo.duration * 60000}" />
 				            <c:choose>
 				                <c:when test="${not empty meetingInfos}">
 				                    <tr>
@@ -626,8 +634,26 @@
 				                        	<fmt:formatDate value="${meetingInfo.start_time}" pattern="yy-MM-dd HH:mm"/>
 				                        </td>
 				                        <td style="text-align: center; vertical-align: middle;">${meetingInfo.duration }분</td>
-				                        <td style="text-align: center; vertical-align: middle;"><a href="${meetingInfo.join_url }" class="btn-join">참여하기</a></td>
-				                        <td style="text-align: center; vertical-align: middle;"><button class="btn-delete" data-meeting-id="${meetingInfo.id}">삭제하기</button></td>
+				                        <td style="text-align: center; vertical-align: middle;">
+				                        	<c:choose>
+				                                <c:when test="${currentTime.time le endTime}">
+				                                    <c:if test="${meetingInfo.memberId == rq.getLoginedMemberId()}">
+				                                        <a href="${meetingInfo.start_url}" class="btn-join">회의 시작</a>
+				                                    </c:if>
+				                                    <c:if test="${meetingInfo.memberId != rq.getLoginedMemberId()}">
+				                                        <a href="${meetingInfo.join_url}" class="btn-join">참여하기</a>
+				                                    </c:if>
+				                                </c:when>
+				                                <c:otherwise>
+				                                    <span class="btn-disabled">종료된 회의</span>
+				                                </c:otherwise>
+				                            </c:choose>
+				                        </td>
+				                        <td style="text-align: center; vertical-align: middle;">
+				                        	<c:if test="${meetingInfo.memberId == rq.getLoginedMemberId()}">
+				                                <button class="btn-delete" data-meeting-id="${meetingInfo.id}">삭제하기</button>
+				                            </c:if>
+				                        </td>
 				                    </tr>
 				                </c:when>
 				                <c:otherwise>
