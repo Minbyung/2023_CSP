@@ -36,3 +36,8 @@ custom:
   siteMainUri: http://localhost:8082
   emailFrom: no-reply@localhost
   emailFromName: 2023_11_SB_AM
+google:
+  client:
+    id: 1088460648506-j2nil1cls769igr3kcfu0bnqkn83lvd5.apps.googleusercontent.com
+    secret: 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
+    redirect-uri: http://localhost:8080/oauth2callback  

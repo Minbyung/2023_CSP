@@ -193,7 +193,6 @@
 				center: 'title',
 				right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
 				},
-// 			initialDate: '2021-07-15', 설정하지않으면 오늘날짜	
 			initialView: 'dayGridMonth', // 초기 뷰 설정
 			navLinks: true, // 날짜를 선택하면 Day 캘린더나 Week 캘린더로 링크
 			editable: true, // 수정 가능?
@@ -276,7 +275,6 @@
 	                            default:
 	                                color = '#8b00ea'; // 기본 색상
                      			}
-	                            
 	                            events.push({
 	                                id: article.id,
 	                                color : color, // 상태에 따른 색상 지정

@@ -1,16 +1,39 @@
 package com.koreaIT.demo.controller;
 
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import java.util.Collections;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
+
 
 import com.koreaIT.demo.service.ArticleService;
 import com.koreaIT.demo.service.BoardService;
@@ -45,7 +68,22 @@ public class UsrProjectController {
 	private MeetingService meetingService;
 	private Rq rq;
 	
-	UsrProjectController(ProjectService projectService, ChatService chatService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, MeetingService meetingService, Rq rq) {
+	private static final String APPLICATION_NAME = "Your App Name";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final String TOKENS_DIRECTORY_PATH = "tokens";
+	
+    @Value("${google.client.id}")
+    private String clientId;
+
+    @Value("${google.client.secret}")
+    private String clientSecret;
+
+    @Value("${google.client.redirect-uri}")
+    private String redirectUri;
+
+    private AuthorizationCodeFlow flow;
+	
+	UsrProjectController(ProjectService projectService, ChatService chatService, MemberService memberService, ArticleService articleService, GroupService groupService, FileService fileService, MeetingService meetingService, Rq rq) throws Exception {
 		this.projectService = projectService;
 		this.articleService = articleService;
 		this.groupService = groupService;
@@ -54,7 +92,20 @@ public class UsrProjectController {
 		this.chatService = chatService;
 		this.meetingService = meetingService;
 		this.rq = rq;
+		
+		NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        FileDataStoreFactory dataStoreFactory = new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH));
+
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, 
+            new InputStreamReader(UsrProjectController.class.getResourceAsStream("/client_secrets.json")));
+
+        flow = new GoogleAuthorizationCodeFlow.Builder(
+            httpTransport, JSON_FACTORY, clientSecrets, Collections.singleton(CalendarScopes.CALENDAR_READONLY))
+            .setDataStoreFactory(dataStoreFactory)
+            .setAccessType("offline")
+            .build();
 	}
+	
 	
 	@RequestMapping("/usr/project/make")
 	public String make(Model model, int teamId) {
@@ -333,7 +384,7 @@ public class UsrProjectController {
 	
 	
 	@RequestMapping("/usr/project/schd")
-	public String gantt(Model model, int projectId) {
+	public String gantt(Model model, int projectId, HttpSession session) throws Exception {
 		int memberId = rq.getLoginedMemberId();
 		
 		List<Group> groups = groupService.getGroups(projectId);
@@ -357,8 +408,37 @@ public class UsrProjectController {
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("loginedMember", loginedMember);
 		
+		 Credential credential = (Credential) session.getAttribute("credential");
+         if (credential == null) {
+        	 return "redirect:/authorize?projectId=" + projectId;
+         }
+         Calendar service = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential)
+                 .setApplicationName(APPLICATION_NAME)
+                 .build();
+
+         Calendar.Events.List request = service.events().list("primary");
+         com.google.api.services.calendar.model.Events events = request.execute();
+         model.addAttribute("events", events.getItems());
+         
 		return "usr/project/schd"; 
 	}
+	
+	@GetMapping("/authorize")
+    public String authorize(HttpServletRequest request, @RequestParam("projectId") String projectId) {
+        AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
+        authorizationUrl.setRedirectUri(redirectUri);
+        authorizationUrl.setState(projectId);
+        return "redirect:" + authorizationUrl.build();
+    }
+	
+	@GetMapping("/oauth2callback")
+    public String oauth2Callback(@RequestParam("code") String code, @RequestParam("state") String projectId, HttpSession session) throws Exception {
+        TokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+        Credential credential = flow.createAndStoreCredential(tokenResponse, "user");
+        session.setAttribute("credential", credential);
+        return "redirect:/usr/project/schd?projectId=" + projectId;
+    }
+	
 	
 	@RequestMapping("/usr/project/file")
 	public String file(Model model, int projectId) {

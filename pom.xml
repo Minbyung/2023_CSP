@@ -133,6 +133,33 @@
 	        <version>2.11.3</version> <!-- 사용 가능한 최신 버전으로 변경하세요 -->
 	    </dependency>
 	    
+	    <!-- Google API Client -->
+	    <dependency>
+	        <groupId>com.google.api-client</groupId>
+	        <artifactId>google-api-client</artifactId>
+	        <version>1.31.5</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>com.google.oauth-client</groupId>
+	        <artifactId>google-oauth-client-jetty</artifactId>
+	        <version>1.31.5</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-calendar</artifactId>
+		    <version>v3-rev20240517-2.0.0</version>
+		</dependency>
+		<dependency>
+	        <groupId>com.google.http-client</groupId>
+	        <artifactId>google-http-client-gson</artifactId>
+	        <version>1.39.2</version>
+	    </dependency>
+		
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
