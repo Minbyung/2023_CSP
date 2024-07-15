@@ -530,6 +530,7 @@ public class UsrProjectController {
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
 		List<FileResponse> projectFiles = fileService.findAllFileByProjectId(projectId);
 		Member member = memberService.getMemberById(memberId);
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		
 		model.addAttribute("project", project);
 		model.addAttribute("projectId", projectId);
@@ -538,6 +539,7 @@ public class UsrProjectController {
 		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("projectFiles", projectFiles);
 		model.addAttribute("member", member);
+		model.addAttribute("loginedMember", loginedMember);
 		
 		return "usr/project/file"; 
 	}
