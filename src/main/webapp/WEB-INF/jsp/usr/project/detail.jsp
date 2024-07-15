@@ -21,7 +21,7 @@
 	<script>
 		var projectId = ${project.id};
 		var loginedMemberId = ${rq.getLoginedMemberId()};
-		var loginedMemberName = ${loginedMember.name};
+		var loginedMemberName = '${loginedMember.name}';
 	</script>
 	<script src="/resource/project/detail.js"></script>
 </head>

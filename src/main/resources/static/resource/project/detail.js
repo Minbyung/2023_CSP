@@ -27,7 +27,7 @@ $(document).ready(function() {
     setupNotifications();
 
     function initializeDefaultStatus() {
-        var status = "요청"; // Default status 
+        window.status = "요청"; // Default status 
         $(".status-btn-write[data-status='요청']").addClass("active");
     }
 
@@ -317,7 +317,7 @@ $(document).ready(function() {
             var formData = new FormData();
             formData.append('title', title);
             formData.append('content', content);
-            formData.append('status', status);
+            formData.append('status', window.status);
             formData.append('projectId', projectId);
             formData.append('selectedGroupId', selectedGroupId);
             formData.append('startDate', startDate);
