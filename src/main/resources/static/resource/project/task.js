@@ -17,6 +17,10 @@ $(document).ready(function() {
     connectWebSocket();
     setupChatButton();
     setupNotifications();
+    setupStatusUpdateButtons(); // 상태 업데이트 버튼
+    setupGroupButtons(); //그룹 추가 버튼
+    setupToggleTasks(); // 그룹 접기/펴기 버튼
+    setupSortButtons(); // 정렬 버튼
 
     function initializeDefaultStatus() {
         window.status = "요청"; // Default status 
@@ -29,15 +33,6 @@ $(document).ready(function() {
 
         window.editor = new Editor({
             el: document.querySelector('#editor'),
-            previewStyle: 'vertical',
-            height: '500px',
-            initialEditType: 'wysiwyg',
-            initialValue: '',
-            plugins: [colorSyntax]
-        });
-
-        window.updateEditor = new Editor({
-            el: document.querySelector('#update-editor'),
             previewStyle: 'vertical',
             height: '500px',
             initialEditType: 'wysiwyg',
@@ -476,5 +471,139 @@ $(document).ready(function() {
         }
         $(element).parent().remove();
     }
+    
+    
+    function setupStatusUpdateButtons() {
+        $(document).on('click', '.status-btn-taskupdate', function(event) {
+            event.stopPropagation();
+            $(this).siblings(".status-menu").toggle();
+        });
+
+        $(document).on('click', '.status-menu button', function() {
+            const newStatus = $(this).data('status');
+            const articleId = $(this).data('article-id');
+            updateStatus(articleId, newStatus);
+        });
+    }
+
+    function updateStatus(articleId, newStatus) {
+        $.ajax({
+            url: '../article/doUpdateStatus',
+            method: 'POST',
+            data: {
+                'articleId': articleId,
+                'newStatus': newStatus
+            },
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('상태 업데이트에 실패했습니다.');
+            }
+        });
+    }
+    
+    function setupGroupButtons() {
+        $(".addGroupButton").click(function(){
+            const $inputRow = $('<tr class="inputRow"><th colspan="7"><input placeholder="추가할 그룹명을 입력해 주세요." type="text" id="groupNameInput"></th></tr>');
+            $(".task-table").prepend($inputRow);
+            $("#groupNameInput").focus();
+        });
+
+        $(document).on('keypress', '#groupNameInput', function(event) {
+            if(event.keyCode == 13) {
+                saveGroup();
+            }
+        });
+    }
+
+    function saveGroup() {
+        const group_name = $("#groupNameInput").val().trim();
+        if (group_name.length === 0) {
+            alert('그룹 이름을 입력해주세요.');
+            return;
+        }
+
+        $.ajax({
+            url: '../group/doMake',
+            method: 'POST',
+            data: {
+                'projectId': projectId,
+                'group_name': group_name
+            },
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('그룹 저장에 실패했습니다.');
+            }
+        });
+    }
+    
+    function setupToggleTasks() {
+        $(document).on('click', '.toggleTasks', function() {
+            $(this).closest('tr').nextAll().toggle();
+        });
+    }
+    
+    function setupSortButtons() {
+        $('.sort-btn').on('click', function() {
+            const column = $(this).data('column');
+            const order = $(this).data('order');
+            sortTable(column, order);
+            $(this).data('order', order === 'ASC' ? 'DESC' : 'ASC');
+        });
+    }
+
+    function sortTable(column, order) {
+        const table = $('#task-table-1');
+        const columnIndex = getColumnIndex(table, column);
+        if (columnIndex === -1) return;
+
+        table.find('tbody').each(function() {
+            const tbody = $(this);
+            const header = tbody.find('tr:first');
+            const rows = tbody.find('tr').not(':first').get();
+
+            rows.sort((a, b) => compareRows(a, b, columnIndex, column, order));
+
+            tbody.empty();
+            tbody.append(header);
+            rows.forEach(row => tbody.append(row));
+        });
+    }
+
+    function getColumnIndex(table, column) {
+        let columnIndex = -1;
+        table.find('th').each(function(index) {
+            const thColumn = $(this).find('.sort-btn').data('column');
+            if (thColumn === column) {
+                columnIndex = index;
+                return false;
+            }
+        });
+        return columnIndex;
+    }
+
+    function compareRows(a, b, columnIndex, column, order) {
+        let A = $(a).children('td').eq(columnIndex).text().trim();
+        let B = $(b).children('td').eq(columnIndex).text().trim();
+
+        if (['startDate', 'endDate', 'regDate'].includes(column)) {
+            A = parseDate(A);
+            B = parseDate(B);
+        } else if (column === 'id') {
+            A = parseInt(A, 10);
+            B = parseInt(B, 10);
+        }
+
+        return (A < B ? -1 : (A > B ? 1 : 0)) * (order === 'ASC' ? 1 : -1);
+    }
+
+    function parseDate(dateString) {
+        const parts = dateString.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+    
     
 });
