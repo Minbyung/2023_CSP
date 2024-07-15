@@ -24,6 +24,7 @@
 		var loginedMemberName = '${loginedMember.name}';
 	</script>
 	<script src="/resource/project/detail.js"></script>
+	<script src="/resource/common2.js"></script>
 </head>
 <body>
 	<jsp:include page="../common/checkCredential.jsp"/>

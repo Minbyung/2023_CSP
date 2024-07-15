@@ -10,12 +10,6 @@ $('select[data-value]').each(function(index, item){
 	
 })
 
-$('.popUp-exam').click(function(){
-	let popOption = 'width=500px, height=500px, top=200px, scrollbars=yes';
-	let openUrl = '/usr/home/popUp';
-	window.open(openUrl, 'pop', popOption);
-})
-
 $('.modal-exam').click(function(){
 	$('.layer-bg').show();
 	$('.layer').show();

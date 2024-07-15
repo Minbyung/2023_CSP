@@ -94,6 +94,11 @@ $(document).ready(function() {
 		$('.rpanel').hide();
 	})
     
+	//초대메일전송 모달
+	$('.invite-modal').click(function(){
+		$('.layer-bg').show();
+		$('.invite-layer').show();
+	})
  // 서버로부터 사용자별 알림 목록을 가져옵니다.
     $.ajax({
         url: '/getTaggedNotifications',

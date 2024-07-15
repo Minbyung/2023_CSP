@@ -3,18 +3,16 @@ $(document).ready(function() {
     initializeDefaultStatus(); // 글 작성 시 상태 '요청' 디폴트 값
     initializeToastUIEditors(); // ToastUI (작성만)
     setupStatusButtons(); // status-btn-write 버튼
+    setupLayerToggles(); // 모달 열기/닫기 & 내용 리셋
     setupArticleSubmitButton(); // submitBtn 작성 버튼
     setupSearchAutocomplete(); // 관리자 자동완성
     setupDatePickers(); // input 날짜 부분 눌러도 달력 나오게
     setupVideoMeetingButton(); // createMeetingBtn 화상회의 버튼
     setupTabNavigation(); // 글작성, 화상회의 탭 전환
     connectWebSocket(); // 웹소켓
-    setupStatusUpdateButtons(); // 상태 업데이트 버튼
-    setupGroupButtons(); //그룹 추가 버튼
-    setupToggleTasks(); // 그룹 접기/펴기 버튼
-    setupSortButtons(); // 정렬 버튼
-
-
+    
+    initializeCalendar(); // 달력
+    initializeModal();
 
     function initializeDefaultStatus() {
         window.status = "요청"; // Default status 
@@ -45,6 +43,37 @@ $(document).ready(function() {
         });
     }
 
+    function setupLayerToggles() {
+        $('.modal-exam').click(function() {
+            $('.layer-bg').show();
+            $('.layer').show();
+        });
+
+        $('.close-btn-x').click(closeLayer);
+        $('.layer-bg').click(closeLayer);
+
+        function closeLayer() {
+            $('.layer-bg').hide();
+            $('.layer').hide();
+            $('.update-layer').hide();
+            $('.rpanel').hide();
+            $('.member-modal').hide();
+            resetLayerFields();
+        }
+
+        function resetLayerFields() {
+            $('.tag').remove();
+            $('#exampleFormControlInput1').val('');
+            $('#exampleFormControlTextarea1').val('');
+            $('#file_list .file_input:not(:first)').remove();
+            $('#file_list .file_input:first input[type="file"]').val('');
+            $('#file_list .file_input:first input[type="text"]').val('');
+            $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
+            $('#start-date').val('');
+            $('#end-date').val('');
+        }
+    }
+
     function setupArticleSubmitButton() {
         $("#submitBtn").click(function() {
             var selectedGroupId = parseInt($('#groupSelect').val());
@@ -55,6 +84,7 @@ $(document).ready(function() {
             var content = editor.getHTML();
             var startDate = $("#start-date").val();
             var endDate = $("#end-date").val();
+            
             var managers = $('.tag').map(function() {
                 return $(this).clone().children().remove().end().text();
             }).get();
@@ -287,138 +317,94 @@ $(document).ready(function() {
         $(element).parent().remove();
     }
     
+    function initializeCalendar() {
+	    var calendarEl = $('#calendar')[0];
+	    var events = projectEvents.concat(googleEvents);
+	    var calendar = new FullCalendar.Calendar(calendarEl, {
+	        height: '1000px',
+	        expandRows: true,
+	        headerToolbar: {
+	            left: 'prev,next today',
+	            center: 'title',
+	            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+	        },
+	        initialView: 'dayGridMonth',
+	        navLinks: true,
+	        editable: true,
+	        eventDurationEditable: true,
+	        eventResizableFromStart: true,
+	        eventDrop: function(info) {
+	            var event = info.event;
+	            if (event.extendedProps.editable === false) {
+	                info.revert();
+	                return;
+	            }
+	            $.ajax({
+	                url: '/usr/article/doUpdateDate',
+	                method: 'POST',
+	                data: {
+	                    articleId: event.id,
+	                    startDate: event.start.toISOString(),
+	                    endDate: event.end ? event.end.toISOString() : event.start.toISOString()
+	                },
+	                success: function(response) {
+	                    // 서버에서 성공적으로 처리됐을 때의 로직
+	                },
+	                error: function() {
+	                    info.revert();
+	                }
+	            });
+	        },
+	        selectable: true,
+	        nowIndicator: true,
+	        dayMaxEvents: true,
+	        locale: 'ko',
+	        select: function(info) {
+	            var endDate = new Date(info.endStr);
+	            endDate.setDate(endDate.getDate());
+	            var endStrAdjusted = endDate.toISOString().split('.')[0];
+	            var startStrAdjusted = new Date(info.startStr).toISOString().split('.')[0];
+	            $('#start-date').val(startStrAdjusted);
+	            $('#end-date').val(endStrAdjusted);
+	            showModal();
+	        },
+	        events: events,
+	        eventClick: function(info) {
+	            if (info.event.extendedProps.editable === false) {
+	                return;
+	            }
+	            var articleId = info.event.id;
+	            window.location.href = "/usr/article/detail?id=" + articleId;
+	        }
+	    });
+	    calendar.render();
+	}
     
-    function setupStatusUpdateButtons() {
-        $(document).on('click', '.status-btn-taskupdate', function(event) {
-            event.stopPropagation();
-            $(this).siblings(".status-menu").toggle();
+    function initializeModal() {
+        $("#close").on("click", function() {
+            hideModal();
         });
 
-        $(document).on('click', '.status-menu button', function() {
-            const newStatus = $(this).data('status');
-            const articleId = $(this).data('article-id');
-            updateStatus(articleId, newStatus);
-        });
-    }
-
-    function updateStatus(articleId, newStatus) {
-        $.ajax({
-            url: '../article/doUpdateStatus',
-            method: 'POST',
-            data: {
-                'articleId': articleId,
-                'newStatus': newStatus
-            },
-            success: function() {
-                location.reload();
-            },
-            error: function() {
-                alert('상태 업데이트에 실패했습니다.');
-            }
-        });
-    }
-    
-    function setupGroupButtons() {
-        $(".addGroupButton").click(function(){
-            const $inputRow = $('<tr class="inputRow"><th colspan="7"><input placeholder="추가할 그룹명을 입력해 주세요." type="text" id="groupNameInput"></th></tr>');
-            $(".task-table").prepend($inputRow);
-            $("#groupNameInput").focus();
-        });
-
-        $(document).on('keypress', '#groupNameInput', function(event) {
-            if(event.keyCode == 13) {
-                saveGroup();
-            }
-        });
-    }
-
-    function saveGroup() {
-        const group_name = $("#groupNameInput").val().trim();
-        if (group_name.length === 0) {
-            alert('그룹 이름을 입력해주세요.');
-            return;
-        }
-
-        $.ajax({
-            url: '../group/doMake',
-            method: 'POST',
-            data: {
-                'projectId': projectId,
-                'group_name': group_name
-            },
-            success: function() {
-                location.reload();
-            },
-            error: function() {
-                alert('그룹 저장에 실패했습니다.');
-            }
-        });
-    }
-    
-    function setupToggleTasks() {
-        $(document).on('click', '.toggleTasks', function() {
-            $(this).closest('tr').nextAll().toggle();
-        });
+        hideModal();
     }
     
-    function setupSortButtons() {
-        $('.sort-btn').on('click', function() {
-            const column = $(this).data('column');
-            const order = $(this).data('order');
-            sortTable(column, order);
-            $(this).data('order', order === 'ASC' ? 'DESC' : 'ASC');
-        });
+    function showModal() {
+        $(".modal-exam").show();
+        $(".layer-bg").show();
+        $(".layer").show();
     }
-
-    function sortTable(column, order) {
-        const table = $('#task-table-1');
-        const columnIndex = getColumnIndex(table, column);
-        if (columnIndex === -1) return;
-
-        table.find('tbody').each(function() {
-            const tbody = $(this);
-            const header = tbody.find('tr:first');
-            const rows = tbody.find('tr').not(':first').get();
-
-            rows.sort((a, b) => compareRows(a, b, columnIndex, column, order));
-
-            tbody.empty();
-            tbody.append(header);
-            rows.forEach(row => tbody.append(row));
-        });
-    }
-
-    function getColumnIndex(table, column) {
-        let columnIndex = -1;
-        table.find('th').each(function(index) {
-            const thColumn = $(this).find('.sort-btn').data('column');
-            if (thColumn === column) {
-                columnIndex = index;
-                return false;
-            }
-        });
-        return columnIndex;
-    }
-
-    function compareRows(a, b, columnIndex, column, order) {
-        let A = $(a).children('td').eq(columnIndex).text().trim();
-        let B = $(b).children('td').eq(columnIndex).text().trim();
-
-        if (['startDate', 'endDate', 'regDate'].includes(column)) {
-            A = parseDate(A);
-            B = parseDate(B);
-        } else if (column === 'id') {
-            A = parseInt(A, 10);
-            B = parseInt(B, 10);
-        }
-
-        return (A < B ? -1 : (A > B ? 1 : 0)) * (order === 'ASC' ? 1 : -1);
-    }
-
-    function parseDate(dateString) {
-        const parts = dateString.split('-');
-        return new Date(parts[0], parts[1] - 1, parts[2]);
+    
+    function hideModal() {
+        $(".modal-exam").hide();
+        $(".layer-bg").hide();
+        $(".layer").hide();
+        $('.tag').remove();
+        $('#exampleFormControlInput1').val('');
+        $('#exampleFormControlTextarea1').val('');
+        $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
     }
     
     
+    
+
 });

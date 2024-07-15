@@ -25,6 +25,7 @@
 	var loginedMemberName = '${loginedMember.name}';
   </script>
   <script src="/resource/project/task.js"></script>
+  <script src="/resource/common2.js"></script>
   
 </head>
 	<!-- 새로운 JSP 파일 포함 -->
