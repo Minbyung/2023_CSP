@@ -61,246 +61,231 @@
 		        </div>
 		    </div>
 		</div>
-		
-		<div class="left-bar flex flex-col">
-		    <div class="left-content">
-		        <div class="new-project-btn-wrap">
-		            <button class="new-project-btn">
-		                <a href="../project/make?teamId=${teamId}">새 프로젝트</a>
-		            </button>
-		        </div>
-		        <ul class="action-list">
-		            <li class="item mt-8 flex gap-2 items-center">
-		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-		                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
-		                    viewBox="0 0 24 24">
-		                    <path d="M22 12h-6l-2 3h-4l-2-3H2" />
-		                    <path
-		                        d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
-		                </svg>
-		                <a href="../dashboard/dashboard?teamId=${teamId}">
-		                    <span>대시보드</span>
-		                </a>
-		            </li>
-		            <li class="item flex gap-2 items-center">
-		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-		                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-		                    class="feather feather-star">
-		                    <polygon
-		                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-		                </svg>
-		                <a href="../dashboard/myProject?teamId=${teamId}">
-		                    <span class="text-blue-500 font-bold">내 프로젝트</span>
-		                </a>
-		            </li>
-		        </ul>
-		        <ul class="menu-accordion-group">
-		            <li class="menu-accordion-button project-menu-accordion-button">
-		                <div class="flex justify-between">
-		                    <div>프로젝트</div>
-		                    <div><i class="fa-solid fa-chevron-down"></i></div>
-		                </div>
-		                <div class="left-menu-project-list-box mt-4">
-		                    <c:forEach items="${projects}" var="project">
-		                        <div class="left-menu-project-list">
-		                            <a href="../project/detail?projectId=${project.id}">
-		                                <div>${project.project_name}</div>
-		                            </a>
-		                        </div>
-		                    </c:forEach>
-		                </div>
-		            </li>
-		            <li class="menu-accordion-button chat-menu-accordion-button">
-		                <div class="flex justify-between">
-		                    <div>채팅방</div>
-		                    <div><i class="fa-solid fa-chevron-down"></i></div>
-		                </div>
-		                <div class="left-menu-chat-list-box mt-4">
-		                    <c:forEach items="${chatRooms}" var="chatRoom">
-		                        <div class="left-menu-chat-list flex">
-		                            <div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
-		                                <div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
-		                            </div>
-		                        </div>
-		                    </c:forEach>
-		                </div>
-		            </li>
-		        </ul>
-		    </div>
-
-		</div>
-	  
-	  
-	    <div class="rpanel">
-			<div class="rpanel-list">
-				<div class="list-header border-b">
-					<div class="text-lg font-bold">알림 센터</div>
-					<span id="close" class="close close-btn-x">&times;</span>
-					<button class="clear-all-btn">모두 읽음</button>
-				</div>
-				
-				<div class="list-notification">
-				</div>
+		<div class="flex h-full w-full">
+			<div class="left-bar flex flex-col">
+			    <div class="left-content">
+			        <div class="new-project-btn-wrap">
+			            <button class="new-project-btn">
+			                <a href="../project/make?teamId=${teamId}">새 프로젝트</a>
+			            </button>
+			        </div>
+			        <ul class="action-list">
+			            <li class="item mt-8 flex gap-2 items-center">
+			                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+			                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-inbox"
+			                    viewBox="0 0 24 24">
+			                    <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+			                    <path
+			                        d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+			                </svg>
+			                <a href="../dashboard/dashboard?teamId=${teamId}">
+			                    <span>대시보드</span>
+			                </a>
+			            </li>
+			            <li class="item flex gap-2 items-center">
+			                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+			                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+			                    class="feather feather-star">
+			                    <polygon
+			                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+			                </svg>
+			                <a href="../dashboard/myProject?teamId=${teamId}">
+			                    <span class="text-blue-500 font-bold">내 프로젝트</span>
+			                </a>
+			            </li>
+			        </ul>
+			        <ul class="menu-accordion-group">
+			            <li class="menu-accordion-button project-menu-accordion-button">
+			                <div class="flex justify-between">
+			                    <div>프로젝트</div>
+			                    <div><i class="fa-solid fa-chevron-down"></i></div>
+			                </div>
+			                <div class="left-menu-project-list-box mt-4">
+			                    <c:forEach items="${projects}" var="project">
+			                        <div class="left-menu-project-list">
+			                            <a href="../project/detail?projectId=${project.id}">
+			                                <div>${project.project_name}</div>
+			                            </a>
+			                        </div>
+			                    </c:forEach>
+			                </div>
+			            </li>
+			            <li class="menu-accordion-button chat-menu-accordion-button">
+			                <div class="flex justify-between">
+			                    <div>채팅방</div>
+			                    <div><i class="fa-solid fa-chevron-down"></i></div>
+			                </div>
+			                <div class="left-menu-chat-list-box mt-4">
+			                    <c:forEach items="${chatRooms}" var="chatRoom">
+			                        <div class="left-menu-chat-list flex">
+			                            <div class="left-menu-chat-list-detail flex flex-col justify-center items-center">
+			                                <div class="chat-btn" data-member-id="${chatRoom.recipientId}">${chatRoom.name}</div>
+			                            </div>
+			                        </div>
+			                    </c:forEach>
+			                </div>
+			            </li>
+			        </ul>
+			    </div>
 			</div>
-		</div>
-	  
-		<div class="page-content">
-    		<nav class="menu-box-1">
-    			<ul>
-    				<li><a class="block" href="/usr/project/detail?projectId=${project.id }">피드</a></li>
-    				<li><a class="block" href="/usr/project/task?projectId=${project.id }">업무</a></li>
-    				<li><a class="block" id="calendarLink" href="#">캘린더</a></li>
-    				<li><a class="block" href="/usr/project/file?projectId=${project.id }">파일</a></li>
-    				<li><a class="block" href="/usr/project/meeting?projectId=${project.id }">영상회의</a></li>
-    			</ul>
-    		</nav>
-    		<div class="project-detail-content">
-    		<section class="project-detail-container">
-				<div class="detail-wrap">
-    				<div class="postTimeline">
-    					<div class="search-box">
-	    					<form action="../article/search">
-	    						<input type="hidden" name="projectId" value="1" />
-	    						<input class="search-txt" type="text" name="searchTerm" placeholder="검색어를 입력하세요"/>
-	    						<button class="search-btn" type="submit">
-	    							<i class="fa-solid fa-magnifying-glass"></i>
-	    						</button>
-	    					</form>
-    					</div>
-    				
-    					<div class="reportArea">
-    					<h1>업무 리포트</h1>
-    					<div class="flex">
-							<div style="width: 200px;">
-								<!--차트가 그려질 부분-->
-								<canvas id="donutChart"></canvas>
-							</div>
-							<div id="infoContainer" class="pl-5"></div>
-						</div>
-
-
-    					</div>
-						
-						
-						<div id="postList">
-							<c:forEach var="article" items="${articles }">
-								<div class="card shadow-xl z-0">
-								  <div class="card-body z-0">
-								  	<div class="flex justify-between">
-								  		<div class="flex">
-									  		<h6 class="card-subtitle text-muted">${article.writerName }</h6>
-									  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
-								  		</div>
-								  		<div>
-								  			<a href="/usr/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
-								  		</div>
-								  	</div>
-								  	<div class="status-btns-update" data-current-status="${article.status }" >
-								      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
-								      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
-								      <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
-								      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
-								      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
-								    </div>
-								    <h5 class="card-title">${article.title }</h5>
-								    <p>${article.groupName }</p> 
-								    
-								    
-								    담당자 : <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
-							                    ${name}<c:if test="${!status.last}">, </c:if>
-							                </c:forEach>
-								    <div class="flex">
-									    <c:if test="${article.startDate != '1000-01-01 00:00:00'}">
-									        <div>시작일: ${article.startDate.substring(2, 10)}</div>
-									    </c:if>
-									    <c:if test="${article.endDate != '1000-01-01 00:00:00'}">
-									        <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
-									    </c:if>
-									</div>
-								    <div class="article-content">
-										<div class="toast-ui-viewer">
-											<script type="text/x-template">${article.content }</script>
-										</div>
-								    </div>
-									<c:if test="${not empty article.infoFiles}">
-										<div class="files">
-										    <ul>
-										        <c:forEach var="file" items="${article.infoFiles}">
-													<li><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
-<%-- 													<li><a href="#">${file.original_name}</a></li> --%>
-												</c:forEach>
-										    </ul>
-										</div>
-									</c:if>
-									<c:if test="${article.memberId == rq.getLoginedMemberId()}">
-								  		<div class="flex justify-end">
-								  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
-								  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
-								  		</div>
-							  		</c:if>
-								  </div>
+			<div class="page-content">
+	    		<nav class="menu-box-1">
+	    			<ul>
+	    				<li><a class="block" href="/usr/project/detail?projectId=${project.id }">피드</a></li>
+	    				<li><a class="block" href="/usr/project/task?projectId=${project.id }">업무</a></li>
+	    				<li><a class="block" id="calendarLink" href="#">캘린더</a></li>
+	    				<li><a class="block" href="/usr/project/file?projectId=${project.id }">파일</a></li>
+	    				<li><a class="block" href="/usr/project/meeting?projectId=${project.id }">영상회의</a></li>
+	    			</ul>
+	    		</nav>
+	    		<div class="project-detail-content">
+	    		<section class="project-detail-container">
+					<div class="detail-wrap">
+	    				<div class="postTimeline">
+	    					<div class="search-box">
+		    					<form action="../article/search">
+		    						<input type="hidden" name="projectId" value="1" />
+		    						<input class="search-txt" type="text" name="searchTerm" placeholder="검색어를 입력하세요"/>
+		    						<button class="search-btn" type="submit">
+		    							<i class="fa-solid fa-magnifying-glass"></i>
+		    						</button>
+		    					</form>
+	    					</div>
+	    				
+	    					<div class="reportArea">
+	    					<h1>업무 리포트</h1>
+	    					<div class="flex">
+								<div style="width: 200px;">
+									<!--차트가 그려질 부분-->
+									<canvas id="donutChart"></canvas>
 								</div>
-							</c:forEach>
-						</div>
-					 </div>
-				</div>	
-			</section>
-			
-			<div class="ml-24">
-				<div class="card-short">
-    				<div class="card-short-header">
-	    				<p>프로젝트 팀원(${projectMembersCnt})</p>
-	    			</div>
-	    			<div class="card-short-body overflow-y-auto">
-	    				<c:forEach items="${projectMembers}" var="member">
-						    <div class="member-list flex participant">
-						        <div class="member-icon-wrap">
-						            <span class="member-icon flex justify-center items-center profile-photo-container">
-						                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
-						            </span>
-						        </div>
-						        <div class="member-list-detail flex flex-col justify-center">
-						            <div class="font-bold" id="member-${member.id}" data-member-id="${member.id}">
-						                ${member.name}
-						                <c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
-						            </div>
-						            <div class="text-xs">${member.project_name}</div>
-						        </div>
-						    </div>
-						</c:forEach>
-	    			</div>
-	    		</div>
-				<div class="card-short">
-    				<div class="card-short-header">
-	    				<p>팀원(${teamMembersCnt})</p>
-	    			</div>
-	    			<div class="card-short-body overflow-y-auto">
-	    				<c:forEach items="${teamMembers}" var="member">
-						    <div class="member-list flex participant">
-						        <div class="member-icon-wrap">
-						            <span class="member-icon flex justify-center items-center profile-photo-container">
-						                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
-						            </span>
-						        </div>
-						        <div class="member-list-detail w-full flex justify-between items-center">
-						            <div class="flex flex-col">
+								<div id="infoContainer" class="pl-5"></div>
+							</div>
+	
+	
+	    					</div>
+							
+							
+							<div id="postList">
+								<c:forEach var="article" items="${articles }">
+									<div class="card shadow-xl z-0">
+									  <div class="card-body z-0">
+									  	<div class="flex justify-between">
+									  		<div class="flex">
+										  		<h6 class="card-subtitle text-muted">${article.writerName }</h6>
+										  		<h6 class="card-subtitle ml-4 text-muted">${article.regDate }</h6>
+									  		</div>
+									  		<div>
+									  			<a href="/usr/article/detail?id=${article.id}"><i class="fa-solid fa-arrow-right"></i></a>
+									  		</div>
+									  	</div>
+									  	<div class="status-btns-update" data-current-status="${article.status }" >
+									      <button class="status-btn-update btn btn-active btn-xs" data-status="요청" data-article-id="${article.id}">요청</button>
+									      <button class="status-btn-update btn btn-active btn-xs" data-status="진행" data-article-id="${article.id}">진행</button>
+									      <button class="status-btn-update btn btn-active btn-xs" data-status="피드백" data-article-id="${article.id}">피드백</button>
+									      <button class="status-btn-update btn btn-active btn-xs" data-status="완료" data-article-id="${article.id}">완료</button>
+									      <button class="status-btn-update btn btn-active btn-xs" data-status="보류" data-article-id="${article.id}">보류</button>
+									    </div>
+									    <h5 class="card-title">${article.title }</h5>
+									    <p>${article.groupName }</p> 
+									    
+									    
+									    담당자 : <c:forEach var="name" items="${fn:split(article.taggedNames, ',')}" varStatus="status">
+								                    ${name}<c:if test="${!status.last}">, </c:if>
+								                </c:forEach>
+									    <div class="flex">
+										    <c:if test="${article.startDate != '1000-01-01 00:00:00'}">
+										        <div>시작일: ${article.startDate.substring(2, 10)}</div>
+										    </c:if>
+										    <c:if test="${article.endDate != '1000-01-01 00:00:00'}">
+										        <div class="ml-4">마감일: ${article.endDate.substring(2, 10)}</div>
+										    </c:if>
+										</div>
+									    <div class="article-content">
+											<div class="toast-ui-viewer">
+												<script type="text/x-template">${article.content }</script>
+											</div>
+									    </div>
+										<c:if test="${not empty article.infoFiles}">
+											<div class="files">
+											    <ul>
+											        <c:forEach var="file" items="${article.infoFiles}">
+														<li><a href="../file/downloadFile?articleId=${file.article_id }&fileId=${file.id }">${file.original_name}</a></li>
+	<%-- 													<li><a href="#">${file.original_name}</a></li> --%>
+													</c:forEach>
+											    </ul>
+											</div>
+										</c:if>
+										<c:if test="${article.memberId == rq.getLoginedMemberId()}">
+									  		<div class="flex justify-end">
+									  			<button class="card-subtitle article-update-btn" data-article-id="${article.id}">수정</button>
+									  			<a class="card-subtitle ml-4" href="../article/doDelete?id=${article.id }" onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;">삭제</a>
+									  		</div>
+								  		</c:if>
+									  </div>
+									</div>
+								</c:forEach>
+							</div>
+						 </div>
+					</div>	
+				</section>
+				
+				<div class="ml-24">
+					<div class="card-short">
+	    				<div class="card-short-header">
+		    				<p>프로젝트 팀원(${projectMembersCnt})</p>
+		    			</div>
+		    			<div class="card-short-body overflow-y-auto">
+		    				<c:forEach items="${projectMembers}" var="member">
+							    <div class="member-list flex participant">
+							        <div class="member-icon-wrap">
+							            <span class="member-icon flex justify-center items-center profile-photo-container">
+							                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
+							            </span>
+							        </div>
+							        <div class="member-list-detail flex flex-col justify-center">
 							            <div class="font-bold" id="member-${member.id}" data-member-id="${member.id}">
 							                ${member.name}
 							                <c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
 							            </div>
-					            		<div class="text-xs">${member.teamName}</div>
-						            </div>
-						            <c:if test="${member.id != rq.getLoginedMemberId()}">
-					                    <div class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}">초대하기</div>
-					                </c:if>
-						        </div>
-						    </div>
-						</c:forEach>
-	    			</div>
-	    		</div>
-
-			</div>
-			</div>
+							            <div class="text-xs">${member.project_name}</div>
+							        </div>
+							    </div>
+							</c:forEach>
+		    			</div>
+		    		</div>
+					<div class="card-short">
+	    				<div class="card-short-header">
+		    				<p>팀원(${teamMembersCnt})</p>
+		    			</div>
+		    			<div class="card-short-body overflow-y-auto">
+		    				<c:forEach items="${teamMembers}" var="member">
+							    <div class="member-list flex participant">
+							        <div class="member-icon-wrap">
+							            <span class="member-icon flex justify-center items-center profile-photo-container">
+							                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
+							            </span>
+							        </div>
+							        <div class="member-list-detail w-full flex justify-between items-center">
+							            <div class="flex flex-col">
+								            <div class="font-bold" id="member-${member.id}" data-member-id="${member.id}">
+								                ${member.name}
+								                <c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
+								            </div>
+						            		<div class="text-xs">${member.teamName}</div>
+							            </div>
+							            <c:if test="${member.id != rq.getLoginedMemberId()}">
+						                    <div class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}">초대하기</div>
+						                </c:if>
+							        </div>
+							    </div>
+							</c:forEach>
+		    			</div>
+		    		</div>
+	
+				</div>
+				</div>
+	    	</div>
     	</div>
     	<div class="write-pen modal-exam">
     		<i class="fa-solid fa-pen"></i>
@@ -308,6 +293,20 @@
     	</div>
 	</div>
     		
+    		
+	<!-- 오른쪽 알림 -->
+    <div class="rpanel">
+		<div class="rpanel-list">
+			<div class="list-header border-b">
+				<div class="text-lg font-bold">알림 센터</div>
+				<span id="close" class="close close-btn-x">&times;</span>
+				<button class="clear-all-btn">모두 읽음</button>
+			</div>
+			
+			<div class="list-notification">
+			</div>
+		</div>
+	</div>		
     <!-- 글 작성 모달 -->
 	<div class="layer-bg"></div>
 	<div class="layer p-10">

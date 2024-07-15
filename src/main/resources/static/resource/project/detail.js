@@ -317,7 +317,7 @@ $(document).ready(function() {
             var formData = new FormData();
             formData.append('title', title);
             formData.append('content', content);
-            formData.append('status', window.status);
+            formData.append('status', status);
             formData.append('projectId', projectId);
             formData.append('selectedGroupId', selectedGroupId);
             formData.append('startDate', startDate);
@@ -650,6 +650,7 @@ $(document).ready(function() {
     }
 
     function connectWebSocket() {
+		
         var socket = new SockJS('/ws_endpoint');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function(frame) {
@@ -660,6 +661,7 @@ $(document).ready(function() {
 
             stompClient.subscribe('/queue/tagNotify-' + projectId + loginedMemberId, function(lastPostedArticle) {
                 const writeNotificationMessage = JSON.parse(lastPostedArticle.body);
+                console.log("sadaasddadddadadadad");
                 showMessage(writeNotificationMessage.writerName + "님이 태그하셨습니다");
                 $('.notification-badge').show();
             });
