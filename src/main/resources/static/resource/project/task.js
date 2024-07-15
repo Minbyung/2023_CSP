@@ -5,7 +5,6 @@ $(document).ready(function() {
     setupStatusButtons(); // status-btn-write 버튼
     setupArticleSubmitButton(); // submitBtn 작성 버튼
     setupSearchAutocomplete(); // 관리자 자동완성
-    setupDatePickers(); // input 날짜 부분 눌러도 달력 나오게
     setupVideoMeetingButton(); // createMeetingBtn 화상회의 버튼
     setupTabNavigation(); // 글작성, 화상회의 탭 전환
     connectWebSocket(); // 웹소켓
@@ -142,14 +141,6 @@ $(document).ready(function() {
             $(this).autocomplete("search", " ");
         });
     }
-
-    function setupDatePickers() {
-        $('#start-date, #end-date').on('click', function() {
-            this.showPicker();
-        });
-    }
-
-    
 
     function setupVideoMeetingButton() {
         $('#createMeetingBtn').click(function() {
