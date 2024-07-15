@@ -17,7 +17,7 @@ $(document).ready(function() {
     setupStatusUpdate();
     fetchArticleCountsByStatus();
     detailModal();
-    setupProjectInviteButton();
+    inviteMember();
     setupAccordionButtons();
     setupVideoMeetingButton();
     setupTabNavigation();
@@ -272,8 +272,8 @@ $(document).ready(function() {
             $('.layer-bg').hide();
             $('.layer').hide();
             $('.update-layer').hide();
-            $('.project-invite-modal').hide();
             $('.rpanel').hide();
+            $('.member-modal').hide();
             resetLayerFields();
         }
 
@@ -512,47 +512,64 @@ $(document).ready(function() {
         });
     }
 
-    function detailModal() {
-        $('.participants-container').on('click', '.participant div[id^=member-]', function() {
-            var memberId = $(this).data('member-id');
-            var memberName = $(this).text();
-            var $memberDetails = $('#member-details');
-            console.log("작동");
-
-            $('.chat-btn').data('member-id', memberId);
-
-            $.ajax({
-                url: '../member/getMemberDetails',
-                type: 'GET',
-                data: { memberId: memberId },
-                dataType: 'json',
-                success: function(data) {
-                    $memberDetails.html('<p>이름: ' + data.name + '</p>' +
-                        '<p>이메일: ' + data.email + '</p>' +
-                        '<p>전화번호: ' + data.cellphoneNum + '</p>'
-                    );
-                    $('#member-modal').fadeIn();
-                }
-            });
-        });
-
-        $('.close').click(function() {
-            $('#member-modal').fadeOut();
-        });
-
-        $(window).click(function(event) {
-            if ($(event.target).hasClass('modal')) {
-                $('#member-modal').fadeOut();
-            }
-        });
-    }
-
-    function setupProjectInviteButton() {
-        $('#project-invite').click(function() {
-            $('.layer-bg').show();
-            $('#project-invite-modal').show();
-        });
-    }
+	function detailModal() {
+	    $(document).on('click', '.participant', function() {
+	        var memberId = $(this).find('div[id^=member-]').data('member-id');
+	        var $memberDetails = $('#member-details');
+	        console.log("작동");  // 디버깅을 위해 로그 추가
+	
+	        $('.chat-btn').data('member-id', memberId);
+	
+	        $.ajax({
+	            url: '../member/getMemberDetails',
+	            type: 'GET',
+	            data: { memberId: memberId },
+	            dataType: 'json',
+	            success: function(data) {
+	                $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+	                    '<p>이메일: ' + data.email + '</p>' +
+	                    '<p>전화번호: ' + data.cellphoneNum + '</p>'
+	                );
+	                $('.layer-bg').show();
+	                $('#member-modal').show();
+	            },
+	            error: function(xhr, status, error) {
+	                console.log("에러 발생: " + error);  // 에러 로그 추가
+	            }
+	        });
+	    });
+	
+	    $('.close').click(function() {
+	        $('#member-modal').hide();
+	        $('.layer-bg').hide();
+	    });
+	}
+	
+	function inviteMember() {
+	    $('.invite-btn').click(function(event) {
+	        event.stopPropagation(); // 이벤트 전파 중단
+	
+	        var memberId = $(this).data('member-id');
+	
+	        // AJAX 요청을 통해 서버에 memberId와 projectId를 전송합니다.
+	        $.ajax({
+	            url: '../project/inviteProjectMember',
+	            method: 'POST',
+	            data: { memberId: memberId, projectId: projectId },
+	            success: function(data) {
+	                if (data.resultCode === "F-1") {
+	                    alert(data.msg);
+	                } else {
+	                    alert('팀원이 프로젝트에 초대되었습니다.');
+	                    location.reload();
+	                }
+	            },
+	            error: function(err) {
+	                alert('초대에 실패했습니다.');
+	            }
+	        });
+	    });
+	}
 
     function setupAccordionButtons() {
         $('.project-menu-accordion-button > .flex').click(function() {
@@ -654,7 +671,6 @@ $(document).ready(function() {
             var memberId = $(this).data('member-id');
             var chatWindowUrl = '/usr/home/chat?memberId=' + encodeURIComponent(memberId);
             window.open(chatWindowUrl, '_blank', 'width=500,height=700');
-            $('#member-modal').hide();
         });
     }
 

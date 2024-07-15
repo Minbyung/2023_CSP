@@ -276,21 +276,25 @@
 	    			</div>
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${teamMembers}" var="member">
-					    	<div class="member-list" onclick="detailModal('${member.id}')">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center profile-photo-container"><img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo"></span></div>
-						    	<div class="member-list-detail flex flex-col justify-center">
-							    	<div class="flex justify-between w-48">
-							    		<div class="font-bold">
-							    			${member.name}
-							    			<c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
-							    		</div>
-							    		<c:if test="${member.id != rq.getLoginedMemberId()}">
-							    			<div class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}">초대하기</div>
-							    		</c:if>
-							    	</div>
-							    	<div class="text-xs">${member.teamName}</div>
-						    	</div>
-					    	</div>
+						    <div class="member-list flex participant">
+						        <div class="member-icon-wrap">
+						            <span class="member-icon flex justify-center items-center profile-photo-container">
+						                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
+						            </span>
+						        </div>
+						        <div class="member-list-detail w-full flex justify-between items-center">
+						            <div class="flex flex-col">
+							            <div class="font-bold" id="member-${member.id}" data-member-id="${member.id}">
+							                ${member.name}
+							                <c:if test="${member.id == rq.getLoginedMemberId()}">(나)</c:if>
+							            </div>
+					            		<div class="text-xs">${member.teamName}</div>
+						            </div>
+						            <c:if test="${member.id != rq.getLoginedMemberId()}">
+					                    <div class="invite-btn" data-member-id="${member.id}" data-member-name="${member.name}">초대하기</div>
+					                </c:if>
+						        </div>
+						    </div>
 						</c:forEach>
 	    			</div>
 	    		</div>
@@ -459,8 +463,7 @@
 	    </div>
 	</div>
 	<!-- 멤버이름 클릭하면 나오는 모달 -->
-	<div id="member-modal" class="member-modal">
-	 	<div class="modal-memberContent">
+	 	<div id="member-modal" class="member-modal">
 	 		<span class="close">&times;</span>
 	 		<h2>멤버 세부 정보</h2>
 	 		<div id="member-details" >
@@ -470,7 +473,6 @@
 	 			<button class="chat-btn p-4 flex-grow text-center border border-red-300">1:1 채팅</button>
 	 		</div>	
 	 	</div>
-	</div>
 	<!-- 알림 메세지박스 -->
 	<div id="messageBox" class="message-box" style="display: none;"></div>
 </body>	

@@ -375,7 +375,7 @@ public class UsrProjectController {
 	
 	@RequestMapping("/usr/project/inviteProjectMember")
 	@ResponseBody
-	public ResultData inviteProjectMember(int memberId, int projectId) {
+	public ResultData inviteProjectMember(Integer memberId, Integer projectId) {
 
 		if (projectService.isMemberAlreadyInProject(memberId, projectId)) {
 	        return ResultData.from("F-1", "이미 프로젝트에 참여중인 멤버입니다");
