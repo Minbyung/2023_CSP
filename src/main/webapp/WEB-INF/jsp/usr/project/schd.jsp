@@ -32,12 +32,15 @@
    padding-right: 1em;
  }
  #calendar-container {
- 	padding-top: 5px;
+/*  	padding-top: 5px; */
  	padding-left: 30px;
  	padding-right: 30px;
  	padding-bottom: 150px;
  }
 </style>
+
+<!-- 새로운 JSP 파일 포함 -->
+<jsp:include page="../common/checkCredential.jsp"/>
 
 <script>
 
@@ -184,6 +187,37 @@
 		
 		
 		var calendarEl = $('#calendar')[0]; // 제이쿼리를 사용하여 DOM 요소를 선택
+		
+		var projectEvents = [
+            <c:forEach var="article" items="${articles}">
+                {
+                    id: "${article.id}",
+                    title: "${article.title}",
+                    start: "${article.startDate}",
+                    end: "${article.endDate}",
+                    color: getColor("${article.status}"),
+                    textColor: "#fff",
+                    editable: true
+                }<c:if test="${!status.last}">,</c:if> // 마지막 JSON배열엔 ","가 없어야함
+            </c:forEach>
+        ];
+		
+		var googleEvents = [
+            <c:forEach var="event" items="${googleEvents}" varStatus="status">
+                {
+                    id: "${event.id}",
+                    title: "${event.summary}",
+                    start: "${event.start.dateTime != null ? event.start.dateTime : event.start.date}",
+                    end: "${event.end.dateTime != null ? event.end.dateTime : event.end.date}",
+                    extendedProps: {
+                        editable: false // Google Calendar 이벤트는 수정 불가
+                    }
+                }<c:if test="${!status.last}">,</c:if>
+            </c:forEach>
+        ];
+		
+		var events = projectEvents.concat(googleEvents);
+		
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			height: '1000px', // calendar 높이 설정
  			expandRows: true, // 화면에 맞게 높이 재설정
@@ -200,24 +234,27 @@
 			eventResizableFromStart: true,
 			eventDrop: function(info) {
 				var event = info.event;
-				console.log(event.start.toISOString());
-				$.ajax({
-				      url: '/usr/article/doUpdateDate', // 이벤트 정보를 업데이트하는 서버의 엔드포인트 URL
-				      method: 'POST',
-				      data: {
-				    	articleId: event.id, // 이벤트 ID
-				        startDate: event.start.toISOString(), // 변경된 시작 날짜/시간
-				        endDate: event.end ? event.end.toISOString() : event.start.toISOString() // 변경된 종료 날짜/시간
-				        // 기타 필요한 데이터를 여기에 포함시킬 수 있습니다.
-				      },
-				      success: function(response) {
-				        // 서버에서 성공적으로 처리됐을 때의 로직
-				      },
-				      error: function() {
-				        // 오류 처리
-				        info.revert(); // 변경 사항을 되돌립니다.
-				      }
-				    });
+				if (event.extendedProps.editable === false) {
+                    info.revert();
+                    return;
+                }
+                console.log(event.start.toISOString());
+                $.ajax({
+                    url: '/usr/article/doUpdateDate',
+                    method: 'POST',
+                    data: {
+                        articleId: event.id,
+                        startDate: event.start.toISOString(),
+                        endDate: event.end ? event.end.toISOString() : event.start.toISOString()
+                    },
+                    success: function(response) {
+                        // 서버에서 성공적으로 처리됐을 때의 로직
+                    },
+                    error: function() {
+                        // 오류 처리
+                        info.revert();
+                    }
+                });
 				console.log(info.event.title + "이(가) " + info.event.start + "부터 " + info.event.end + "까지로 이동되었습니다.");
 			},
 			
@@ -237,66 +274,14 @@
 			    showModal();
 			},
 			// 이벤트 
-	        events: function(fetchInfo, successCallback, failureCallback) { 
-	        	$.ajax({
-	        		url: '/usr/project/getGroupedArticles', // 서버의 API 엔드포인트
-	                method: 'GET',
-	                dataType: 'json',
-	                data: {
-	                	projectId: projectId
-	                  // 필요한 경우 서버에 전송할 추가 데이터를 여기에 포함시킵니다.
-	                  // 예: start: fetchInfo.startStr, end: fetchInfo.endStr
-	                },	
-	                success: function(data) {
-	                	
-	                	let events = [];
-	                	for (let group in data) {
-	                		var articles = data[group];
-	                	    for (var i = 0; i < articles.length; i++) {
-	                            var article = articles[i];
-	                            var color;
-	                            
-	                            switch(article.status) {
-	                            case '요청':
-	                                color = 'rgba(255, 99, 132, 0.8)';
-	                                break;
-	                            case '진행':
-	                                color = 'rgba(54, 162, 235, 0.8)';
-	                                break;
-	                            case '피드백':
-	                                color = 'rgba(255, 206, 86, 0.8)';
-	                                break;
-	                            case '완료':
-	                                color = 'rgba(75, 192, 192, 0.8)';
-	                                break;
-	                            case '보류':
-	                                color = 'rgba(153, 102, 255, 0.8)';
-	                                break;
-	                            default:
-	                                color = '#8b00ea'; // 기본 색상
-                     			}
-	                            events.push({
-	                                id: article.id,
-	                                color : color, // 상태에 따른 색상 지정
-	                                textColor : "#fff",
- 	                                title: article.title,
-	                                start: article.startDate,
- 	                                end: article.endDate
-	                            });
-	                	    }
-	                	}
-	                  successCallback(events);
-	               },
-	       	
-	               error: function(xhr, status, error) {
-	                   // 오류 처리
-	                   failureCallback(error);
-	                 }
-	        	});
-	        },
+	        events: events,
 	        eventClick: function(info) {
-	            var articleId = info.event.id;
-	            window.location.href = "/usr/article/detail?id=" + articleId;
+	        	if (info.event.extendedProps.editable === false) {
+                    return;
+                }
+	        	
+                var articleId = info.event.id;
+                window.location.href = "/usr/article/detail?id=" + articleId;
 	        },
 		});
 		calendar.render(); // 캘린더 렌더링
@@ -649,6 +634,23 @@
         });
     }
     
+    function getColor(status) {
+        switch(status) {
+            case '요청':
+                return 'rgba(255, 99, 132, 0.8)';
+            case '진행':
+                return 'rgba(54, 162, 235, 0.8)';
+            case '피드백':
+                return 'rgba(255, 206, 86, 0.8)';
+            case '완료':
+                return 'rgba(75, 192, 192, 0.8)';
+            case '보류':
+                return 'rgba(153, 102, 255, 0.8)';
+            default:
+                return '#8b00ea';
+        }
+    }
+    
     
     
 </script>
@@ -761,33 +763,27 @@
 		            </li>
 		        </ul>
 		    </div>
-<!-- 		    <div class="lnb-bottom-customer"> -->
-<!-- 		        <a href="#" class=""> -->
-<!-- 		            <i class="fa-regular fa-circle-question self-center mr-3"></i> -->
-<!-- 		            <div>고객센터</div> -->
-<!-- 		        </a> -->
-<!-- 		    </div> -->
 		</div>
 		
 		<div class="page-content">
 			
     		<nav class="menu-box-1">
     			<ul>
-    				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
-    				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
-    				<li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
-    				<li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
-    				<li><a class="block" href="../project/meeting?projectId=${project.id }">영상회의</a></li>
+    				<li><a class="block" href="/usr/project/detail?projectId=${project.id }">피드</a></li>
+    				<li><a class="block" href="/usr/project/task?projectId=${project.id }">업무</a></li>
+    				<li><a class="block" id="calendarLink" href="#">캘린더</a></li>
+    				<li><a class="block" href="/usr/project/file?projectId=${project.id }">파일</a></li>
+    				<li><a class="block" href="/usr/project/meeting?projectId=${project.id }">영상회의</a></li>
     			</ul>
     		</nav>
-  
-  			
+    	   <button id="googleCalendarButton" onclick="location.href='/authorize?projectId=${projectId}'">Google Calendar 연동</button>
 		  <!--물음표 아이콘 -->
            <div class="relative helpIcon-box">
                <i class="fas fa-question-circle text-2xl cursor-pointer" id="helpIcon"></i>
                <div class="tooltip" id="tooltip">
                		 날짜 칸을 드래그하여 업무 추가를 할 수 있어요.
                		<br>막대를 드래그하여 시작일을 변경할 수 있어요.
+               		<br>구글 캘린더와 연동해 일정을 관리해보세요.
                </div>
            </div>
 		  

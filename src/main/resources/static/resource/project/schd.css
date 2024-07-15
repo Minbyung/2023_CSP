@@ -705,6 +705,7 @@ ul.ui-autocomplete {
 .helpIcon-box {
 	top: 55px;
 	left: 200px;
+	width: 500px;
 }
 
 .tooltip {
@@ -738,3 +739,27 @@ ul.ui-autocomplete {
     opacity: 1;
 }
 
+#googleCalendarButton {
+	position: relative;
+	width: 270px;
+	top: 60px;
+    left: 44px;
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#googleCalendarButton:hover {
+    background-color: #357ae8;
+}
+
+#googleCalendarButton:disabled {
+    background-color: #d2e3fc;
+    cursor: not-allowed;
+}

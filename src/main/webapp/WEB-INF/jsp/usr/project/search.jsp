@@ -22,6 +22,8 @@
 <!-- partial:index.partial.html -->
 <!-- <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet"> -->
 <body>
+	<!-- 새로운 JSP 파일 포함 -->
+	<jsp:include page="../common/checkCredential.jsp"/>
 	<script>
 	$(document).ready(function() {
 		var status = "요청"; // Default status 
@@ -1091,11 +1093,11 @@
 		<div class="page-content">
     		<nav class="menu-box-1">
     			<ul>
-    				<li><a class="block" href="../project/detail?projectId=${project.id }">피드</a></li>
-    				<li><a class="block" href="../project/task?projectId=${project.id }">업무</a></li>
-    				<li><a class="block" href="../project/schd?projectId=${project.id }">캘린더</a></li>
-    				<li><a class="block" href="../project/file?projectId=${project.id }">파일</a></li>
-    				<li><a class="block" href="../project/meeting?projectId=${project.id }">영상회의</a></li>
+    				<li><a class="block" href="/usr/project/detail?projectId=${project.id }">피드</a></li>
+    				<li><a class="block" href="/usr/project/task?projectId=${project.id }">업무</a></li>
+    				<li><a class="block" id="calendarLink" href="#">캘린더</a></li>
+    				<li><a class="block" href="/usr/project/file?projectId=${project.id }">파일</a></li>
+    				<li><a class="block" href="/usr/project/meeting?projectId=${project.id }">영상회의</a></li>
     			</ul>
     		</nav>
     		<div class="project-detail-content">

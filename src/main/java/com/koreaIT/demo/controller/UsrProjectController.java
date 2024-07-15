@@ -7,14 +7,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Collections;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,8 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 
 
 import com.koreaIT.demo.service.ArticleService;
@@ -68,7 +71,7 @@ public class UsrProjectController {
 	private MeetingService meetingService;
 	private Rq rq;
 	
-	private static final String APPLICATION_NAME = "Your App Name";
+	private static final String APPLICATION_NAME = "teamup";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 	
@@ -280,6 +283,7 @@ public class UsrProjectController {
 		}
 		
 		model.addAttribute("project", project);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("projects", projects);
 		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("articles", articles);
@@ -408,37 +412,113 @@ public class UsrProjectController {
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("loginedMember", loginedMember);
 		
-		 Credential credential = (Credential) session.getAttribute("credential");
-         if (credential == null) {
-        	 return "redirect:/authorize?projectId=" + projectId;
-         }
-         Calendar service = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential)
-                 .setApplicationName(APPLICATION_NAME)
-                 .build();
-
-         Calendar.Events.List request = service.events().list("primary");
-         com.google.api.services.calendar.model.Events events = request.execute();
-         model.addAttribute("events", events.getItems());
-         
+		String id = "id";
+		String DESC = "DESC";
+		
+		List<Article> articles = articleService.getArticles(projectId, id, DESC);
+		model.addAttribute("articles", articles);
+		
+		// Google Calendar 데이터 추가 (기본적으로 비어 있는 상태로 시작)
+        List<com.google.api.services.calendar.model.Event> googleEvents = new ArrayList<>();
+        model.addAttribute("googleEvents", googleEvents);
+		
 		return "usr/project/schd"; 
 	}
 	
-	@GetMapping("/authorize")
+	@RequestMapping("/usr/project/schd/google")
+    public String addGoogleEvents(@RequestParam("projectId") int projectId, HttpSession session, Model model) throws Exception {
+		int memberId = rq.getLoginedMemberId();
+
+        List<Group> groups = groupService.getGroups(projectId);
+        Project project = projectService.getProjectByProjectId(projectId);
+
+        int teamId = project.getTeamId();
+        List<Project> projects = projectService.getProjectsByTeamIdAndMemberId(teamId, memberId);
+        List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
+
+        Member member = memberService.getMemberById(memberId);
+        Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
+
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("projects", projects);
+        model.addAttribute("teamId", teamId);
+        model.addAttribute("chatRooms", chatRooms);
+        model.addAttribute("project", project);
+        model.addAttribute("groups", groups);
+
+        model.addAttribute("member", member);
+        model.addAttribute("teamId", teamId);
+        model.addAttribute("loginedMember", loginedMember);
+
+        String id = "id";
+		String DESC = "DESC";
+		
+		List<Article> articles = articleService.getArticles(projectId, id, DESC);
+		model.addAttribute("articles", articles);
+		
+        // Google Calendar 데이터 추가
+        List<com.google.api.services.calendar.model.Event> googleEvents = new ArrayList<>();
+        Credential credential = (Credential) session.getAttribute("credential");
+        if (credential != null) {
+            Calendar service = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+            Calendar.Events.List request = service.events().list("primary");
+            com.google.api.services.calendar.model.Events events = request.execute();
+            googleEvents = events.getItems();
+        }
+        model.addAttribute("googleEvents", googleEvents);
+
+        return "usr/project/schd";
+    }
+
+    @GetMapping("/authorize")
     public String authorize(HttpServletRequest request, @RequestParam("projectId") String projectId) {
         AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl();
         authorizationUrl.setRedirectUri(redirectUri);
         authorizationUrl.setState(projectId);
         return "redirect:" + authorizationUrl.build();
     }
-	
-	@GetMapping("/oauth2callback")
+
+    @GetMapping("/oauth2callback")
     public String oauth2Callback(@RequestParam("code") String code, @RequestParam("state") String projectId, HttpSession session) throws Exception {
         TokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
         Credential credential = flow.createAndStoreCredential(tokenResponse, "user");
         session.setAttribute("credential", credential);
-        return "redirect:/usr/project/schd?projectId=" + projectId;
+        return "redirect:/usr/project/schd/google?projectId=" + projectId;
     }
 	
+    @PostMapping("/usr/project/updateGoogleEvent")
+    public String updateGoogleEvent(@RequestParam("eventId") String eventId,
+                                    @RequestParam("start") String start,
+                                    @RequestParam("end") String end,
+                                    HttpSession session) throws Exception {
+        Credential credential = (Credential) session.getAttribute("credential");
+        if (credential != null) {
+            Calendar service = new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credential)
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+            Event event = service.events().get("primary", eventId).execute();
+            event.setStart(new EventDateTime().setDateTime(new com.google.api.client.util.DateTime(start)));
+            event.setEnd(new EventDateTime().setDateTime(new com.google.api.client.util.DateTime(end)));
+
+            service.events().update("primary", eventId, event).execute();
+        }
+        
+        System.out.println("eventId : " + eventId);
+        return "redirect:/usr/project/schd";
+    }
+    
+    @GetMapping("/checkCredential")
+    @ResponseBody
+    public Map<String, Object> checkCredential(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        Credential credential = (Credential) session.getAttribute("credential");
+        response.put("hasCredential", credential != null);
+        return response;
+    }
 	
 	@RequestMapping("/usr/project/file")
 	public String file(Model model, int projectId) {
@@ -452,6 +532,7 @@ public class UsrProjectController {
 		Member member = memberService.getMemberById(memberId);
 		
 		model.addAttribute("project", project);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("projects", projects);
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("chatRooms", chatRooms);
@@ -476,6 +557,7 @@ public class UsrProjectController {
         model.addAttribute("meetingInfos", meetingInfos);
 
 		model.addAttribute("project", project);
+		model.addAttribute("projectId", projectId);
 		model.addAttribute("projects", projects);
 		model.addAttribute("chatRooms", chatRooms);
 		model.addAttribute("member", member);
