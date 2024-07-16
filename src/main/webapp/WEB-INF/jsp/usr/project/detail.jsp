@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
+    <title>${project.project_name }</title>
     <link rel="stylesheet" href="/resource/project/detail.css" />
     <link rel="stylesheet" href="/resource/home/home.css" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -17,7 +18,6 @@
 	<!--chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
-    <title>${project.project_name }</title>
 	<script>
 		var projectId = ${project.id};
 		var loginedMemberId = ${rq.getLoginedMemberId()};

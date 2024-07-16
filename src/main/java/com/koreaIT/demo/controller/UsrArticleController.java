@@ -210,6 +210,7 @@ public class UsrArticleController {
 		model.addAttribute("article", article);
 		model.addAttribute("replies", replies);
 		model.addAttribute("groups", groups);
+		model.addAttribute("projectId", projectId);
 		
 		return "usr/article/detail";
 	}
