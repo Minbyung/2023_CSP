@@ -88,7 +88,12 @@ $(document).ready(function() {
             type: 'GET',
             data: { "projectId": projectId, "articleId": articleId },
             success: function(data) {
-                populateArticleDetails(data);
+				if (data.resultCode.startsWith("F-")) {
+					alert(data.msg);
+					history.back();
+				} else {
+					populateArticleDetails(data.data);
+				}
             }
         });
     }
@@ -144,6 +149,11 @@ $(document).ready(function() {
             }).get();
             var status = $('#update-status .status-btn-write.active').data('update-status');
             var articleId = $(this).data('article-id');
+            
+            if (managers.length === 0) {
+            	alert("담당자를 입력하세요.");
+	            return; 
+	        }
 
             if (!startDate) {
                 $('#update-start-date').val('1000-01-01T00:00:00');
@@ -233,6 +243,11 @@ $(document).ready(function() {
             var managers = $('.tag').map(function() {
                 return $(this).clone().children().remove().end().text();
             }).get();
+            
+            if (managers.length === 0) {
+            	alert("담당자를 입력하세요.");
+	            return; 
+	        }
 
             if (!startDate) {
                 $('#start-date').val('1000-01-01T00:00:00');

@@ -2,16 +2,13 @@ package com.koreaIT.demo.controller;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
-import java.util.Collections;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
@@ -36,17 +32,13 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
-
-
 import com.koreaIT.demo.service.ArticleService;
-import com.koreaIT.demo.service.BoardService;
 import com.koreaIT.demo.service.ChatService;
 import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MeetingService;
 import com.koreaIT.demo.service.MemberService;
 import com.koreaIT.demo.service.ProjectService;
-import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Article;
 import com.koreaIT.demo.vo.ChatRoom;
@@ -54,10 +46,12 @@ import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Project;
-import com.koreaIT.demo.vo.RecommendPoint;
 import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 import com.koreaIT.demo.vo.ZoomMeetingResponse;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UsrProjectController {
@@ -192,15 +186,9 @@ public class UsrProjectController {
 	public String search(Model model, int projectId, String searchTerm, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
 		int memberId = rq.getLoginedMemberId();
-		
-		
-		
-		
 		Project project = projectService.getProjectByProjectId(projectId);
 		List<Article> articles = articleService.getArticlesByTerm(searchTerm, projectId);
 		Article lastPostedArticle = articleService.getRecentlyAddArticle(projectId);
-		
-		
 		for (Article article : articles) {
 		       System.out.println(article);
 		    }
@@ -211,11 +199,6 @@ public class UsrProjectController {
 	        
 	        article.setInfoFiles(infoFiles); 
 	    }
-		
-		
-		
-		
-		
 		List<Group> groups = groupService.getGroups(projectId);
 		int teamId = project.getTeamId();
 		List<Member> teamMembers = memberService.getMembersByTeamId(teamId, rq.getLoginedMemberId());
@@ -226,7 +209,6 @@ public class UsrProjectController {
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		int projectMembersCnt = memberService.getProjectMembersCnt(projectId);
 		List<ChatRoom> chatRooms = chatService.getChatRoomsByMemberId(memberId);
-		
 		Member member = memberService.getMemberById(memberId);
 		
 		
@@ -248,10 +230,7 @@ public class UsrProjectController {
 		
 		return "usr/project/detail";
 	}
-	
-	
-	
-	
+
 	@RequestMapping("/usr/project/task")
 	public String task(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
 		
@@ -324,10 +303,7 @@ public class UsrProjectController {
 		
 		return groupedArticles;
 	}
-	
-	
-	
-	
+
 	@RequestMapping("/usr/project/getMembers")
 	@ResponseBody
 	public List<String> getMembersByName(@RequestParam String term, int projectId) {
@@ -338,41 +314,7 @@ public class UsrProjectController {
 		
 		return projectService.getMembersByName(term, projectId);
 	}
-	
-	@RequestMapping("/usr/project/gantt")
-	public String gantt(Model model, int projectId, @RequestParam(required = false, defaultValue = "id") String column, @RequestParam(required = false, defaultValue = "DESC") String order) {
-		
-		Project project = projectService.getProjectByProjectId(projectId);
-		List<Article> articles = articleService.getArticles(projectId, column, order);
-		List<Group> groups = groupService.getGroups(projectId);
-		
-		
-		// groupId 별로 article을 그룹화
-		Map<String, List<Article>> groupedArticles = new LinkedHashMap<>();
-		// 먼저 모든 그룹을 맵에 추가
-		for (Group group : groups) {
-		    groupedArticles.put(group.getGroup_name(), new ArrayList<>());
-		}
-		// 그런 다음 각 게시글을 해당 그룹에 추가
-		for (Article article : articles) {
-		    String groupName = article.getGroupName();
-		    if (groupedArticles.containsKey(groupName)) { 
-		        groupedArticles.get(groupName).add(article);
-		    }
-		}
 
-		model.addAttribute("project", project);
-		model.addAttribute("projectId", projectId);
-		model.addAttribute("articles", articles);
-		model.addAttribute("groups", groups);
-		model.addAttribute("groupedArticles", groupedArticles);
-		
-		
-		
-		
-		return "usr/project/gantt"; 
-	}
-	
 	@RequestMapping("/usr/project/inviteProjectMember")
 	@ResponseBody
 	public ResultData inviteProjectMember(Integer memberId, Integer projectId) {

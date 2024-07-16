@@ -140,15 +140,21 @@
 		                startDate = $("#update-start-date").val();
 		         }
 		
-	            if (!endDate) {
-	                $('#update-end-date').val('1000-01-01T00:00:00');
-	                endDate = $("#update-end-date").val();
-	           	}
+	             if (!endDate) {
+	                 $('#update-end-date').val('1000-01-01T00:00:00');
+	                 endDate = $("#update-end-date").val();
+	           	 }
 
 				 var managers = $('.tag').map(function() {
 				 // 'x' 버튼을 제외한 텍스트만 반환합니다.
 			        return $(this).clone().children().remove().end().text();
 			     }).get();
+				 
+				 if (managers.length === 0) {
+	            	alert("담당자를 입력하세요.");
+		            return; 
+		         }
+				 
 				 var status = $('#update-status .status-btn-write.active').data('update-status');
 				 var articleId = $(this).data('article-id');
 				 

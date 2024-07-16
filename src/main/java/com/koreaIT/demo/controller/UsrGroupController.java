@@ -1,18 +1,10 @@
 package com.koreaIT.demo.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.koreaIT.demo.service.ArticleService;
-import com.koreaIT.demo.service.BoardService;
 import com.koreaIT.demo.service.GroupService;
-import com.koreaIT.demo.service.MemberService;
-import com.koreaIT.demo.service.ReplyService;
 import com.koreaIT.demo.util.Util;
 import com.koreaIT.demo.vo.Rq;
 
@@ -32,13 +24,10 @@ public class UsrGroupController {
 	public String doMake(int projectId, String group_name) {
 		
 		groupService.doMakeGroup(projectId, group_name);
-		
 
-		
 		int id = projectId;
-    
-		
-		return Util.jsReplace(Util.f("%d번 게시물을 생성했습니다", id), Util.f("detail?id=%d", id));
+
+		return Util.jsReplace(Util.f("%d번 프로젝트 그룹을 생성했습니다", id), Util.f("detail?id=%d", id));
 	}
 	
 }

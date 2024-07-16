@@ -57,6 +57,11 @@ $(document).ready(function() {
             var managers = $('.tag').map(function() {
                 return $(this).clone().children().remove().end().text();
             }).get();
+            
+            if (managers.length === 0) {
+            	alert("담당자를 입력하세요.");
+	            return; 
+	        }
 
             if (!startDate) {
                 $('#start-date').val('1000-01-01T00:00:00');

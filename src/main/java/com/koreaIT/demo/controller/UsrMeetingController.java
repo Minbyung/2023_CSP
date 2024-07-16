@@ -97,35 +97,5 @@ public class UsrMeetingController {
     public String delete(@RequestParam("meetingId") String meetingId) {
         meetingService.deleteMeeting(meetingId);
         return "회의가 삭제되었습니다";
-    }
-
-//    @GetMapping("/createMeeting")
-//    public String showCreateMeetingPage() {
-//        return "createMeeting";
-//    }
-//
-//    @GetMapping("/createMeetingAction")
-//    public String createMeeting(
-//            @RequestParam String accessToken,
-//    		@RequestParam String code,
-//            @RequestParam String topic,
-//            @RequestParam String startTime,
-//            @RequestParam int duration,
-//            @RequestParam String password,
-//            Model model) {
-//        try {
-//            ZoomMeetingRequest meetingRequest = new ZoomMeetingRequest(topic, 2, startTime, duration, password);
-//            
-//            ZoomMeetingResponse meetingResponse = meetingService.createMeeting(accessToken, meetingRequest);
-//            // 미팅 정보
-//            model.addAttribute("meetingDetails", meetingResponse);
-//            return "meetingDetails";
-//            
-//        } catch (IOException e) {
-//            model.addAttribute("error", "Failed to create meeting: " + e.getMessage());
-//            return "error";
-//        }
-//    }
-
-	
+    }	
 }

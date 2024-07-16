@@ -28,7 +28,7 @@ public class UsrTeamController {
         teamInviteService.inviteMember(teamId, email);
         
         
-        return Util.jsReplace("프로젝트를 생성했습니다", Util.f("detail?id=%d", teamId));
+        return Util.jsReplace("초대했습니다", Util.f("detail?id=%d", teamId));
     }
 	
 	@RequestMapping("/usr/team/getTeamByInviteCode")

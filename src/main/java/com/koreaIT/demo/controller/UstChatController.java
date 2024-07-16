@@ -203,10 +203,6 @@ public class UstChatController {
         
     }
     
-	
-	
-	
-    
     @MessageMapping("/write.notification.{projectId}")
     public Notification handleWriteNotification(@Payload Notification writeNotification,
                                             @DestinationVariable String projectId) {

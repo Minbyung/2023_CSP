@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.koreaIT.demo.service.ArticleService;
-import com.koreaIT.demo.service.BoardService;
 import com.koreaIT.demo.service.FileService;
 import com.koreaIT.demo.service.GroupService;
 import com.koreaIT.demo.service.MemberService;
@@ -25,6 +24,7 @@ import com.koreaIT.demo.vo.FileResponse;
 import com.koreaIT.demo.vo.Group;
 import com.koreaIT.demo.vo.Member;
 import com.koreaIT.demo.vo.Reply;
+import com.koreaIT.demo.vo.ResultData;
 import com.koreaIT.demo.vo.Rq;
 
 import jakarta.servlet.http.Cookie;
@@ -37,18 +37,16 @@ public class UsrArticleController {
 	private ArticleService articleService;
 	private FileService fileService;
 	private FileUtils fileUtils;
-	private BoardService boardService;
 	private ReplyService replyService;
 	private MemberService memberService;
 	private GroupService groupService;
 	private Rq rq;
 	
 	
-	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, BoardService boardService, ReplyService replyService, MemberService memberService, GroupService groupService, Rq rq) {
+	UsrArticleController(ArticleService articleService, FileService fileService, FileUtils fileUtils, ReplyService replyService, MemberService memberService, GroupService groupService, Rq rq) {
 		this.articleService = articleService;
 		this.fileService = fileService;
 		this.fileUtils = fileUtils;
-		this.boardService = boardService;
 		this.replyService = replyService;
 		this.memberService = memberService;
 		this.groupService = groupService;
@@ -152,61 +150,21 @@ public class UsrArticleController {
 	
 	@RequestMapping("/usr/article/modify")
 	@ResponseBody
-	public Article modify(Model model, int projectId, int articleId) {
+	public ResultData<Article> modify(Model model, int projectId, int articleId) {
 		
 		Article article = articleService.getArticle(projectId, articleId);
-		
-//		if (article == null) {
-//			return rq.jsReturnOnView(Util.f("%d번 게시물은 존재하지 않습니다", articleId));
-//		}
-//		
-//		if (rq.getLoginedMemberId() != article.getMemberId()) {
-//			return rq.jsReturnOnView("해당 게시물에 대한 권한이 없습니다");
-//		}
-		
-		System.out.println(article);
-		
 		model.addAttribute("article", article);
 		
-		return article;
+		if (article == null) {
+	        return ResultData.from("F-1", Util.f("%d번 게시물은 존재하지 않습니다", articleId));
+	    }
+
+	    if (rq.getLoginedMemberId() != article.getMemberId()) {
+	        return ResultData.from("F-2", "해당 게시물에 대한 권한이 없습니다");
+	    }
+
+		return ResultData.from("S-1", "게시글 조회 성공", article);
 	}
-	
-//	http://localhost:8082/usr/article/list
-	
-//	@RequestMapping("/usr/article/list")
-//	public String list(Model model, @RequestParam(defaultValue = "1") int boardId, @RequestParam(defaultValue = "1") int page,
-//			@RequestParam(defaultValue = "title") String searchKeywordType, @RequestParam(defaultValue = "") String searchKeyword) {
-//		
-//		if (page <= 0) {
-//			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다");
-//		}
-//		
-//		Board board = boardService.getBoardById(boardId);
-//
-//		if (board == null) {
-//			return rq.jsReturnOnView("존재하지 않는 게시판입니다");
-//		}
-//		
-//		int articlesCnt = articleService.getArticlesCnt(boardId, searchKeywordType, searchKeyword);
-//		
-//		int itemsInAPage = 10;
-//		
-//		int limitStart = (page - 1) * itemsInAPage;
-//		
-//		int pagesCnt = (int) Math.ceil((double) articlesCnt / itemsInAPage);
-//		
-//		List<Article> articles = articleService.getArticles(boardId, searchKeywordType, searchKeyword, limitStart, itemsInAPage);
-//		
-//		model.addAttribute("searchKeywordType", searchKeywordType);
-//		model.addAttribute("searchKeyword", searchKeyword);
-//		model.addAttribute("articles", articles);
-//		model.addAttribute("articlesCnt", articlesCnt);
-//		model.addAttribute("board", board);
-//		model.addAttribute("pagesCnt", pagesCnt);
-//		model.addAttribute("page", page);
-//		
-//		return "usr/article/list";
-//	}
 	
 	@RequestMapping("/usr/article/detail")
 	public String detail(HttpServletRequest req, HttpServletResponse resp, Model model, int id) {
@@ -255,27 +213,5 @@ public class UsrArticleController {
 		
 		return "usr/article/detail";
 	}
-	
-
-//	
-//	@RequestMapping("/usr/article/doModify")
-//	@ResponseBody
-//	public String doModify(int id, String title, String body) {
-//		
-//		Article article = articleService.getArticleById(id);
-//		
-//		if (article == null) {
-//			return Util.jsHistoryBack(Util.f("%d번 게시물은 존재하지 않습니다", id));
-//		}
-//		
-//		if (rq.getLoginedMemberId() != article.getMemberId()) {
-//			return Util.jsHistoryBack("해당 게시물에 대한 권한이 없습니다");
-//		}
-//		
-//		articleService.modifyArticle(id, title, body);
-//		
-//		return Util.jsReplace(Util.f("%d번 게시물을 수정했습니다", id), Util.f("detail?id=%d", id));
-//	}
-//	
 	
 }

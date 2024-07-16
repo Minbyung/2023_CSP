@@ -194,32 +194,8 @@ public class UsrMemberController {
 	        return ResponseEntity.badRequest().build();
 	    }
 	}
-	
-	
-	
-	
-	
-	
-//	@RequestMapping("/images/{filename:.+}")
-//	@ResponseBody
-//	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-//	    Path filePath = Paths.get("C:/develop/upload-files").resolve(filename);
-//	    try {
-//	        Resource file = new Resource(filePath.toUri());
-//	        if (file.exists() || file.isReadable()) {
-//	            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-//	                    "inline; filename=\"" + file.getFilename() + "\"").body(file);
-//	        } else {
-//	            throw new RuntimeException("Could not read file: " + filename);
-//	        }
-//	    } catch (MalformedURLException e) {
-//	        throw new RuntimeException("Could not read file: " + filename, e);
-//	    }
-//	}
-	
-	
-	
-	
+
+
 	@RequestMapping("/usr/member/doJoinWithInvite")
 	@ResponseBody
 	public String doJoinWithInvite(String name, String nickname, String cellphoneNum, String loginId, String loginPw, String inviteCode, @RequestParam("profilePhoto") MultipartFile profilePhoto) throws IOException {
@@ -362,15 +338,7 @@ public class UsrMemberController {
 		
 		return member;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@RequestMapping("/usr/member/myPage")
 	public String myPage(Model model) {
 		
@@ -388,25 +356,7 @@ public class UsrMemberController {
 		
 		return "usr/member/checkPassword";
 	}
-	
-//	@RequestMapping("/usr/member/doCheckPassword")
-//	public String doCheckPassword(Model model, String loginPw) {
-//		
-//		if (Util.empty(loginPw)) {
-//			return rq.jsReturnOnView("비밀번호를 입력해주세요"); 
-//		}
-//		
-//		Member member = memberService.getMemberById(rq.getLoginedMemberId());
-//		
-//		if (member.getLoginPw().equals(loginPw) == false) {
-//			return rq.jsReturnOnView("비밀번호가 일치하지 않습니다");
-//		}
-//		
-//		model.addAttribute("member", member);
-//		
-//		return "usr/member/modify";
-//	}
-	
+
 	@RequestMapping("/usr/member/doCheckPassword")
 	public String doCheckPassword(Model model, String loginPw, String action) {
 	    
@@ -432,9 +382,6 @@ public class UsrMemberController {
 	    // 기본값은 비밀번호 확인 페이지로 리다이렉트
 	    return "redirect:/usr/member/checkPassword";
 	}
-	
-	
-	
 	
 	@RequestMapping("/usr/member/doModify")
 	@ResponseBody

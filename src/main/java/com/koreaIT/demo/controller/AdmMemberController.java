@@ -47,10 +47,7 @@ public class AdmMemberController {
 	        allMembers = memberService.getAllMembers(limitStart, itemsInAPage);
 	        allMembersCnt = memberService.getMembersCnt();
 	    }
-		
-		
-//		int allMembersCnt = memberService.getMembersCnt();
-//		int allMembersPagesCnt = (int) Math.ceil((double) allMembersCnt / itemsInAPage);
+
 		int allMembersPagesCnt = (int) Math.ceil((double) allMembersCnt / itemsInAPage);
 		
 		int activeMembersCnt = memberService.getActiveMembersCnt();
@@ -58,8 +55,7 @@ public class AdmMemberController {
 		
 		int inactiveMembersCnt = memberService.getInactiveMembersCnt();
 		int inactiveMembersPagesCnt = (int) Math.ceil((double) inactiveMembersCnt / itemsInAPage);
-		
-//		List<Member> allMembers = memberService.getAllMembers(limitStart, itemsInAPage);
+
 		List<Member> activeMembers = memberService.getActiveMembers(limitStart, itemsInAPage);
 		List<Member> inactiveMembers = memberService.getInactiveMembers(limitStart, itemsInAPage);
 		
