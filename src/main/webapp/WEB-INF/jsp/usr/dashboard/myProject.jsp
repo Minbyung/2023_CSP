@@ -7,31 +7,15 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
+<title>MyProject</title>
 <link rel="stylesheet" href="/resource/cards/dist/style.css" />
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<!-- <link rel="stylesheet" href="/resource/project/detail.css" /> -->
-<!-- <link rel="stylesheet" href="/resource/dist/style.css" /> -->
 <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
 <link rel="stylesheet" href="/resource/dashboard/myproject.css" />
 </head>
 
-
-<!--   <meta charset="UTF-8"> -->
-<!--   <link rel="stylesheet" href="./style.css"> -->
-<!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"> -->
-
-<!-- <link href="https://fonts.googleapis.com/css?family=DM+Sans:400,500,700&display=swap" rel="stylesheet"> -->
-
-
-
-
-
 <script>
-
-
-
-
 $(document).ready(function() {
 	$('.favoriteIcon').each(function() {
 	    // this는 현재 순회 중인 '.favoriteIcon' 요소를리킵니다.
@@ -88,17 +72,10 @@ $(document).ready(function() {
        });
    });
 	
-	
-	
-	
-	
-	
-	
-	
 	$("#submitBtn").click(function(){
 	//초대 메일 전송     	    	
 	var email = $("#exampleFormControlInput1").val();
-	var teamId = '1';
+	var teamId = ${teamId};
 	
 	$.ajax({
 	    url: '../member/doInvite',

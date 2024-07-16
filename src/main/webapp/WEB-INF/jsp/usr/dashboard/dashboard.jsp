@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
+<title>Dashboard</title>
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 <link rel="stylesheet" href="/resource/dashboard/dashboard.css" />
@@ -199,7 +200,9 @@
 	    			<div class="card-short-body overflow-y-auto">
 	    				<c:forEach items="${chatRooms}" var="chatRoom">
 					    	<div class="member-list flex chat-btn border-b" data-member-id="${chatRoom.recipientId}">
-						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><i class="fa-regular fa-user"></i></span></div>
+						    	<div class="member-icon-wrap"><span class="member-icon flex justify-center items-center"><span class="member-icon flex justify-center items-center profile-photo-container">
+							                <img src="/profile-photo/${member.id}" alt="Profile Photo" class="profile-photo">
+							            </span></span></div>
 						    	<div class="member-list-detail flex flex-col justify-center">
 							    	<div class="font-bold">${chatRoom.name}</div>
 						    	</div>
