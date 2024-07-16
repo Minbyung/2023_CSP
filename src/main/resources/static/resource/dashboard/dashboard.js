@@ -1,43 +1,14 @@
 $(document).ready(function() {
-	setupFavoriteIcon(); // 즐겨찾기아이콘 상태 가져오기
-	setupFavoriteIconClick(); // 즐겨찾기아이콘 수정
-	setupAccordionButtons(); // left-bar 아코디언 버튼
-	setupMemberDetailMenu(); // 상단 바 member-detail 누를시
-	setupChatButton(); // 채팅방 진입
-	setupNotifications(); // rpanel
-	setupLayerToggles(); // 모달 열기/닫기 & 내용 리셋
-	setupDatePickers(); // input 날짜 부분 눌러도 달력 나오게
+	setupAccordionButtons();
+	setupChatButton();
+	setupNotifications();
+	setupLayerToggles();
+	memberDetailModal();
+	setupInviteEmail();
 	
-	function setupFavoriteIcon() {
-        $.ajax({
-            url: '../favorite/getFavorite',
-            method: 'GET',
-            data: { "projectId": projectId },
-            dataType: "json",
-            success: function(data) {
-                $('#favoriteIcon').addClass(data ? 'fas' : 'far');
-            }
-        });
-    }
-
-    function setupFavoriteIconClick() {
-        $('#favoriteIcon').click(function() {
-            var isFavorite = $(this).hasClass('fas');
-            $.ajax({
-                url: '../favorite/updateFavorite',
-                method: 'POST',
-                data: {
-                    "projectId": projectId,
-                    "isFavorite": !isFavorite
-                },
-                success: function(response) {
-                    $('#favoriteIcon').toggleClass('far fas');
-                }
-            });
-        });
-    }
-    
-    function setupAccordionButtons() {
+	
+	
+	function setupAccordionButtons() {
         $('.project-menu-accordion-button > .flex').click(function() {
             toggleAccordion('.left-menu-project-list-box', $(this).find('i'));
         });
@@ -54,19 +25,6 @@ $(document).ready(function() {
                 icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
             }
         }
-    }
-	
-	function setupMemberDetailMenu() {
-        $('.member-detail').click(function() {
-            $('.member-detail-menu').toggle();
-        });
-
-        $(document).click(function(event) {
-            var $target = $(event.target);
-            if (!$target.closest('.member-detail-menu').length && !$target.hasClass('member-detail')) {
-                $('.member-detail-menu').hide();
-            }
-        });
     }
 	
 	function setupChatButton() {
@@ -143,26 +101,18 @@ $(document).ready(function() {
             }
         });
     }
-	
+
 	function setupLayerToggles() {
-        $('.modal-exam').click(function() {
-            $('.layer-bg').show();
-            $('.layer').show();
-        });
-        
         $('.invite-modal').click(function() {
             $('.layer-bg').show();
             $('.invite-layer').show();
         });
         
-
         $('.close-btn-x').click(closeLayer);
         $('.layer-bg').click(closeLayer);
 
         function closeLayer() {
             $('.layer-bg').hide();
-            $('.layer').hide();
-            $('.update-layer').hide();
             $('.rpanel').hide();
             $('.member-modal').hide();
             $('.invite-layer').hide();
@@ -170,29 +120,66 @@ $(document).ready(function() {
         }
 
         function resetLayerFields() {
-            $('.tag').remove();
-            $('#exampleFormControlInput1').val('');
-            $('#exampleFormControlTextarea1').val('');
-            $('#file_list .file_input:not(:first)').remove();
-            $('#file_list .file_input:first input[type="file"]').val('');
-            $('#file_list .file_input:first input[type="text"]').val('');
-            $('#groupSelect').val($('#groupSelect option:contains("그룹 미지정")').val());
-            $('#start-date').val('');
-            $('#end-date').val('');
+            $(".invite-email-input").val('');
         }
     }
 	
-	function setupDatePickers() {
-        $('#start-date, #end-date').on('click', function() {
-            this.showPicker();
+    
+    function memberDetailModal() {
+	    $(document).on('click', '.participant', function() {
+	        var memberId = $(this).find('div[id^=member-]').data('member-id');
+	        var $memberDetails = $('#member-details');
+	        console.log("작동");  // 디버깅을 위해 로그 추가
+	
+	        $('.chat-btn').data('member-id', memberId);
+	
+	        $.ajax({
+	            url: '../member/getMemberDetails',
+	            type: 'GET',
+	            data: { memberId: memberId },
+	            dataType: 'json',
+	            success: function(data) {
+	                $memberDetails.html('<p>이름: ' + data.name + '</p>' +
+	                    '<p>이메일: ' + data.email + '</p>' +
+	                    '<p>전화번호: ' + data.cellphoneNum + '</p>'
+	                );
+	                $('.layer-bg').show();
+	                $('#member-modal').show();
+	            },
+	            error: function(xhr, status, error) {
+	                console.log("에러 발생: " + error);  // 에러 로그 추가
+	            }
+	        });
+	    });
+	
+	    $('.close').click(function() {
+	        $('#member-modal').hide();
+	        $('.layer-bg').hide();
+	    });
+	    
+	    $('.layer-bg').click(function() {
+			$('#member-modal').hide();
+	        $('.layer-bg').hide();
+		});
+	}
+	
+	function setupInviteEmail() {
+        $("#submitBtn").click(function() {
+            var email = $("#exampleFormControlInput1").val();
+            
+            $.ajax({
+                url: '../member/doInvite',
+                type: 'POST',
+                data: { teamId: teamId, email: email },
+                success: function(data) {
+                    $(".invite-email-input").val('');
+                    $('.layer-bg').hide();
+                    $('.invite-layer').hide();
+                    alert("메일 전송이 완료되었습니다.");
+                }
+            });
         });
     }
 	
 	
-	
-	
-	
-	
-	
-	
-});	
+})

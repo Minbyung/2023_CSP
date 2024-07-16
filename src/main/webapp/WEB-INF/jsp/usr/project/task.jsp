@@ -8,24 +8,24 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-  <title>${project.project_name }</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="/resource/home/home.css" />
-  <link rel="stylesheet" href="/resource/project/task.css" />
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
-<!--   웹소켓	 -->
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
-  <script>
-	var projectId = ${project.id};
-	var loginedMemberId = ${rq.getLoginedMemberId()};
-	var loginedMemberName = '${loginedMember.name}';
-  </script>
-  <script src="/resource/project/task.js"></script>
-  <script src="/resource/common2.js"></script>
+	<title>${project.project_name }</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<link rel="stylesheet" href="/resource/home/home.css" />
+	<link rel="stylesheet" href="/resource/project/task.css" />
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+	<!--   웹소켓	 -->
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
+	<script>
+		var projectId = ${project.id};
+		var loginedMemberId = ${rq.getLoginedMemberId()};
+		var loginedMemberName = '${loginedMember.name}';
+	 </script>
+	<script src="/resource/project/task.js"></script>
+	<script src="/resource/common2.js"></script>
   
 </head>
 	<!-- 새로운 JSP 파일 포함 -->

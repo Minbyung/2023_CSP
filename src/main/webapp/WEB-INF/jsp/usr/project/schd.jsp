@@ -7,72 +7,72 @@
 <html lang="en">
 <head>
 	<title>${project.project_name }</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="/resource/project/schd.css" />
-  <link rel="stylesheet" href="/resource/home/home.css" />	
-  <!-- fullcalendar CDN -->
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
-  <!-- fullcalendar 언어 CDN -->
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
-<!--   웹소켓 -->
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>  
-  
-  <script>
-	var projectId = ${project.id};
-	var loginedMemberId = ${rq.getLoginedMemberId()};
-	var loginedMemberName = '${loginedMember.name}';
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<link rel="stylesheet" href="/resource/project/schd.css" />
+	<link rel="stylesheet" href="/resource/home/home.css" />	
+	<!-- fullcalendar CDN -->
+	<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.css' rel='stylesheet' />
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/main.min.js'></script>
+	<!-- fullcalendar 언어 CDN -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.8.0/locales-all.min.js'></script>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.3.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+	<!--   웹소켓 -->
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>  
 	
-	var projectEvents = [
-	    <c:forEach var="article" items="${articles}" varStatus="status">
-	        {
-	            id: "${article.id}",
-	            title: "${article.title}",
-	            start: "${article.startDate}",
-	            end: "${article.endDate}",
-	            color: getColor("${article.status}"),
-	            textColor: "#fff",
-	            editable: true
-	        }<c:if test="${!status.last}">,</c:if>
-	    </c:forEach>
-	];
-	
-	var googleEvents = [
-	    <c:forEach var="event" items="${googleEvents}" varStatus="status">
-	        {
-	            id: "${event.id}",
-	            title: "${event.summary}",
-	            start: "${event.start.dateTime != null ? event.start.dateTime : event.start.date}",
-	            end: "${event.end.dateTime != null ? event.end.dateTime : event.end.date}",
-	            extendedProps: {
-	                editable: false
-	            }
-	        }<c:if test="${!status.last}">,</c:if>
-	    </c:forEach>
-	];
-	
-	function getColor(status) {
-	    switch(status) {
-	        case '요청':
-	            return 'rgba(255, 99, 132, 0.8)';
-	        case '진행':
-	            return 'rgba(54, 162, 235, 0.8)';
-	        case '피드백':
-	            return 'rgba(255, 206, 86, 0.8)';
-	        case '완료':
-	            return 'rgba(75, 192, 192, 0.8)';
-	        case '보류':
-	            return 'rgba(153, 102, 255, 0.8)';
-	        default:
-	            return '#8b00ea';
-	    }
-	}
-  </script>
-  <script src="/resource/project/schd.js"></script>
-  <script src="/resource/common2.js"></script>
+	<script>
+		var projectId = ${project.id};
+		var loginedMemberId = ${rq.getLoginedMemberId()};
+		var loginedMemberName = '${loginedMember.name}';
+		
+		var projectEvents = [
+		    <c:forEach var="article" items="${articles}" varStatus="status">
+		        {
+		            id: "${article.id}",
+		            title: "${article.title}",
+		            start: "${article.startDate}",
+		            end: "${article.endDate}",
+		            color: getColor("${article.status}"),
+		            textColor: "#fff",
+		            editable: true
+		        }<c:if test="${!status.last}">,</c:if>
+		    </c:forEach>
+		];
+		
+		var googleEvents = [
+		    <c:forEach var="event" items="${googleEvents}" varStatus="status">
+		        {
+		            id: "${event.id}",
+		            title: "${event.summary}",
+		            start: "${event.start.dateTime != null ? event.start.dateTime : event.start.date}",
+		            end: "${event.end.dateTime != null ? event.end.dateTime : event.end.date}",
+		            extendedProps: {
+		                editable: false
+		            }
+		        }<c:if test="${!status.last}">,</c:if>
+		    </c:forEach>
+		];
+		
+		function getColor(status) {
+		    switch(status) {
+		        case '요청':
+		            return 'rgba(255, 99, 132, 0.8)';
+		        case '진행':
+		            return 'rgba(54, 162, 235, 0.8)';
+		        case '피드백':
+		            return 'rgba(255, 206, 86, 0.8)';
+		        case '완료':
+		            return 'rgba(75, 192, 192, 0.8)';
+		        case '보류':
+		            return 'rgba(153, 102, 255, 0.8)';
+		        default:
+		            return '#8b00ea';
+		    }
+		}
+	</script>
+	<script src="/resource/project/schd.js"></script>
+	<script src="/resource/common2.js"></script>
   
 <style>
  /* body 스타일 */

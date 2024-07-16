@@ -86,7 +86,7 @@ public class UsrDashboardController {
 		int teamMembersCnt = memberService.getTeamMembersCnt(teamId);
 		String teamName = teamService.getTeamNameByTeamId(teamId);
 		Member member = memberService.getMemberById(memberId);
-		
+		Member loginedMember = memberService.getMemberById(rq.getLoginedMemberId());
 		
 		// 날짜와 오전인지 오후인지
 		SimpleDateFormat amPmFormat = new SimpleDateFormat("a", Locale.KOREAN);
@@ -106,6 +106,7 @@ public class UsrDashboardController {
 		model.addAttribute("member", member);
 		model.addAttribute("amOrPm", amOrPm);
 		model.addAttribute("currentDate", currentDate);
+		model.addAttribute("loginedMember", loginedMember);
 		
 		
 		return "usr/dashboard/dashboard";

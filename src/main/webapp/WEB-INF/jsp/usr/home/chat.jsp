@@ -39,15 +39,10 @@
 	function showMessage(messageOutputBody) {
 		var message = JSON.parse(messageOutputBody);
 	    var messageType = (message.senderName === myName) ? 'my-message' : 'other-message';
-	    
-// 		var messageTime = new Date(message.regDate).toLocaleTimeString();
 		var messageTime = new Date(message.regDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-		
-		
 		var messageContent = (message.senderName === myName) ? 
 		        message.content : '<b>' + message.senderName + '</b>: ' + message.content;
-
-		    var messageElement = $('<div class="' + messageType + '">' + messageContent + '<span class="timestamp">' + messageTime + '</span></div>');
+		var messageElement = $('<div class="' + messageType + '">' + messageContent + '<span class="timestamp">' + messageTime + '</span></div>');
 		
 	    // 채팅 창에 메시지 요소를 추가
 	    $('.chat-box').append(messageElement);
