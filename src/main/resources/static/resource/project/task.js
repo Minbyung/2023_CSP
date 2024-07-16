@@ -144,7 +144,6 @@ $(document).ready(function() {
 
     function setupVideoMeetingButton() {
         $('#createMeetingBtn').click(function() {
-            const projectId = projectId;
             const topic = $('#meetingTopic').val();
             const duration = $('#meetingDuration').val();
             const startTime = $('#meetingStartTime').val();
