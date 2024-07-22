@@ -7,6 +7,7 @@ $(document).ready(function() {
 	setupUpdateSubmitButton();
 	setupUpdateSearchAutocomplete();
 	setupUpdateFileDelete();
+	setupModalCloseButtons();
 	
 	function initializeToastUIEditors() {
         const { Editor } = toastui;
@@ -81,7 +82,6 @@ $(document).ready(function() {
     
     function setupArticleUpdateButton() {
         $(document).on('click', '.article-update-btn', function() {
-            var articleId = $(this).data('article-id');
             $('.layer-bg').show();
 	    	$('.update-layer').show();
             fetchArticleDetails(articleId);
@@ -131,7 +131,7 @@ $(document).ready(function() {
                 tag.remove();
             });
         });
-
+		
         $("#updateBtn").data("article-id", data.id);
         $("#updateTitle").val(data.title);
         updateEditor.setMarkdown(data.content);
@@ -311,6 +311,13 @@ $(document).ready(function() {
         $(element).parent().remove();
     }
 	
+	function setupModalCloseButtons() {
+        $('.close-btn-x, .layer-bg').click(function() {
+            $('.layer-bg').hide();
+            $('.update-layer').hide();
+            $('.tag').remove();
+        });
+    }
 	
 	
 })

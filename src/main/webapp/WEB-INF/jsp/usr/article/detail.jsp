@@ -14,13 +14,12 @@
 	<link rel="stylesheet" href="/resource/article/detail.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-autocomplete/1.0.7/jquery.auto-complete.min.js"></script>
 	<script>
-		var projectId = ${project.id};
+		var projectId = ${projectId};
 		var articleId = ${article.id}
 		var loginedMemberId = ${rq.getLoginedMemberId()};
 		var loginedMemberName = '${member.name}';
 	</script>
-	<script src="/resource/project/detail.js"></script>
-	<script src="/resource/common2.js"></script>
+	<script src="/resource/article/detail.js"></script>
 </head>	
 	
 <body>	
@@ -285,8 +284,8 @@
 					
 					</div>
 					<div class="mb-3">
-					  <label for="updateTitle1" class="form-label">제목</label>
-					  <input type="email" class="form-control title" id="updateTitle1" placeholder="제목을 입력해주세요" required />
+					  <label for="updateTitle" class="form-label">제목</label>
+					  <input type="email" class="form-control title" id="updateTitle" placeholder="제목을 입력해주세요" required />
 					</div>
 <!-- 					<div class="mb-3"> -->
 <!-- 					  <label for="updateContent" class="form-label h-4">내용</label> -->
